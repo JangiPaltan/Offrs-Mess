@@ -7,9 +7,11 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     
-<link rel="icon" type="image/png" href="https://upload.wikimedia.org/wikipedia/commons/thumb/e/ec/Maratha_Light_Infantry.svg/500px-Maratha_Light_Infantry.svg.png?v=2">
-<link rel="apple-touch-icon" href="https://upload.wikimedia.org/wikipedia/commons/thumb/e/ec/Maratha_Light_Infantry.svg/500px-Maratha_Light_Infantry.svg.png?v=2">
+    <!-- Custom Home Screen Icons with Cache Busting -->
+    <link rel="icon" type="image/png" href="https://upload.wikimedia.org/wikipedia/commons/thumb/e/ec/Maratha_Light_Infantry.svg/500px-Maratha_Light_Infantry.svg.png?v=2">
+    <link rel="apple-touch-icon" href="https://upload.wikimedia.org/wikipedia/commons/thumb/e/ec/Maratha_Light_Infantry.svg/500px-Maratha_Light_Infantry.svg.png?v=2">
     
+    <!-- Elegant Serif Web Font -->
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700&display=swap">
 
     <style>
@@ -20,6 +22,8 @@
             --mustard-gold: #E1AD01; 
             --text-white: #FFFFFF;
             --text-muted: #8F9E96;
+            --glass-bg: rgba(19, 28, 24, 0.65);
+            --glass-border: rgba(225, 173, 1, 0.25);
         }
 
         * {
@@ -32,12 +36,13 @@
 
         body {
             background-color: var(--bg-dark);
+            background-image: radial-gradient(circle at 50% 50%, #111a15 0%, #0a0f0d 100%);
             color: var(--text-white);
             min-height: 100vh;
             display: flex;
             justify-content: center;
             align-items: flex-start;
-            overflow-y: auto; /* Enables custom page vertical scrolling */
+            overflow-y: auto;
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
         }
 
@@ -53,7 +58,7 @@
             justify-content: space-between;
         }
 
-        /* LOCK SCREEN WITH MATCHING COSMETIC BRANDING */
+        /* 4. SMOOTH PAGE TRANSITIONS & 2. TACTILE GLASSMORPHISM LOCK SCREEN */
         #lock-screen {
             display: flex;
             flex-direction: column;
@@ -65,8 +70,11 @@
             top: 0;
             left: 0;
             z-index: 100;
-            background: linear-gradient(135deg, #070B09 0%, #111A16 100%);
-            transition: transform 0.5s cubic-bezier(0.1, 0.9, 0.2, 1);
+            background: rgba(10, 15, 13, 0.6);
+            backdrop-filter: blur(25px); /* Premium iOS-style frosted glass blur */
+            -webkit-backdrop-filter: blur(25px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.6s ease;
             overflow-y: auto;
             padding: 20px 0;
         }
@@ -82,13 +90,14 @@
             height: 14px;
             border: 2px solid var(--forest-light);
             border-radius: 50%;
-            transition: all 0.15s ease;
+            transition: all 0.2s ease;
         }
 
         .dot.active {
-            background-color: var(--text-white);
-            border-color: var(--text-white);
-            box-shadow: 0 0 8px rgba(255, 255, 255, 0.5);
+            background-color: var(--mustard-gold);
+            border-color: var(--mustard-gold);
+            box-shadow: 0 0 12px var(--mustard-gold);
+            transform: scale(1.2);
         }
 
         .keypad {
@@ -102,8 +111,9 @@
             width: 85px;
             height: 85px;
             border-radius: 50%;
-            border: 1px solid rgba(255, 255, 255, 0.05);
-            background: rgba(27, 67, 50, 0.15);
+            border: 1px solid rgba(225, 173, 1, 0.15);
+            background: rgba(27, 67, 50, 0.2);
+            backdrop-filter: blur(5px);
             color: var(--text-white);
             font-size: 1.5rem;
             font-weight: 300;
@@ -112,12 +122,13 @@
             align-items: center;
             cursor: pointer;
             text-transform: uppercase;
-            transition: background 0.1s;
+            transition: background 0.1s, transform 0.1s;
         }
 
         .key:active {
-            background-color: var(--forest-green);
-            border-color: var(--forest-light);
+            background-color: var(--mustard-gold);
+            color: var(--bg-dark);
+            transform: scale(0.92);
         }
 
         /* DESIGN PARITY HEADERS */
@@ -131,6 +142,7 @@
             width: 90px;
             height: auto;
             margin-bottom: 10px;
+            filter: drop-shadow(0 4px 8px rgba(0,0,0,0.5));
         }
 
         header h1 {
@@ -142,6 +154,7 @@
             text-transform: none; 
             padding-bottom: 12px;
             border-bottom: 1px solid var(--forest-green);
+            text-shadow: 0 2px 4px rgba(0,0,0,0.6);
         }
 
         /* STACKED DATE & COLON SEPARATED TIME */
@@ -176,36 +189,61 @@
             margin: 30px 0;
         }
 
-        /* HIGH-RESPONSE 3D TOUCHPAD INTERFACE */
+        /* 2. GLASSMORPHISM CONSOLE BUTTONS WITH 3. MICRO-ANIMATIONS */
         .btn-card {
-            background: linear-gradient(180deg, #131c18 0%, #0c120f 100%); 
-            border: 1px solid rgba(225, 173, 1, 0.3);
-            border-radius: 6px; 
-            padding: 24px 15px;
+            background: var(--glass-bg);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid var(--glass-border);
+            border-radius: 8px; 
+            padding: 26px 15px;
             text-align: center;
             text-decoration: none;
             display: flex;
             justify-content: center;
             align-items: center;
             cursor: pointer;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.05);
-            transition: all 0.2s cubic-bezier(0.25, 0.8, 0.25, 1);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
             position: relative;
+            overflow: hidden;
+            transition: transform 0.3s cubic-bezier(0.25, 0.8, 0.25, 1), border-color 0.3s, box-shadow 0.3s;
         }
 
-        /* Hover Behavior */
-        .btn-card:hover {
-            transform: translateY(-2px);
-            border-color: var(--mustard-gold);
-            box-shadow: 0 8px 15px rgba(225, 173, 1, 0.15), inset 0 1px 0 rgba(255,255,255,0.1);
+        /* Micro-Animation: Subtle shifting ambient border pulse */
+        @keyframes subtleGlow {
+            0% { border-color: rgba(225, 173, 1, 0.25); }
+            50% { border-color: rgba(225, 173, 1, 0.5); }
+            100% { border-color: rgba(225, 173, 1, 0.25); }
         }
 
-        /* Half-Second Selection Action Glow Trigger */
+        .btn-card {
+            animation: subtleGlow 4s infinite ease-in-out;
+        }
+
+        /* Micro-Animation: Shimmer reflection effect on hover/idle triggers */
+        .btn-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -150%;
+            width: 50%;
+            height: 100%;
+            background: linear-gradient(to right, transparent, rgba(255, 255, 255, 0.08), transparent);
+            transform: skewX(-25deg);
+            transition: 0.75s;
+        }
+
+        .btn-card:hover::before {
+            left: 150%;
+        }
+
+        /* Active Press Feedback Physics */
         .btn-card:active {
-            transform: translateY(1px);
+            transform: scale(0.97) translateY(2px);
             background: var(--mustard-gold);
-            box-shadow: 0 2px 4px rgba(0,0,0,0.5);
-            transition: background 0.05s;
+            border-color: var(--mustard-gold);
+            box-shadow: 0 2px 8px rgba(225, 173, 1, 0.4);
+            transition: background 0.05s, transform 0.05s;
         }
 
         .btn-card h2 {
@@ -214,11 +252,20 @@
             font-weight: 500;
             letter-spacing: 3px;
             text-transform: uppercase;
-            transition: color 0.05s;
+            transition: color 0.05s, transform 0.2s;
         }
 
         .btn-card:active h2 {
             color: var(--bg-dark); 
+            transform: scale(0.98);
+        }
+
+        /* APPLICATION LAYER ANIMATION STATUS */
+        #app-screen {
+            opacity: 0; 
+            transform: translateY(20px) scale(0.98); 
+            width: 100%;
+            transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.6s ease;
         }
 
         .admin-section {
@@ -251,6 +298,7 @@
 </head>
 <body>
 
+    <!-- SECURE TACTILE GLASSMORPHISM LOCK SCREEN -->
     <div id="lock-screen">
         <header style="margin-bottom: 45px;">
             <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/ec/Maratha_Light_Infantry.svg/500px-Maratha_Light_Infantry.svg.png" class="logo-img" alt="Logo">
@@ -278,8 +326,9 @@
         </div>
     </div>
 
+    <!-- RESPONSIVE MAIN APP CONTAINER -->
     <div class="page-container">
-        <div id="app-screen" style="opacity: 0; transform: scale(0.98); width: 100%;">
+        <div id="app-screen">
             <header>
                 <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/ec/Maratha_Light_Infantry.svg/500px-Maratha_Light_Infantry.svg.png" class="logo-img" alt="Logo">
                 <h1>Jangi Paltan Officers Mess</h1>
@@ -291,13 +340,13 @@
             </header>
 
             <div class="grid-container">
-                <a href="https://docs.google.com/forms/d/e/1FAIpQLSdEil3Mo3jSFAq-xCCXpXXc4o7bwY3PFu9A7oDMNgqHW_2Kxw/viewform" target="_self" class="btn-card">
+                <a href="https://docs.google.com/forms/d/e/1FAIpQLSdEiI3Mo3jSFAq-xCCXpXXc4o7bwy3PFu9A7oDMNgqHW_2Kxw/viewform" target="_self" class="btn-card">
                     <h2>Liquor</h2>
                 </a>
-                <a href="https://docs.google.com/forms/d/e/1FAIpQLSeToMjA5N-vvYkbslGoyck9SmsrSdGbNIIm2j6Lbln8sbJ2dw/viewform" target="_self" class="btn-card">
+                <a href="https://docs.google.com/forms/d/e/1FAIpQLSeToMjA5N-vvYkbsIGoyck9SmsrSdGbNIIm2j6LbIn8sbJ2dw/viewform" target="_self" class="btn-card">
                     <h2>Soft Drinks</h2>
                 </a>
-                <a href="https://docs.google.com/forms/d/e/1FAIpQLSek-_3zzJTKczyOz2T3m4qDOtOt_sh2KcnK2_t7nXP5dAD8yQ/viewform" target="_self" class="btn-card">
+                <a href="https://docs.google.com/forms/d/e/1FAIpQLSek-_3zzJTKczyOz2T3m4qDOtOt_sh2KcnK2_t7NXP5dAD8yQ/viewform" target="_self" class="btn-card">
                     <h2>Guest Room</h2>
                 </a>
             </div>
@@ -313,9 +362,28 @@
     <script>
         const CORRECT_PIN = "1768";
         let currentPin = "";
+        let idleTimer;
+
+        // 1. AUTOMATIC PAGE RESET ENGINE (2 Minute Expiration)
+        function resetIdleTimer() {
+            clearTimeout(idleTimer);
+            // 120000 ms = 2 Minutes
+            idleTimer = setTimeout(function() {
+                lockApp();
+            }, 120000); 
+        }
+
+        // Bind reset triggers to structural system movements
+        window.onload = resetIdleTimer;
+        window.onmousemove = resetIdleTimer;
+        window.onmousedown = resetIdleTimer;
+        window.ontouchstart = resetIdleTimer;
+        window.onclick = resetIdleTimer;
+        window.onkeydown = resetIdleTimer;
 
         // UI Keypad Functions
         function pressNum(num) {
+            resetIdleTimer();
             if (currentPin.length < 4) {
                 currentPin += num;
                 updateDots();
@@ -326,6 +394,7 @@
         }
 
         function clearPin() {
+            resetIdleTimer();
             currentPin = "";
             updateDots();
         }
@@ -341,12 +410,18 @@
             }
         }
 
+        // 4. SMOOTH PAGE TRANSITIONS ENGINE
         function verifyPin() {
             if (currentPin === CORRECT_PIN) {
+                // Curtain slide-up transition effect
                 document.getElementById('lock-screen').style.transform = 'translateY(-100%)';
+                document.getElementById('lock-screen').style.opacity = '0';
+                
+                // Content expansion and fade-in effect
                 document.getElementById('app-screen').style.opacity = '1';
-                document.getElementById('app-screen').style.transform = 'scale(1)';
+                document.getElementById('app-screen').style.transform = 'translateY(0) scale(1)';
                 clearPin();
+                resetIdleTimer();
             } else {
                 alert("ACCESS DENIED. INCORRECT PIN.");
                 clearPin();
@@ -355,8 +430,10 @@
 
         function lockApp() {
             document.getElementById('lock-screen').style.transform = 'translateY(0)';
+            document.getElementById('lock-screen').style.opacity = '1';
+            
             document.getElementById('app-screen').style.opacity = '0';
-            document.getElementById('app-screen').style.transform = 'scale(0.98)';
+            document.getElementById('app-screen').style.transform = 'translateY(20px) scale(0.98)';
             clearPin();
         }
 
@@ -364,7 +441,6 @@
         function updateDateTime() {
             const now = new Date();
 
-            // Format Date: 15 July 2026
             const day = now.getDate();
             const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
             const month = months[now.getMonth()];
@@ -372,7 +448,6 @@
             
             document.getElementById('live-date').innerText = `${day} ${month} ${year}`;
 
-            // Format Time: HH:MM:SS
             const hours = String(now.getHours()).padStart(2, '0');
             const minutes = String(now.getMinutes()).padStart(2, '0');
             const seconds = String(now.getSeconds()).padStart(2, '0');
