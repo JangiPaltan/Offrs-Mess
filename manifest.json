@@ -1,0 +1,13 @@
+{
+  "name": "Jangi Paltan Officers Mess",
+  "short_name": "Mess",
+  "icons": [
+    {
+      "src": "https://upload.wikimedia.org/wikipedia/commons/thumb/e/ec/Maratha_Light_Infantry.svg/500px-Maratha_Light_Infantry.svg.png",
+      "sizes": "500x500",
+      "type": "image/png"
+    }
+  ],
+  "start_url": ".",
+  "display": "standalone"
+}
