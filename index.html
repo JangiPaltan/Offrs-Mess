@@ -7,9 +7,9 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     
-    <link rel="icon" type="image/png" href="https://upload.wikimedia.org/wikipedia/commons/thumb/e/ec/Maratha_Light_Infantry.svg/500px-Maratha_Light_Infantry.svg.png?v=4">
-    <link rel="apple-touch-icon" href="https://upload.wikimedia.org/wikipedia/commons/thumb/e/ec/Maratha_Light_Infantry.svg/500px-Maratha_Light_Infantry.svg.png?v=4">
-    <link rel="shortcut icon" href="https://upload.wikimedia.org/wikipedia/commons/thumb/e/ec/Maratha_Light_Infantry.svg/500px-Maratha_Light_Infantry.svg.png?v=4">
+    <link rel="icon" type="image/png" href="https://upload.wikimedia.org/wikipedia/commons/thumb/e/ec/Maratha_Light_Infantry.svg/500px-Maratha_Light_Infantry.svg.png?v=5">
+    <link rel="apple-touch-icon" href="https://upload.wikimedia.org/wikipedia/commons/thumb/e/ec/Maratha_Light_Infantry.svg/500px-Maratha_Light_Infantry.svg.png?v=5">
+    <link rel="shortcut icon" href="https://upload.wikimedia.org/wikipedia/commons/thumb/e/ec/Maratha_Light_Infantry.svg/500px-Maratha_Light_Infantry.svg.png?v=5">
     
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700&display=swap">
 
@@ -45,7 +45,7 @@
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
         }
 
-        /* SCROLLABLE CONTAINER */
+        /* SCROLLABLE MAIN CONTAINER */
         .page-container {
             width: 100%;
             max-width: 600px;
@@ -130,7 +130,7 @@
             transform: scale(0.92);
         }
 
-        /* HEADER INTERFACE */
+        /* UI HEADERS */
         header {
             text-align: center;
             margin-bottom: 15px;
@@ -156,7 +156,7 @@
             text-shadow: 0 2px 4px rgba(0,0,0,0.6);
         }
 
-        /* CENTERED DATE & TIME */
+        /* LIVE SYSTEM CLOCK */
         .live-clock {
             margin-top: 15px;
             display: flex;
@@ -179,7 +179,7 @@
             color: var(--text-muted);
         }
 
-        /* LAYOUT CONTAINER */
+        /* CONSOLE ACTION GRID */
         .grid-container {
             display: flex;
             flex-direction: column;
@@ -188,7 +188,7 @@
             margin: 30px 0;
         }
 
-        /* BUTTON SHIMMER & GLOW MICRO-ANIMATIONS */
+        /* GLASSMORPHISM BUTTONS & SHIMMER PULSE DYNAMICS */
         .btn-card {
             background: var(--glass-bg);
             backdrop-filter: blur(10px);
@@ -256,7 +256,7 @@
             transform: scale(0.98);
         }
 
-        /* APPLICATION LAYER TRANSITIONS */
+        /* INTERFACE STAGE ANIMATION */
         #app-screen {
             opacity: 0; 
             transform: translateY(20px) scale(0.98); 
@@ -333,14 +333,14 @@
                 </div>
             </header>
 
-           <div class="grid-container">
-                <a href="https://docs.google.com/forms/d/e/1FAIpQLSdEil3Mo3jSFAq-xCCXpXXc4o7bwy3PFu9A7oDMNgqHW_2Kxw/viewform" target="_blank" rel="noopener noreferrer" class="btn-card">
+            <div class="grid-container">
+                <a href="https://docs.google.com/forms/d/e/1FAIpQLSdEiI3Mo3jSFAq-xCCXpXXc4o7bwy3PFu9A7oDMNgqHW_2Kxw/viewform" target="_self" class="btn-card">
                     <h2>Liquor</h2>
                 </a>
-                <a href="https://docs.google.com/forms/d/e/1FAIpQLSeToMjA5N-vvYkbsIGoyck9SmsrSdGbNIIm2j6LbIn8sbJ2dw/viewform" target="_blank" rel="noopener noreferrer" class="btn-card">
+                <a href="https://docs.google.com/forms/d/e/1FAIpQLSeToMjA5N-vvYkbsIGoyck9SmsrSdGbNIIm2j6LbIn8sbJ2dw/viewform" target="_self" class="btn-card">
                     <h2>Soft Drinks</h2>
                 </a>
-                <a href="https://docs.google.com/forms/d/e/1FAIpQLSek-_3zzJTKczyOz2T3m4qDOtOt_sh2KcnK2_t7NXP5dAD8yQ/viewform" target="_blank" rel="noopener noreferrer" class="btn-card">
+                <a href="https://docs.google.com/forms/d/e/1FAIpQLSek-_3zzJTKczyOz2T3m4qDOtOt_sh2KcnK2_t7NXP5dAD8yQ/viewform" target="_self" class="btn-card">
                     <h2>Guest Room</h2>
                 </a>
             </div>
@@ -373,7 +373,7 @@
         window.onclick = resetIdleTimer;
         window.onkeydown = resetIdleTimer;
 
-        // UI Keypad Controls
+        // Keypad Controller Logic
         function pressNum(num) {
             resetIdleTimer();
             if (currentPin.length < 4) {
@@ -402,7 +402,7 @@
             }
         }
 
-        // SMOOTH TRANSITION CONTROLLERS
+        // SMOOTH SLIDE PAGE TRANSITION
         function verifyPin() {
             if (currentPin === CORRECT_PIN) {
                 document.getElementById('lock-screen').style.transform = 'translateY(-100%)';
@@ -427,7 +427,7 @@
             clearPin();
         }
 
-        // Clock Parser Engine
+        // Clock Script
         function updateDateTime() {
             const now = new Date();
 
