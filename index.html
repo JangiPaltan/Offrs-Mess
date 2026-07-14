@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>JANGI PALTAN OFFICERS MESS</title>
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <style>
+        :root {
+            --bg-dark: #0A0F0D; /* Matte near-black with a hint of forest */
+            --forest-green: #1B4332; /* Deep military forest green */
+            --forest-light: #2D6A4F; /* Accent forest green */
+            --accent-gold: #D4AF37; /* Minimalist gold highlights */
+            --text-white: #FFFFFF;
+            --text-muted: #8F9E96;
+        }
+
+        * {
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            user-select: none;
+            text-transform: uppercase; /* Enforces ALL CAPS globally */
+            letter-spacing: 1.5px;
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-white);
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+        }
+
+        /* LOCK SCREEN */
+        #lock-screen {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            z-index: 10;
+            background: linear-gradient(135deg, #070B09 0%, #111A16 100%);
+            transition: transform 0.5s cubic-bezier(0.1, 0.9, 0.2, 1);
+        }
+
+        .pin-dots {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+
+        .dot {
+            width: 14px;
+            height: 14px;
+            border: 2px solid var(--forest-light);
+            border-radius: 50%;
+            transition: all 0.15s ease;
+        }
+
+        .dot.active {
+            background-color: var(--text-white);
+            border-color: var(--text-white);
+            box-shadow: 0 0 8px rgba(255, 255, 255, 0.5);
+        }
+
+        .keypad {
+            display: grid;
+            grid-template-columns: repeat(3, 85px);
+            gap: 15px;
+        }
+
+        .key {
+            width: 85px;
+            height: 85px;
+            border-radius: 50%;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            background: rgba(27, 67, 50, 0.15);
+            color: var(--text-white);
+            font-size: 1.5rem;
+            font-weight: 300;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            transition: background 0.1s;
+        }
+
+        .key:active {
+            background-color: var(--forest-green);
+            border-color: var(--forest-light);
+        }
+
+        /* MAIN APP SCREEN */
+        #app-screen {
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+            max-width: 900px;
+            height: 100%;
+            padding: 50px 30px;
+            justify-content: space-between;
+            opacity: 0;
+            transform: scale(0.98);
+            transition: all 0.4s ease;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        header h1 {
+            color: var(--text-white);
+            font-size: 2rem;
+            font-weight: 700;
+            border-bottom: 1px solid var(--forest-green);
+            padding-bottom: 15px;
+            display: inline-block;
+            width: 100%;
+        }
+
+        header p {
+            color: var(--accent-gold);
+            font-size: 0.85rem;
+            margin-top: 10px;
+            font-weight: 500;
+        }
+
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .btn-card {
+            background-color: #0F1613; /* Deep matte card fill */
+            border: 1px solid var(--forest-green);
+            border-radius: 4px; /* Minimalist clean corners */
+            padding: 40px 15px;
+            text-align: center;
+            text-decoration: none;
+            color: var(--text-white);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-card:active {
+            background-color: var(--forest-green);
+            border-color: var(--forest-light);
+        }
+
+        .btn-card span {
+            font-size: 1.8rem;
+            color: var(--accent-gold);
+        }
+
+        .btn-card h2 {
+            font-size: 1rem;
+            font-weight: 500;
+            letter-spacing: 2px;
+        }
+
+        .admin-section {
+            display: flex;
+            justify-content: center;
+        }
+
+        .btn-admin {
+            background-color: transparent;
+            border: 1px dashed var(--text-muted);
+            color: var(--text-muted);
+            padding: 15px 40px;
+            border-radius: 4px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            cursor: pointer;
+            text-decoration: none;
+            transition: all 0.2s;
+        }
+
+        .btn-admin:active {
+            border-color: var(--text-white);
+            color: var(--text-white);
+            background-color: rgba(255, 255, 255, 0.05);
+        }
+    </style>
+</head>
+<body>
+
+    <!-- PIN LOCK SCREEN -->
+    <div id="lock-screen">
+        <header style="margin-bottom: 40px;">
+            <h1 style="border: none; padding: 0; font-size: 1.5rem;">JANGI PALTAN MESS</h1>
+            <p style="text-align: center; color: var(--text-muted);">ENTER BAR SYSTEM PIN</p>
+        </header>
+        <div class="pin-dots">
+            <div class="dot" id="dot1"></div>
+            <div class="dot" id="dot2"></div>
+            <div class="dot" id="dot3"></div>
+            <div class="dot" id="dot4"></div>
+        </div>
+        <div class="keypad">
+            <div class="key" onclick="pressNum(1)">1</div>
+            <div class="key" onclick="pressNum(2)">2</div>
+            <div class="key" onclick="pressNum(3)">3</div>
+            <div class="key" onclick="pressNum(4)">4</div>
+            <div class="key" onclick="pressNum(5)">5</div>
+            <div class="key" onclick="pressNum(6)">6</div>
+            <div class="key" onclick="pressNum(7)">7</div>
+            <div class="key" onclick="pressNum(8)">8</div>
+            <div class="key" onclick="pressNum(9)">9</div>
+            <div class="key" style="font-size: 0.75rem;" onclick="clearPin()">CLEAR</div>
+            <div class="key" onclick="pressNum(0)">0</div>
+            <div class="key" style="font-size: 0.75rem;" onclick="lockApp()">LOCK</div>
+        </div>
+    </div>
+
+    <!-- MAIN CONTROL SCREEN -->
+    <div id="app-screen">
+        <header>
+            <h1>JANGI PALTAN OFFICERS MESS</h1>
+            <p>BAR CONTROL PANEL</p>
+        </header>
+
+        <div class="grid-container">
+            <!-- REPLACE THE PLACEHOLDER LINKS BELOW WITH YOUR GOOGLE FORM LINKS -->
+            <a href="https://docs.google.com/forms/d/e/1FAIpQLSdEil3Mo3jSFAq-xCCXpXXc4o7bwY3PFu9A7oDMNgqHW_2Kxw/viewform?usp=header" target="_blank" class="btn-card">
+                <span>[ LIQ ]</span>
+                <h2>LIQUOR FORM</h2>
+            </a>
+            <a href="https://docs.google.com/forms/d/e/1FAIpQLSeToMjA5N-vvYkbslGoyck9SmsrSdGbNIIm2j6Lbln8sbJ2dw/viewform?usp=header" target="_blank" class="btn-card">
+                <span>[ SFT ]</span>
+                <h2>SOFT DRINKS</h2>
+            </a>
+            <a href="https://docs.google.com/forms/d/e/1FAIpQLSek-_3zzJTKczyOz2T3m4qDOtOt_sh2KcnK2_t7nXP5dAD8yQ/viewform?usp=header" target="_blank" class="btn-card">
+                <span>[ GST ]</span>
+                <h2>GUEST ROOM</h2>
+            </a>
+        </div>
+
+        <div class="admin-section">
+            <!-- REPLACE THE PLACEHOLDER LINK BELOW WITH YOUR MASTER SHEET URL -->
+            <a href="https://docs.google.com/spreadsheets/d/17rMvMusueD6IDAYGIjPvL9662G-z4z-CRSc_1jJrRaY/edit?gid=1634296846#gid=1634296846" target="_blank" class="btn-admin">
+                MESS LEDGERS (MASTER)
+            </a>
+        </div>
+    </div>
+
+    <script>
+        const CORRECT_PIN = "1768";
+        let currentPin = "";
+
+        function pressNum(num) {
+            if (currentPin.length < 4) {
+                currentPin += num;
+                updateDots();
+                if (currentPin.length === 4) {
+                    setTimeout(verifyPin, 150);
+                }
+            }
+        }
+
+        function clearPin() {
+            currentPin = "";
+            updateDots();
+        }
+
+        function updateDots() {
+            for (let i = 1; i <= 4; i++) {
+                const dot = document.getElementById(`dot${i}`);
+                if (i <= currentPin.length) {
+                    dot.classList.add('active');
+                } else {
+                    dot.classList.remove('active');
+                }
+            }
+        }
+
+        function verifyPin() {
+            if (currentPin === CORRECT_PIN) {
+                document.getElementById('lock-screen').style.transform = 'translateY(-100%)';
+                document.getElementById('app-screen').style.opacity = '1';
+                document.getElementById('app-screen').style.transform = 'scale(1)';
+                clearPin();
+            } else {
+                alert("ACCESS DENIED. INCORRECT PIN.");
+                clearPin();
+            }
+        }
+
+        function lockApp() {
+            document.getElementById('lock-screen').style.transform = 'translateY(0)';
+            document.getElementById('app-screen').style.opacity = '0';
+            document.getElementById('app-screen').style.transform = 'scale(0.98)';
+            clearPin();
+        }
+    </script>
+</body>
+</html>
