@@ -7,11 +7,9 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     
-    <!-- Custom Home Screen Icons -->
     <link rel="icon" type="image/png" href="https://upload.wikimedia.org/wikipedia/commons/thumb/e/ec/Maratha_Light_Infantry.svg/500px-Maratha_Light_Infantry.svg.png">
     <link rel="apple-touch-icon" href="https://upload.wikimedia.org/wikipedia/commons/thumb/e/ec/Maratha_Light_Infantry.svg/500px-Maratha_Light_Infantry.svg.png">
     
-    <!-- Elegant Serif Web Font -->
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700&display=swap">
 
     <style>
@@ -39,11 +37,11 @@
             display: flex;
             justify-content: center;
             align-items: flex-start;
-            overflow-y: auto; /* Restores global vertical scrolling */
+            overflow-y: auto; /* Enables custom page vertical scrolling */
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
         }
 
-        /* SCROLLABLE MAIN CONTAINER */
+        /* SCROLLABLE MAIN WRAPPER */
         .page-container {
             width: 100%;
             max-width: 600px;
@@ -55,7 +53,7 @@
             justify-content: space-between;
         }
 
-        /* LOCK SCREEN */
+        /* LOCK SCREEN WITH MATCHING COSMETIC BRANDING */
         #lock-screen {
             display: flex;
             flex-direction: column;
@@ -122,7 +120,7 @@
             border-color: var(--forest-light);
         }
 
-        /* UNIFIED THEMED HEADERS */
+        /* DESIGN PARITY HEADERS */
         header {
             text-align: center;
             margin-bottom: 15px;
@@ -146,7 +144,7 @@
             border-bottom: 1px solid var(--forest-green);
         }
 
-        /* CENTERED DATE & TIME STACK */
+        /* STACKED DATE & COLON SEPARATED TIME */
         .live-clock {
             margin-top: 15px;
             display: flex;
@@ -169,7 +167,7 @@
             color: var(--text-muted);
         }
 
-        /* BUTTON LAYOUT CONTAINER */
+        /* VERTICAL LAYOUT CONTAINER */
         .grid-container {
             display: flex;
             flex-direction: column;
@@ -178,7 +176,7 @@
             margin: 30px 0;
         }
 
-        /* PREMIUM 3D TEXTURED BUTTON IMPLEMENTATION */
+        /* HIGH-RESPONSE 3D TOUCHPAD INTERFACE */
         .btn-card {
             background: linear-gradient(180deg, #131c18 0%, #0c120f 100%); 
             border: 1px solid rgba(225, 173, 1, 0.3);
@@ -195,14 +193,14 @@
             position: relative;
         }
 
-        /* Desktop Mouse Hover Feedback */
+        /* Hover Behavior */
         .btn-card:hover {
             transform: translateY(-2px);
             border-color: var(--mustard-gold);
             box-shadow: 0 8px 15px rgba(225, 173, 1, 0.15), inset 0 1px 0 rgba(255,255,255,0.1);
         }
 
-        /* Half-Second Selection Flash / Compression State */
+        /* Half-Second Selection Action Glow Trigger */
         .btn-card:active {
             transform: translateY(1px);
             background: var(--mustard-gold);
@@ -253,7 +251,6 @@
 </head>
 <body>
 
-    <!-- PIN LOCK SCREEN WITH MATCHING DESIGN PARITY -->
     <div id="lock-screen">
         <header style="margin-bottom: 45px;">
             <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/ec/Maratha_Light_Infantry.svg/500px-Maratha_Light_Infantry.svg.png" class="logo-img" alt="Logo">
@@ -281,14 +278,12 @@
         </div>
     </div>
 
-    <!-- MAIN INTERFACE PAGE -->
     <div class="page-container">
         <div id="app-screen" style="opacity: 0; transform: scale(0.98); width: 100%;">
             <header>
                 <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/ec/Maratha_Light_Infantry.svg/500px-Maratha_Light_Infantry.svg.png" class="logo-img" alt="Logo">
                 <h1>Jangi Paltan Officers Mess</h1>
                 
-                <!-- Live Clocks Container -->
                 <div class="live-clock">
                     <span id="live-date"></span>
                     <span id="live-time"></span>
@@ -296,13 +291,13 @@
             </header>
 
             <div class="grid-container">
-                <a href="https://docs.google.com/forms/d/e/1FAIpQLSdEiI3Mo3jSFAq-xCCXpXXc4o7bwy3PFu9A7oDMNgqHW_2Kxw/viewform?usp=header" target="_blank" class="btn-card">
+                <a href="https://docs.google.com/forms/d/e/1FAIpQLSdEiI3Mo3jSFAq-xCCXpXXc4o7bwy3PFu9A7oDMNgqHW_2Kxw/viewform?usp=dialog" target="_blank" class="btn-card">
                     <h2>Liquor</h2>
                 </a>
-                <a href="https://docs.google.com/forms/d/e/1FAIpQLSeToMjA5N-vvYkbsIGoyck9SmsrSdGbNIIm2j6LbIn8sbJ2dw/viewform?usp=header" target="_blank" class="btn-card">
+                <a href="https://docs.google.com/forms/d/e/1FAIpQLSeToMjA5N-vvYkbsIGoyck9SmsrSdGbNIIm2j6LbIn8sbJ2dw/viewform?usp=dialog" target="_blank" class="btn-card">
                     <h2>Soft Drinks</h2>
                 </a>
-                <a href="https://docs.google.com/forms/d/e/1FAIpQLSek-_3zzJTKczyOz2T3m4qDOtOt_sh2KcnK2_t7NXP5dAD8yQ/viewform?usp=header" target="_blank" class="btn-card">
+                <a href="https://docs.google.com/forms/d/e/1FAIpQLSek-_3zzJTKczyOz2T3m4qDOtOt_sh2KcnK2_t7NXP5dAD8yQ/viewform?usp=dialog" target="_blank" class="btn-card">
                     <h2>Guest Room</h2>
                 </a>
             </div>
@@ -319,7 +314,7 @@
         const CORRECT_PIN = "1768";
         let currentPin = "";
 
-        // PIN Keypad UI Controller
+        // UI Keypad Functions
         function pressNum(num) {
             if (currentPin.length < 4) {
                 currentPin += num;
@@ -365,11 +360,11 @@
             clearPin();
         }
 
-        // Real-Time Dynamic Date & Time System
+        // Real-Time Dynamic Clock Script
         function updateDateTime() {
             const now = new Date();
 
-            // Date Parser Engine (Output: 15 July 2026)
+            // Format Date: 15 July 2026
             const day = now.getDate();
             const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
             const month = months[now.getMonth()];
@@ -377,7 +372,7 @@
             
             document.getElementById('live-date').innerText = `${day} ${month} ${year}`;
 
-            // 24-Hour Time Format Parser Engine (Output: HH:MM:SS)
+            // Format Time: HH:MM:SS
             const hours = String(now.getHours()).padStart(2, '0');
             const minutes = String(now.getMinutes()).padStart(2, '0');
             const seconds = String(now.getSeconds()).padStart(2, '0');
