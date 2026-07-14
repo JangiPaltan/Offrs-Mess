@@ -7,11 +7,10 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     
-<link rel="icon" type="image/png" href="https://upload.wikimedia.org/wikipedia/commons/thumb/e/ec/Maratha_Light_Infantry.svg/500px-Maratha_Light_Infantry.svg.png?v=3">
-<link rel="apple-touch-icon" href="https://upload.wikimedia.org/wikipedia/commons/thumb/e/ec/Maratha_Light_Infantry.svg/500px-Maratha_Light_Infantry.svg.png?v=3">
-<link rel="shortcut icon" href="https://upload.wikimedia.org/wikipedia/commons/thumb/e/ec/Maratha_Light_Infantry.svg/500px-Maratha_Light_Infantry.svg.png?v=3">
+    <link rel="icon" type="image/png" href="https://upload.wikimedia.org/wikipedia/commons/thumb/e/ec/Maratha_Light_Infantry.svg/500px-Maratha_Light_Infantry.svg.png?v=4">
+    <link rel="apple-touch-icon" href="https://upload.wikimedia.org/wikipedia/commons/thumb/e/ec/Maratha_Light_Infantry.svg/500px-Maratha_Light_Infantry.svg.png?v=4">
+    <link rel="shortcut icon" href="https://upload.wikimedia.org/wikipedia/commons/thumb/e/ec/Maratha_Light_Infantry.svg/500px-Maratha_Light_Infantry.svg.png?v=4">
     
-    <!-- Elegant Serif Web Font -->
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700&display=swap">
 
     <style>
@@ -46,7 +45,7 @@
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
         }
 
-        /* SCROLLABLE MAIN WRAPPER */
+        /* SCROLLABLE CONTAINER */
         .page-container {
             width: 100%;
             max-width: 600px;
@@ -58,7 +57,7 @@
             justify-content: space-between;
         }
 
-        /* 4. SMOOTH PAGE TRANSITIONS & 2. TACTILE GLASSMORPHISM LOCK SCREEN */
+        /* GLASSMORPHISM LOCK SCREEN */
         #lock-screen {
             display: flex;
             flex-direction: column;
@@ -71,7 +70,7 @@
             left: 0;
             z-index: 100;
             background: rgba(10, 15, 13, 0.6);
-            backdrop-filter: blur(25px); /* Premium iOS-style frosted glass blur */
+            backdrop-filter: blur(25px); 
             -webkit-backdrop-filter: blur(25px);
             border: 1px solid rgba(255, 255, 255, 0.05);
             transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.6s ease;
@@ -131,7 +130,7 @@
             transform: scale(0.92);
         }
 
-        /* DESIGN PARITY HEADERS */
+        /* HEADER INTERFACE */
         header {
             text-align: center;
             margin-bottom: 15px;
@@ -157,7 +156,7 @@
             text-shadow: 0 2px 4px rgba(0,0,0,0.6);
         }
 
-        /* STACKED DATE & COLON SEPARATED TIME */
+        /* CENTERED DATE & TIME */
         .live-clock {
             margin-top: 15px;
             display: flex;
@@ -180,7 +179,7 @@
             color: var(--text-muted);
         }
 
-        /* VERTICAL LAYOUT CONTAINER */
+        /* LAYOUT CONTAINER */
         .grid-container {
             display: flex;
             flex-direction: column;
@@ -189,7 +188,7 @@
             margin: 30px 0;
         }
 
-        /* 2. GLASSMORPHISM CONSOLE BUTTONS WITH 3. MICRO-ANIMATIONS */
+        /* BUTTON SHIMMER & GLOW MICRO-ANIMATIONS */
         .btn-card {
             background: var(--glass-bg);
             backdrop-filter: blur(10px);
@@ -209,7 +208,6 @@
             transition: transform 0.3s cubic-bezier(0.25, 0.8, 0.25, 1), border-color 0.3s, box-shadow 0.3s;
         }
 
-        /* Micro-Animation: Subtle shifting ambient border pulse */
         @keyframes subtleGlow {
             0% { border-color: rgba(225, 173, 1, 0.25); }
             50% { border-color: rgba(225, 173, 1, 0.5); }
@@ -220,7 +218,6 @@
             animation: subtleGlow 4s infinite ease-in-out;
         }
 
-        /* Micro-Animation: Shimmer reflection effect on hover/idle triggers */
         .btn-card::before {
             content: '';
             position: absolute;
@@ -237,7 +234,6 @@
             left: 150%;
         }
 
-        /* Active Press Feedback Physics */
         .btn-card:active {
             transform: scale(0.97) translateY(2px);
             background: var(--mustard-gold);
@@ -260,7 +256,7 @@
             transform: scale(0.98);
         }
 
-        /* APPLICATION LAYER ANIMATION STATUS */
+        /* APPLICATION LAYER TRANSITIONS */
         #app-screen {
             opacity: 0; 
             transform: translateY(20px) scale(0.98); 
@@ -298,7 +294,6 @@
 </head>
 <body>
 
-    <!-- SECURE TACTILE GLASSMORPHISM LOCK SCREEN -->
     <div id="lock-screen">
         <header style="margin-bottom: 45px;">
             <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/ec/Maratha_Light_Infantry.svg/500px-Maratha_Light_Infantry.svg.png" class="logo-img" alt="Logo">
@@ -326,7 +321,6 @@
         </div>
     </div>
 
-    <!-- RESPONSIVE MAIN APP CONTAINER -->
     <div class="page-container">
         <div id="app-screen">
             <header>
@@ -340,7 +334,7 @@
             </header>
 
             <div class="grid-container">
-                <a href="https://docs.google.com/forms/d/e/1FAIpQLSdEiI3Mo3jSFAq-xCCXpXXc4o7bwy3PFu9A7oDMNgqHW_2Kxw/viewform" target="_self" class="btn-card">
+                <a href="https://docs.google.com/forms/d/e/1FAIpQLSdEil3Mo3jSFAq-xCCXpXXc4o7bwy3PFu9A7oDMNgqHW_2Kxw/viewform" target="_self" class="btn-card">
                     <h2>Liquor</h2>
                 </a>
                 <a href="https://docs.google.com/forms/d/e/1FAIpQLSeToMjA5N-vvYkbsIGoyck9SmsrSdGbNIIm2j6LbIn8sbJ2dw/viewform" target="_self" class="btn-card">
@@ -364,16 +358,14 @@
         let currentPin = "";
         let idleTimer;
 
-        // 1. AUTOMATIC PAGE RESET ENGINE (2 Minute Expiration)
+        // AUTOMATIC PAGE RESET ENGINE (2 Minute Expiration)
         function resetIdleTimer() {
             clearTimeout(idleTimer);
-            // 120000 ms = 2 Minutes
             idleTimer = setTimeout(function() {
                 lockApp();
             }, 120000); 
         }
 
-        // Bind reset triggers to structural system movements
         window.onload = resetIdleTimer;
         window.onmousemove = resetIdleTimer;
         window.onmousedown = resetIdleTimer;
@@ -381,7 +373,7 @@
         window.onclick = resetIdleTimer;
         window.onkeydown = resetIdleTimer;
 
-        // UI Keypad Functions
+        // UI Keypad Controls
         function pressNum(num) {
             resetIdleTimer();
             if (currentPin.length < 4) {
@@ -410,14 +402,12 @@
             }
         }
 
-        // 4. SMOOTH PAGE TRANSITIONS ENGINE
+        // SMOOTH TRANSITION CONTROLLERS
         function verifyPin() {
             if (currentPin === CORRECT_PIN) {
-                // Curtain slide-up transition effect
                 document.getElementById('lock-screen').style.transform = 'translateY(-100%)';
                 document.getElementById('lock-screen').style.opacity = '0';
                 
-                // Content expansion and fade-in effect
                 document.getElementById('app-screen').style.opacity = '1';
                 document.getElementById('app-screen').style.transform = 'translateY(0) scale(1)';
                 clearPin();
@@ -437,7 +427,7 @@
             clearPin();
         }
 
-        // Real-Time Dynamic Clock Script
+        // Clock Parser Engine
         function updateDateTime() {
             const now = new Date();
 
