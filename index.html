@@ -23,7 +23,7 @@
             --text-white: #FFFFFF;
             --text-muted: #8F9E96;
             --glass-bg: rgba(19, 28, 24, 0.65);
-            --glass-border: rgba(225, 173, 1, 0.25);
+            --glass-border: rgba(225, 173, 1, 0.4);
         }
 
         * {
@@ -46,6 +46,7 @@
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
         }
 
+        /* SCROLLABLE MAIN CONTAINER */
         .page-container {
             width: 100%;
             max-width: 600px;
@@ -156,6 +157,7 @@
             text-shadow: 0 2px 4px rgba(0,0,0,0.6);
         }
 
+        /* LIVE SYSTEM CLOCK */
         .live-clock {
             margin-top: 15px;
             display: flex;
@@ -178,89 +180,91 @@
             color: var(--text-muted);
         }
 
-        /* CONSOLE ACTION GRID - UPDATED FOR CIRCULAR GLOSSY GLASS BUTTONS */
+        /* CONSOLE ACTION GRID - ORIGINAL RECTANGULAR LAYOUT */
         .grid-container {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 25px 20px;
-            width: 100%;
-            margin: 40px 0;
-            justify-items: center;
-        }
-
-        .button-wrapper {
             display: flex;
             flex-direction: column;
-            align-items: center;
-            gap: 12px;
+            gap: 20px;
             width: 100%;
+            margin: 30px 0;
         }
 
-        /* NEW HIGH-GLOSS CYLINDRICAL/CIRCULAR BUTTON BASE STYLE */
-        .btn-gloss-circle {
-            position: relative;
-            width: 96px;
-            height: 96px;
-            border-radius: 50%;
-            border: 1px solid rgba(225, 173, 1, 0.4);
+        /* RECTANGULAR GLASS BUTTONS WITH PRINTSHOPS HIGH-GLOSS FINISH */
+        .btn-card {
             background: linear-gradient(135deg, #18231f 0%, #0d1613 50%, #050a08 100%);
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            box-shadow: 
-                inset 0 1px 2px rgba(255, 255, 255, 0.2),
-                inset 0 -2px 4px rgba(0, 0, 0, 0.8),
-                0 6px 16px rgba(0, 0, 0, 0.6);
-            transition: transform 0.1s cubic-bezier(0.25, 0.8, 0.25, 1), box-shadow 0.1s;
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid var(--glass-border);
+            border-radius: 8px; 
+            padding: 26px 15px;
+            text-align: center;
             text-decoration: none;
-            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            box-shadow: 
+                inset 0 1px 1px rgba(255, 255, 255, 0.15),
+                inset 0 -1px 3px rgba(0, 0, 0, 0.6),
+                0 6px 20px rgba(0, 0, 0, 0.45);
+            position: relative;
+            overflow: hidden;
+            transition: transform 0.1s cubic-bezier(0.25, 0.8, 0.25, 1), box-shadow 0.1s;
         }
 
-        .btn-gloss-circle::after {
+        /* Glossy Highlight Reflection Layer */
+        .btn-card::after {
             content: '';
             position: absolute;
-            top: 4px;
-            left: 14px;
-            width: 68px;
-            height: 30px;
-            background: linear-gradient(to bottom, rgba(255, 255, 255, 0.18) 0%, rgba(255, 255, 255, 0) 100%);
-            border-radius: 50% / 35%;
+            top: 2px;
+            left: 4%;
+            width: 92%;
+            height: 40%;
+            background: linear-gradient(to bottom, rgba(255, 255, 255, 0.12) 0%, rgba(255, 255, 255, 0) 100%);
+            border-radius: 4px;
             pointer-events: none;
         }
 
-        .btn-gloss-circle:active {
-            transform: scale(0.94) translateY(2px);
+        /* Moving Light Shimmer */
+        .btn-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -150%;
+            width: 50%;
+            height: 100%;
+            background: linear-gradient(to right, transparent, rgba(255, 255, 255, 0.06), transparent);
+            transform: skewX(-25deg);
+            transition: 0.75s;
+        }
+
+        .btn-card:hover::before {
+            left: 150%;
+        }
+
+        .btn-card:active {
+            transform: scale(0.97) translateY(2px);
             box-shadow: 
                 inset 0 2px 4px rgba(0, 0, 0, 0.9),
-                0 2px 4px rgba(0, 0, 0, 0.4);
+                0 2px 4px rgba(0, 0, 0, 0.3);
         }
 
-        /* GLOSSY SVG ICON EMBED */
-        .btn-gloss-circle svg {
-            width: 38px;
-            height: 38px;
-            fill: var(--mustard-gold);
-            z-index: 1;
-            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.4));
-            transition: transform 0.2s;
-        }
-
-        .btn-gloss-circle:active svg {
-            transform: scale(0.95);
-        }
-
-        /* CAPTIONS UNDER DOCK INTERFACE BUTTONS */
-        .button-label {
+        .btn-card h2 {
             color: var(--mustard-gold);
-            font-size: 0.85rem;
-            font-weight: 600;
-            letter-spacing: 2px;
+            font-size: 1.3rem;
+            font-weight: 500;
+            letter-spacing: 3px;
             text-transform: uppercase;
-            text-align: center;
-            text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+            text-shadow: 0 2px 4px rgba(0,0,0,0.4);
+            transition: transform 0.1s;
+            z-index: 1;
         }
 
+        .btn-card:active h2 {
+            transform: scale(0.98);
+        }
+
+        /* INTERFACE STAGE ANIMATION */
         #app-screen {
             opacity: 0; 
             transform: translateY(20px) scale(0.98); 
@@ -268,12 +272,12 @@
             transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.6s ease;
         }
 
-        /* BOTTOM ACTIONS PANEL */
+        /* BOTTOM ACTIONS ROW LAYOUT */
         .bottom-actions-container {
             display: flex;
             justify-content: center;
             align-items: center;
-            gap: 16px;
+            gap: 14px;
             margin-top: 20px;
             width: 100%;
         }
@@ -300,6 +304,7 @@
             background-color: rgba(255, 255, 255, 0.05);
         }
 
+        /* CIRCULAR GLOSSY PRINT HUB TRIGGER */
         .print-hub-trigger {
             position: relative;
             width: 44px;
@@ -461,6 +466,7 @@
             fill: #ffffff;
         }
 
+        /* Icon Background Gradients */
         .blue-gradient { background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); }
         .amber-gradient { background: linear-gradient(135deg, #f6d365 0%, #fda085 100%); }
         .green-gradient { background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%); }
@@ -539,45 +545,18 @@
             </header>
 
             <div class="grid-container">
-                <!-- LIQUOR DOCK TRIGGER -->
-                <div class="button-wrapper">
-                    <a href="https://docs.google.com/forms/d/e/1FAIpQLSdEil3Mo3jSFAq-xCCXpXXc4o7bwY3PFu9A7oDMNgqHW_2Kxw/viewform?usp=sharing&ouid=117721681857450201406" target="_self" class="btn-gloss-circle">
-                        <svg viewBox="0 0 24 24">
-                            <path d="M7.5 11c0 .83-.67 1.5-1.5 1.5s-1.5-.67-1.5-1.5.67-1.5 1.5-1.5 1.5 .67 1.5 1.5zm10.5-1.5c-.83 0-1.5.67-1.5 1.5s.67 1.5 1.5 1.5 1.5-.67 1.5-1.5-.67-1.5-1.5-1.5zm-6-2c-.83 0-1.5.67-1.5 1.5s.67 1.5 1.5 1.5 1.5-.67 1.5-1.5-.67-1.5-1.5-1.5zm0 8c-.83 0-1.5.67-1.5 1.5s.67 1.5 1.5 1.5 1.5-.67 1.5-1.5-.67-1.5-1.5-1.5z"/>
-                        </svg>
-                    </a>
-                    <span class="button-label">Liquor</span>
-                </div>
-
-                <!-- SOFT DRINKS DOCK TRIGGER -->
-                <div class="button-wrapper">
-                    <a href="https://docs.google.com/forms/d/e/1FAIpQLSeToMjA5N-vvYkbslGoyck9SmsrSdGbNIIm2j6Lbln8sbJ2dw/viewform?usp=sharing&ouid=117721681857450201406" target="_self" class="btn-gloss-circle">
-                        <svg viewBox="0 0 24 24">
-                            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.53c-.26-.81-1-1.4-1.9-1.4h-1v-3c0-.55-.45-1-1-1h-6v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/>
-                        </svg>
-                    </a>
-                    <span class="button-label">Soft Drinks</span>
-                </div>
-
-                <!-- GUEST ROOM DOCK TRIGGER -->
-                <div class="button-wrapper">
-                    <a href="https://docs.google.com/forms/d/e/1FAIpQLSek-_3zzJTKczyOz2T3m4qDOtOt_sh2KcnK2_t7nXP5dAD8yQ/viewform?usp=sharing&ouid=117721681857450201406" target="_self" class="btn-gloss-circle">
-                        <svg viewBox="0 0 24 24">
-                            <path d="M17 12h-5v5h5v-5zM16 1v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2h-1V1h-2zm3 18H5V8h14v11z"/>
-                        </svg>
-                    </a>
-                    <span class="button-label">Guest Room</span>
-                </div>
-
-                <!-- FREE LIQUOR DOCK TRIGGER -->
-                <div class="button-wrapper">
-                    <a href="https://docs.google.com/forms/d/e/1FAIpQLSdr05sZYlhqm4c0fBBZnUdQ7oOCZHj99BErHVKFA_Ovu9GMHQ/viewform?usp=sharing&ouid=117721681857450201406" target="_self" class="btn-gloss-circle">
-                        <svg viewBox="0 0 24 24">
-                            <path d="M12 2c5.52 0 10 4.48 10 10s-4.48 10-10 10S2 17.52 2 12 6.48 2 12 2zm1 10h3l-4-4-4 4h3v4h2v-4z"/>
-                        </svg>
-                    </a>
-                    <span class="button-label">Free Liquor</span>
-                </div>
+                <a href="https://docs.google.com/forms/d/e/1FAIpQLSdEil3Mo3jSFAq-xCCXpXXc4o7bwY3PFu9A7oDMNgqHW_2Kxw/viewform?usp=sharing&ouid=117721681857450201406" target="_self" class="btn-card">
+                    <h2>Liquor</h2>
+                </a>
+                <a href="https://docs.google.com/forms/d/e/1FAIpQLSeToMjA5N-vvYkbslGoyck9SmsrSdGbNIIm2j6Lbln8sbJ2dw/viewform?usp=sharing&ouid=117721681857450201406" target="_self" class="btn-card">
+                    <h2>Soft Drinks</h2>
+                </a>
+                <a href="https://docs.google.com/forms/d/e/1FAIpQLSek-_3zzJTKczyOz2T3m4qDOtOt_sh2KcnK2_t7nXP5dAD8yQ/viewform?usp=sharing&ouid=117721681857450201406" target="_self" class="btn-card">
+                    <h2>Guest Room</h2>
+                </a>
+                <a href="https://docs.google.com/forms/d/e/1FAIpQLSdr05sZYlhqm4c0fBBZnUdQ7oOCZHj99BErHVKFA_Ovu9GMHQ/viewform?usp=sharing&ouid=117721681857450201406" target="_self" class="btn-card">
+                    <h2>Free Liquor</h2>
+                </a>
             </div>
 
             <!-- BOTTOM ACTION PANEL -->
@@ -691,6 +670,7 @@
         let currentPin = "";
         let idleTimer;
 
+        // AUTOMATIC PAGE RESET ENGINE (2 Minute Expiration)
         function resetIdleTimer() {
             clearTimeout(idleTimer);
             idleTimer = setTimeout(function() {
@@ -705,6 +685,7 @@
         window.onclick = resetIdleTimer;
         window.onkeydown = resetIdleTimer;
 
+        // Keypad Controller Logic
         function pressNum(num) {
             resetIdleTimer();
             if (currentPin.length < 4) {
@@ -733,6 +714,7 @@
             }
         }
 
+        // SMOOTH SLIDE PAGE TRANSITION
         function verifyPin() {
             if (currentPin === CORRECT_PIN) {
                 document.getElementById('lock-screen').style.transform = 'translateY(-100%)';
@@ -750,6 +732,7 @@
 
         function lockApp() {
             switchDashboardView(false);
+
             document.getElementById('lock-screen').style.transform = 'translateY(0)';
             document.getElementById('lock-screen').style.opacity = '1';
             
@@ -758,8 +741,10 @@
             clearPin();
         }
 
+        // Clock Script
         function updateDateTime() {
             const now = new Date();
+
             const day = now.getDate();
             const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
             const month = months[now.getMonth()];
@@ -776,6 +761,7 @@
             document.getElementById('live-time').innerText = `${hours}:${minutes}:${seconds}`;
         }
 
+        // View Transition Router Logic
         function switchDashboardView(showDashboard) {
             resetIdleTimer();
             const homeScreen = document.getElementById('app-screen');
