@@ -265,31 +265,233 @@
             transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.6s ease;
         }
 
-        .admin-section {
+        /* UPDATED BOTTOM ACTIONS ROW LAYOUT */
+        .bottom-actions-container {
             display: flex;
             justify-content: center;
-            width: 100%;
+            align-items: center;
+            gap: 14px;
             margin-top: 20px;
+            width: 100%;
         }
 
         .btn-admin {
             background-color: transparent;
-            border: 1px dashed var(--text-muted);
-            color: var(--text-muted);
-            padding: 12px 40px;
+            border: 1px dashed var(--mustard-gold);
+            color: var(--mustard-gold);
+            padding: 12px 28px;
             border-radius: 4px;
             font-size: 0.85rem;
-            font-weight: 500;
+            font-weight: 600;
             cursor: pointer;
             text-decoration: none;
             text-transform: uppercase;
             transition: all 0.2s;
+            display: inline-block;
+            margin: 0;
         }
 
         .btn-admin:hover, .btn-admin:active {
             border-color: var(--text-white);
             color: var(--text-white);
             background-color: rgba(255, 255, 255, 0.05);
+        }
+
+        /* CIRCULAR GLOSSY PRINT HUB TRIGGER */
+        .print-hub-trigger {
+            position: relative;
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            border: 1px solid rgba(225, 173, 1, 0.4);
+            background: linear-gradient(135deg, #18231f 0%, #0d1613 50%, #050a08 100%);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 
+                inset 0 1px 1px rgba(255, 255, 255, 0.15),
+                inset 0 -1px 3px rgba(0, 0, 0, 0.6),
+                0 4px 10px rgba(0, 0, 0, 0.4);
+            transition: transform 0.1s ease;
+            padding: 0;
+        }
+
+        .print-hub-trigger::after {
+            content: '';
+            position: absolute;
+            top: 2px;
+            left: 6px;
+            width: 32px;
+            height: 16px;
+            background: linear-gradient(to bottom, rgba(255, 255, 255, 0.15) 0%, rgba(255, 255, 255, 0) 100%);
+            border-radius: 50% / 30%;
+            pointer-events: none;
+        }
+
+        .print-hub-trigger:active {
+            transform: scale(0.95);
+        }
+
+        .print-icon-svg {
+            width: 22px;
+            height: 22px;
+            fill: var(--mustard-gold);
+            z-index: 1;
+        }
+
+        /* NEW SCREEN: BILLS & SUMMARY INTERFACE VIEW */
+        #bills-summary-screen {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.6s ease;
+        }
+
+        .dashboard-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            width: 100%;
+        }
+
+        .header-text-group {
+            display: flex;
+            flex-direction: column;
+            text-align: left;
+        }
+
+        .header-date-lbl {
+            font-size: 11px;
+            text-transform: uppercase;
+            color: var(--text-muted);
+            letter-spacing: 1.5px;
+            margin-bottom: 4px;
+        }
+
+        .header-title-lbl {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--text-white);
+            margin: 0;
+            letter-spacing: 0.5px;
+        }
+
+        .header-action-container {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .back-home-btn {
+            background: none;
+            border: 1px solid rgba(225, 173, 1, 0.3);
+            color: var(--mustard-gold);
+            font-size: 14px;
+            cursor: pointer;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.2s, border-color 0.2s;
+        }
+
+        .back-home-btn:active {
+            background: rgba(225, 173, 1, 0.2);
+            border-color: var(--mustard-gold);
+        }
+        
+        .dashboard-logo {
+            width: 45px;
+            height: auto;
+            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.5));
+        }
+
+        .dashboard-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            width: 100%;
+        }
+
+        .list-item-card {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background-color: #131c18;
+            border: 1px solid rgba(225, 173, 1, 0.15);
+            border-radius: 14px;
+            padding: 16px;
+            cursor: pointer;
+            transition: background-color 0.2s, transform 0.2s;
+            text-decoration: none;
+        }
+
+        .list-item-card:hover {
+            background-color: #192620;
+        }
+
+        .list-item-card:active {
+            transform: scale(0.99);
+        }
+
+        .card-left-group {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .card-icon-wrapper {
+            width: 42px;
+            height: 42px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .card-icon-wrapper svg {
+            width: 22px;
+            height: 22px;
+            fill: #ffffff;
+        }
+
+        /* Icon Background Gradients */
+        .blue-gradient { background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); }
+        .amber-gradient { background: linear-gradient(135deg, #f6d365 0%, #fda085 100%); }
+        .green-gradient { background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%); }
+        .purple-gradient { background: linear-gradient(135deg, #a18cd1 0%, #fbc2eb 100%); }
+        .red-gradient { background: linear-gradient(135deg, #ff0844 0%, #ffb199 100%); }
+
+        .card-text-details {
+            display: flex;
+            flex-direction: column;
+            gap: 3px;
+            text-align: left;
+        }
+
+        .card-title {
+            font-size: 15px;
+            font-weight: 600;
+            color: #ffffff;
+            margin: 0;
+            letter-spacing: 0.5px;
+        }
+
+        .card-subtitle {
+            font-size: 11px;
+            color: var(--text-muted);
+            margin: 0;
+            letter-spacing: 0.5px;
+        }
+
+        .card-chevron svg {
+            width: 20px;
+            height: 20px;
+            fill: var(--text-muted);
         }
     </style>
 </head>
@@ -323,6 +525,7 @@
     </div>
 
     <div class="page-container">
+        <!-- APP SCREEN CONSOLE (HOME) -->
         <div id="app-screen">
             <header>
                 <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/ec/Maratha_Light_Infantry.svg/500px-Maratha_Light_Infantry.svg.png" class="logo-img" alt="Logo">
@@ -334,7 +537,7 @@
                 </div>
             </header>
 
-           <div class="grid-container">
+            <div class="grid-container">
                 <a href="https://docs.google.com/forms/d/e/1FAIpQLSdEil3Mo3jSFAq-xCCXpXXc4o7bwY3PFu9A7oDMNgqHW_2Kxw/viewform?usp=sharing&ouid=117721681857450201406" target="_self" class="btn-card">
                     <h2>Liquor</h2>
                 </a>
@@ -344,16 +547,114 @@
                 <a href="https://docs.google.com/forms/d/e/1FAIpQLSek-_3zzJTKczyOz2T3m4qDOtOt_sh2KcnK2_t7nXP5dAD8yQ/viewform?usp=sharing&ouid=117721681857450201406" target="_self" class="btn-card">
                     <h2>Guest Room</h2>
                 </a>
-               <a href="https://docs.google.com/forms/d/e/1FAIpQLSdr05sZYlhqm4c0fBBZnUdQ7oOCZHj99BErHVKFA_Ovu9GMHQ/viewform?usp=sharing&ouid=117721681857450201406" target="_self" class="btn-card">
+                <a href="https://docs.google.com/forms/d/e/1FAIpQLSdr05sZYlhqm4c0fBBZnUdQ7oOCZHj99BErHVKFA_Ovu9GMHQ/viewform?usp=sharing&ouid=117721681857450201406" target="_self" class="btn-card">
                     <h2>Free Liquor</h2>
                 </a>
             </div>
 
-            <div class="admin-section">
+            <!-- MERGED BOTTOM ACTION PANEL ELEMENT -->
+            <div class="bottom-actions-container">
                 <a href="https://docs.google.com/spreadsheets/d/17rMvMusueD6IDAYGIjPvL9662G-z4z-CRSc_1jJrRaY/edit?gid=1634296846#gid=1634296846" target="_self" class="btn-admin">
                     Mess Ledger
                 </a>
+                
+                <button class="print-hub-trigger" onclick="switchDashboardView(true)" aria-label="Open Bills and Summary">
+                    <svg class="print-icon-svg" viewBox="0 0 24 24">
+                        <path d="M19 8H5c-1.66 0-3 1.34-3 3v6h4v4h12v-4h4v-6c0-1.66-1.34-3-3-3zm-3 11H8v-5h8v5zm3-7c-.55 0-1-.45-1-1s.45-1 1-1 1 .45 1 1-.45 1-1 1zm-1-9H6v4h12V3z"/>
+                    </svg>
+                </button>
             </div>
+        </div>
+
+        <!-- NEW INLINE SCREEN: BILLS & SUMMARY VIEW -->
+        <div id="bills-summary-screen" style="display: none; opacity: 0; transform: translateY(20px) scale(0.98);">
+            <header class="dashboard-header">
+                <div class="header-text-group">
+                    <span class="header-date-lbl" id="dash-live-date">15 July 2026</span>
+                    <h1 class="header-title-lbl">Bills & Summary</h1>
+                </div>
+                <div class="header-action-container">
+                    <button class="back-home-btn" onclick="switchDashboardView(false)">✕</button>
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/ec/Maratha_Light_Infantry.svg/500px-Maratha_Light_Infantry.svg.png" class="dashboard-logo" alt="Logo">
+                </div>
+            </header>
+
+            <main class="dashboard-list">
+                <div class="list-item-card" onclick="openPrintPreview('https://docs.google.com/spreadsheets/d/17rMvMusueD6IDAYGIjPvL9662G-z4z-CRSc_1jJrRaY/preview?gid=1634296846')">
+                    <div class="card-left-group">
+                        <div class="card-icon-wrapper blue-gradient">
+                            <svg viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/></svg>
+                        </div>
+                        <div class="card-text-details">
+                            <h2 class="card-title">Monthly Bill Summary</h2>
+                            <p class="card-subtitle">Complete ledger for the current month</p>
+                        </div>
+                    </div>
+                    <div class="card-chevron">
+                        <svg viewBox="0 0 24 24"><path d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.41z"/></svg>
+                    </div>
+                </div>
+
+                <div class="list-item-card" onclick="openPrintPreview('https://docs.google.com/spreadsheets/d/17rMvMusueD6IDAYGIjPvL9662G-z4z-CRSc_1jJrRaY/preview?gid=YOUR_LIQUOR_GID_HERE')">
+                    <div class="card-left-group">
+                        <div class="card-icon-wrapper amber-gradient">
+                            <svg viewBox="0 0 24 24"><path d="M7.5 11c0 .83-.67 1.5-1.5 1.5s-1.5-.67-1.5-1.5.67-1.5 1.5-1.5 1.5.67 1.5 1.5zm10.5-1.5c-.83 0-1.5.67-1.5 1.5s.67 1.5 1.5 1.5 1.5-.67 1.5-1.5-.67-1.5-1.5-1.5zm-6-2c-.83 0-1.5.67-1.5 1.5s.67 1.5 1.5 1.5 1.5-.67 1.5-1.5-.67-1.5-1.5-1.5zm0 8c-.83 0-1.5.67-1.5 1.5s.67 1.5 1.5 1.5 1.5-.67 1.5-1.5-.67-1.5-1.5-1.5z"/></svg>
+                        </div>
+                        <div class="card-text-details">
+                            <h2 class="card-title">Monthly Liquor Summary</h2>
+                            <p class="card-subtitle">Liquor distribution and totals</p>
+                        </div>
+                    </div>
+                    <div class="card-chevron">
+                        <svg viewBox="0 0 24 24"><path d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.41z"/></svg>
+                    </div>
+                </div>
+
+                <div class="list-item-card" onclick="openPrintPreview('https://docs.google.com/spreadsheets/d/17rMvMusueD6IDAYGIjPvL9662G-z4z-CRSc_1jJrRaY/preview?gid=YOUR_SOFT_DRINKS_GID_HERE')">
+                    <div class="card-left-group">
+                        <div class="card-icon-wrapper green-gradient">
+                            <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.53c-.26-.81-1-1.4-1.9-1.4h-1v-3c0-.55-.45-1-1-1h-6v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg>
+                        </div>
+                        <div class="card-text-details">
+                            <h2 class="card-title">Monthly Soft Drink Summary</h2>
+                            <p class="card-subtitle">Soft drink sales and inventories</p>
+                        </div>
+                    </div>
+                    <div class="card-chevron">
+                        <svg viewBox="0 0 24 24"><path d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.41z"/></svg>
+                    </div>
+                </div>
+
+                <div class="list-item-card" onclick="openPrintPreview('https://docs.google.com/spreadsheets/d/17rMvMusueD6IDAYGIjPvL9662G-z4z-CRSc_1jJrRaY/preview?gid=YOUR_OFFICER_BILL_GID_HERE')">
+                    <div class="card-left-group">
+                        <div class="card-icon-wrapper purple-gradient">
+                            <svg viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
+                        </div>
+                        <div class="card-text-details">
+                            <h2 class="card-title">Officer Bill</h2>
+                            <p class="card-subtitle">Print individual officer mess invoice</p>
+                        </div>
+                    </div>
+                    <div class="card-chevron">
+                        <svg viewBox="0 0 24 24"><path d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.41z"/></svg>
+                    </div>
+                </div>
+
+                <div class="list-item-card" onclick="openPrintPreview('https://docs.google.com/spreadsheets/d/17rMvMusueD6IDAYGIjPvL9662G-z4z-CRSc_1jJrRaY/preview?gid=YOUR_GUEST_BILL_GID_HERE')">
+                    <div class="card-left-group">
+                        <div class="card-icon-wrapper red-gradient">
+                            <svg viewBox="0 0 24 24"><path d="M17 12h-5v5h5v-5zM16 1v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2h-1V1h-2zm3 18H5V8h14v11z"/></svg>
+                        </div>
+                        <div class="card-text-details">
+                            <h2 class="card-title">Guest Bill</h2>
+                            <p class="card-subtitle">Print guest room temporary invoice</p>
+                        </div>
+                    </div>
+                    <div class="card-chevron">
+                        <svg viewBox="0 0 24 24"><path d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.41z"/></svg>
+                    </div>
+                </div>
+            </main>
         </div>
     </div>
 
@@ -423,6 +724,9 @@
         }
 
         function lockApp() {
+            // Close the print view dashboard option seamlessly if it was left open during an automatic lockout
+            switchDashboardView(false);
+
             document.getElementById('lock-screen').style.transform = 'translateY(0)';
             document.getElementById('lock-screen').style.opacity = '1';
             
@@ -440,7 +744,9 @@
             const month = months[now.getMonth()];
             const year = now.getFullYear();
             
-            document.getElementById('live-date').innerText = `${day} ${month} ${year}`;
+            const compiledDateStr = `${day} ${month} ${year}`;
+            document.getElementById('live-date').innerText = compiledDateStr;
+            document.getElementById('dash-live-date').innerText = compiledDateStr;
 
             const hours = String(now.getHours()).padStart(2, '0');
             const minutes = String(now.getMinutes()).padStart(2, '0');
@@ -449,9 +755,47 @@
             document.getElementById('live-time').innerText = `${hours}:${minutes}:${seconds}`;
         }
 
+        // View Transition Router Logic
+        function switchDashboardView(showDashboard) {
+            resetIdleTimer();
+            const homeScreen = document.getElementById('app-screen');
+            const dashScreen = document.getElementById('bills-summary-screen');
+            
+            if (showDashboard) {
+                // Hide home elements cleanly
+                homeScreen.style.display = 'none';
+                homeScreen.style.opacity = '0';
+                homeScreen.style.transform = 'translateY(20px) scale(0.98)';
+                
+                // Present Dashboard Container
+                dashScreen.style.display = 'flex';
+                // Small delay to trigger hardware graphics transition smoothly
+                setTimeout(() => {
+                    dashScreen.style.opacity = '1';
+                    dashScreen.style.transform = 'translateY(0) scale(1)';
+                }, 50);
+            } else {
+                // Hide Dashboard Container
+                dashScreen.style.display = 'none';
+                dashScreen.style.opacity = '0';
+                dashScreen.style.transform = 'translateY(20px) scale(0.98)';
+                
+                // Show Home View Elements
+                homeScreen.style.display = 'block';
+                setTimeout(() => {
+                    homeScreen.style.opacity = '1';
+                    homeScreen.style.transform = 'translateY(0) scale(1)';
+                }, 50);
+            }
+        }
+
+        function openPrintPreview(urlTarget) {
+            resetIdleTimer();
+            window.open(urlTarget, '_blank');
+        }
+
         updateDateTime();
         setInterval(updateDateTime, 1000);
     </script>
 </body>
 </html>
-
