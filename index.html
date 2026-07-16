@@ -1075,7 +1075,6 @@
 
         function parseGoogleSheetGvizJson(rawText, tabType) {
     try {
-        // 1. Clean the Google API wrapper text safely
         const startIdx = rawText.indexOf('{');
         const endIdx = rawText.lastIndexOf('}');
         if (startIdx === -1 || endIdx === -1) return [];
@@ -1088,23 +1087,20 @@
         const rows = jsonObj.table.rows;
         const inventoryList = [];
 
-        // 2. Loop through all rows starting at index 6 (Row 7 in your spreadsheet)
+        // Loop through item rows starting at index 6
         for (let i = 6; i < rows.length; i++) {
             const row = rows[i];
             if (!row || !row.c) continue;
 
-            // Target Column A safely (Index 0)
-            const nameObj = row.c[0];
-            // Target Column F safely (Index 5)
-            const stockObj = row.c[5];
+            const nameObj = row.c[0]; // Column A
+            const stockObj = row.c[5]; // Column F
 
-            // Safely parse out the string item name value
             let itemName = '';
             if (nameObj && nameObj.v !== null && nameObj.v !== undefined) {
                 itemName = String(nameObj.v).trim();
             }
 
-            // Skip row if the item name is completely blank, or matches spreadsheet header tags
+            // Skip garbage/dates/header-labels
             if (!itemName || 
                 itemName.toUpperCase() === 'TOTAL' || 
                 itemName.toUpperCase() === 'VALUE' || 
@@ -1112,19 +1108,17 @@
                 continue;
             }
 
-            // Get the stock value safely (Default to 0 if it's empty, null, or undefined)
             let currentStock = 0;
             if (stockObj && stockObj.v !== null && stockObj.v !== undefined) {
-                // Check if the value is purely numerical before parsing
                 const numericValue = parseFloat(stockObj.v);
                 currentStock = !isNaN(numericValue) ? Math.floor(numericValue) : 0;
             }
 
-            // 3. Append clean data object to your cached array
+            // MUST match your exact UI keys: itemName, monthlyBalance, category
             inventoryList.push({
-                name: itemName,
-                stock: currentStock,
-                type: tabType // Correctly categorizes item based on which sheet tab fetched it
+                itemName: itemName,
+                monthlyBalance: currentStock,
+                category: tabType 
             });
         }
 
