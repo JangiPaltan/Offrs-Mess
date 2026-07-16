@@ -24,6 +24,7 @@
             --text-muted: #8F9E96;
             --glass-bg: rgba(19, 28, 24, 0.65);
             --glass-border: rgba(225, 173, 1, 0.4);
+            --drawer-width: 280px;
         }
 
         * {
@@ -43,6 +44,7 @@
             display: flex;
             justify-content: center;
             align-items: flex-start;
+            overflow-x: hidden;
             overflow-y: auto;
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
         }
@@ -135,11 +137,28 @@
             transform: scale(0.92);
         }
 
-        /* UI HEADERS */
+        /* HEADER & TOP CONTROLS */
         header {
             text-align: center;
             margin-bottom: 15px;
             width: 100%;
+            position: relative;
+        }
+
+        .hamburger-btn {
+            position: absolute;
+            top: 0;
+            left: 0;
+            background: none;
+            border: none;
+            color: var(--mustard-gold);
+            font-size: 1.8rem;
+            cursor: pointer;
+            padding: 5px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 10;
         }
 
         .logo-img {
@@ -159,6 +178,7 @@
             padding-bottom: 12px;
             border-bottom: 1px solid var(--forest-green);
             text-shadow: 0 2px 4px rgba(0,0,0,0.6);
+            margin-top: 10px;
         }
 
         /* LIVE SYSTEM CLOCK */
@@ -275,79 +295,148 @@
             transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.6s ease;
         }
 
-        /* BOTTOM ACTIONS ROW LAYOUT */
-        .bottom-actions-container {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 14px;
-            margin-top: 20px;
+        /* GESTURE SIDEBAR & OVERLAY SYSTEM */
+        .drawer-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
             width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(4px);
+            -webkit-backdrop-filter: blur(4px);
+            z-index: 90;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
         }
 
-        .btn-admin {
-            background-color: transparent;
-            border: 1px dashed var(--mustard-gold);
+        .drawer-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .sidebar-drawer {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: var(--drawer-width);
+            height: 100%;
+            background: rgba(10, 15, 13, 0.85);
+            backdrop-filter: blur(25px);
+            -webkit-backdrop-filter: blur(25px);
+            border-right: 1.5px solid var(--mustard-gold);
+            z-index: 95;
+            transform: translate3d(-100%, 0, 0);
+            transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            padding: 30px 20px;
+            box-shadow: 10px 0 30px rgba(0, 0, 0, 0.6);
+        }
+
+        .sidebar-drawer.active {
+            transform: translate3d(0, 0, 0);
+        }
+
+        /* Sidebar Header and Brand Info */
+        .drawer-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid rgba(225, 173, 1, 0.25);
+            margin-bottom: 25px;
+        }
+
+        .drawer-logo {
+            width: 35px;
+            height: auto;
+        }
+
+        .drawer-brand-title {
             color: var(--mustard-gold);
-            padding: 12px 28px;
-            border-radius: 4px;
+            font-family: 'Cinzel', Georgia, serif;
+            font-size: 0.9rem;
+            font-weight: 700;
+            letter-spacing: 1px;
+            line-height: 1.2;
+        }
+
+        /* Sidebar Menu Layout */
+        .drawer-nav {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            flex-grow: 1;
+            overflow-y: auto;
+            margin-bottom: 20px;
+            padding-right: 5px;
+        }
+
+        /* Custom scrollbar styling for clean scrollable sidebar */
+        .drawer-nav::-webkit-scrollbar {
+            width: 4px;
+        }
+        .drawer-nav::-webkit-scrollbar-thumb {
+            background: rgba(225, 173, 1, 0.2);
+            border-radius: 2px;
+        }
+
+        /* SIDEBAR ITEM ACTIONS */
+        .drawer-item {
+            display: flex;
+            align-items: center;
+            background: rgba(27, 67, 50, 0.15);
+            border: 1px solid rgba(225, 173, 1, 0.15);
+            border-radius: 6px;
+            padding: 14px 16px;
+            color: var(--text-white);
+            text-decoration: none;
+            font-size: 0.85rem;
+            font-weight: 500;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .drawer-item:active {
+            background: var(--mustard-gold);
+            color: var(--bg-dark);
+            transform: scale(0.97);
+        }
+
+        /* Logout Container Styled Separately at Bottom */
+        .drawer-footer {
+            border-top: 1px solid rgba(225, 173, 1, 0.15);
+            padding-top: 20px;
+            margin-top: auto;
+        }
+
+        .btn-logout {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(225, 173, 1, 0.05);
+            border: 1px dashed #ff0844;
+            color: #ff0844;
+            border-radius: 6px;
+            padding: 14px 16px;
+            text-transform: uppercase;
             font-size: 0.85rem;
             font-weight: 600;
+            letter-spacing: 1.5px;
             cursor: pointer;
-            text-decoration: none;
-            text-transform: uppercase;
-            transition: all 0.2s;
-            display: inline-block;
-            margin: 0;
+            width: 100%;
+            transition: all 0.2s ease;
         }
 
-        .btn-admin:hover, .btn-admin:active {
-            border-color: var(--text-white);
+        .btn-logout:active {
+            background: #ff0844;
             color: var(--text-white);
-            background-color: rgba(255, 255, 255, 0.05);
-        }
-
-        /* CIRCULAR GLOSSY PRINT HUB TRIGGER */
-        .print-hub-trigger {
-            position: relative;
-            width: 44px;
-            height: 44px;
-            border-radius: 50%;
-            border: 1px solid rgba(225, 173, 1, 0.4);
-            background: linear-gradient(135deg, #18231f 0%, #0d1613 50%, #050a08 100%);
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            box-shadow: 
-                inset 0 1px 1px rgba(255, 255, 255, 0.15),
-                inset 0 -1px 3px rgba(0, 0, 0, 0.6),
-                0 4px 10px rgba(0, 0, 0, 0.4);
-            transition: transform 0.1s ease;
-            padding: 0;
-        }
-
-        .print-hub-trigger::after {
-            content: '';
-            position: absolute;
-            top: 2px;
-            left: 6px;
-            width: 32px;
-            height: 16px;
-            background: linear-gradient(to bottom, rgba(255, 255, 255, 0.15) 0%, rgba(255, 255, 255, 0) 100%);
-            border-radius: 50% / 30%;
-            pointer-events: none;
-        }
-
-        .print-hub-trigger:active {
-            transform: scale(0.95);
-        }
-
-        .print-icon-svg {
-            width: 22px;
-            height: 22px;
-            fill: var(--mustard-gold);
-            z-index: 1;
+            transform: scale(0.97);
         }
 
         /* BILLS & SUMMARY INTERFACE VIEW */
@@ -392,7 +481,7 @@
             display: flex;
             align-items: center;
             gap: 15px;
-            margin-left: auto; /* Pushes the actions strictly to the extreme right */
+            margin-left: auto;
         }
 
         .back-home-btn {
@@ -466,6 +555,32 @@
 </head>
 <body>
 
+    <!-- SIDEBAR DRAWER OVERLAY & SYSTEM -->
+    <div id="drawerOverlay" class="drawer-overlay" onclick="toggleSidebar(false)"></div>
+    <div id="sidebarDrawer" class="sidebar-drawer">
+        <div>
+            <div class="drawer-header">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/ec/Maratha_Light_Infantry.svg/500px-Maratha_Light_Infantry.svg.png" class="drawer-logo" alt="Logo">
+                <span class="drawer-brand-title">Jangi Paltan<br>Officers Mess</span>
+            </div>
+            <nav class="drawer-nav">
+                <!-- 1. Orders -->
+                <a href="PASTE_YOUR_NEW_ORDERS_SHEET_LINK_HERE" class="drawer-item" onclick="toggleSidebar(false)">Orders</a>
+                <!-- 2. Bills & Summary (Internal routing) -->
+                <div class="drawer-item" onclick="openInternalSummary()">Bills & Summary</div>
+                <!-- Placeholder Menu Actions -->
+                <a href="#" class="drawer-item" onclick="toggleSidebar(false)">Check Inventory</a>
+                <a href="#" class="drawer-item" onclick="toggleSidebar(false)">Add New Item</a>
+                <a href="#" class="drawer-item" onclick="toggleSidebar(false)">Update Purchase</a>
+                <a href="#" class="drawer-item" onclick="toggleSidebar(false)">Edit Officers Name List</a>
+                <a href="#" class="drawer-item" onclick="toggleSidebar(false)">Edit Price of Items</a>
+            </nav>
+        </div>
+        <div class="drawer-footer">
+            <button class="btn-logout" onclick="instantLogOut()">Log Out</button>
+        </div>
+    </div>
+
     <div id="lock-screen">
         <header style="margin-bottom: 45px;">
             <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/ec/Maratha_Light_Infantry.svg/500px-Maratha_Light_Infantry.svg.png" class="logo-img" alt="Logo">
@@ -497,6 +612,7 @@
         <!-- APP SCREEN CONSOLE (HOME) -->
         <div id="app-screen">
             <header>
+                <button class="hamburger-btn" onclick="toggleSidebar(true)" aria-label="Open Sidebar Menu">☰</button>
                 <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/ec/Maratha_Light_Infantry.svg/500px-Maratha_Light_Infantry.svg.png" class="logo-img" alt="Logo">
                 <h1>Jangi Paltan Officers Mess</h1>
                 
@@ -519,19 +635,6 @@
                 <a href="https://docs.google.com/forms/d/e/1FAIpQLSdr05sZYlhqm4c0fBBZnUdQ7oOCZHj99BErHVKFA_Ovu9GMHQ/viewform?usp=sharing&ouid=117721681857450201406" target="_self" class="btn-card">
                     <h2>Free Liquor</h2>
                 </a>
-            </div>
-
-            <!-- BOTTOM ACTION PANEL -->
-            <div class="bottom-actions-container">
-                <a href="PASTE_YOUR_NEW_ORDERS_SHEET_LINK_HERE" target="_self" class="btn-admin">
-                    Orders
-                </a>
-                
-                <button class="print-hub-trigger" onclick="switchDashboardView(true)" aria-label="Open Bills and Summary">
-                    <svg class="print-icon-svg" viewBox="0 0 24 24">
-                        <path d="M19 8H5c-1.66 0-3 1.34-3 3v6h4v4h12v-4h4v-6c0-1.66-1.34-3-3-3zm-3 11H8v-5h8v5zm3-7c-.55 0-1-.45-1-1s.45-1 1-1 1 .45 1 1-.45 1-1 1zm-1-9H6v4h12V3z"/>
-                    </svg>
-                </button>
             </div>
         </div>
 
@@ -645,13 +748,16 @@
         const CORRECT_PIN = "1768";
         let currentPin = "";
         let idleTimer;
+        let isLocked = true;
 
         // AUTOMATIC PAGE RESET ENGINE (2 Minute Expiration)
         function resetIdleTimer() {
             clearTimeout(idleTimer);
-            idleTimer = setTimeout(function() {
-                lockApp();
-            }, 120000); 
+            if (!isLocked) {
+                idleTimer = setTimeout(function() {
+                    lockApp();
+                }, 120000); 
+            }
         }
 
         window.onload = resetIdleTimer;
@@ -702,6 +808,7 @@
         // SMOOTH SLIDE PAGE TRANSITION
         function verifyPin() {
             if (currentPin === CORRECT_PIN) {
+                isLocked = false;
                 document.getElementById('lock-screen').style.transform = 'translateY(-100%)';
                 document.getElementById('lock-screen').style.opacity = '0';
                 
@@ -716,7 +823,9 @@
         }
 
         function lockApp() {
+            isLocked = true;
             switchDashboardView(false);
+            toggleSidebar(false);
 
             document.getElementById('lock-screen').style.transform = 'translateY(0)';
             document.getElementById('lock-screen').style.opacity = '1';
@@ -724,6 +833,11 @@
             document.getElementById('app-screen').style.opacity = '0';
             document.getElementById('app-screen').style.transform = 'translateY(20px) scale(0.98)';
             clearPin();
+        }
+
+        // Instant manual log out trigger
+        function instantLogOut() {
+            lockApp();
         }
 
         // Clock Script
@@ -775,10 +889,116 @@
             }
         }
 
+        function openInternalSummary() {
+            toggleSidebar(false);
+            switchDashboardView(true);
+        }
+
         function openPrintPreview(urlTarget) {
             resetIdleTimer();
             window.open(urlTarget, '_blank');
         }
+
+        // --- GESTURE & SIDEBAR NAVIGATION ENGINE ---
+        const sidebar = document.getElementById('sidebarDrawer');
+        const overlay = document.getElementById('drawerOverlay');
+        let drawerOpen = false;
+
+        function toggleSidebar(open) {
+            if (isLocked) return; // Do not allow toggle if app is locked
+            resetIdleTimer();
+            drawerOpen = open;
+            if (open) {
+                sidebar.classList.add('active');
+                overlay.classList.add('active');
+            } else {
+                sidebar.classList.remove('active');
+                overlay.classList.remove('active');
+                sidebar.style.transform = ''; // Clear touch-drag styles
+            }
+        }
+
+        // Swiping gesture variables
+        let startX = 0;
+        let currentX = 0;
+        let isDragging = false;
+        const drawerWidth = 280;
+
+        window.addEventListener('touchstart', (e) => {
+            if (isLocked) return;
+            const touch = e.touches[0];
+            startX = touch.clientX;
+            
+            // Allow dragging open from the far left of the screen (0px to 35px edge zone)
+            if (!drawerOpen && startX < 35) {
+                isDragging = true;
+                sidebar.style.transition = 'none';
+                overlay.style.transition = 'none';
+                overlay.classList.add('active');
+            } 
+            // Allow dragging closed from anywhere on the drawer panel when it is open
+            else if (drawerOpen && startX <= drawerWidth) {
+                isDragging = true;
+                sidebar.style.transition = 'none';
+                overlay.style.transition = 'none';
+            }
+        }, { passive: true });
+
+        window.addEventListener('touchmove', (e) => {
+            if (!isDragging) return;
+            const touch = e.touches[0];
+            currentX = touch.clientX;
+            
+            let translateX = 0;
+            if (!drawerOpen) {
+                // Dragging from Closed to Open (dragging right)
+                translateX = Math.min(0, -drawerWidth + currentX);
+                sidebar.style.transform = `translate3d(${translateX}px, 0, 0)`;
+                
+                const ratio = Math.min(1, currentX / drawerWidth);
+                overlay.style.opacity = ratio;
+            } else {
+                // Dragging from Open to Closed (dragging left)
+                const displacement = currentX - startX;
+                if (displacement < 0) {
+                    translateX = Math.min(0, displacement);
+                    sidebar.style.transform = `translate3d(${translateX}px, 0, 0)`;
+                    
+                    const ratio = Math.max(0, 1 + (displacement / drawerWidth));
+                    overlay.style.opacity = ratio;
+                }
+            }
+        }, { passive: true });
+
+        window.addEventListener('touchend', (e) => {
+            if (!isDragging) return;
+            isDragging = false;
+            
+            // Restore transitions
+            sidebar.style.transition = '';
+            overlay.style.transition = '';
+            overlay.style.opacity = '';
+
+            const touch = e.changedTouches[0];
+            const endX = touch.clientX;
+
+            if (!drawerOpen) {
+                // Determine whether to complete opening
+                if (endX > drawerWidth / 3) {
+                    toggleSidebar(true);
+                } else {
+                    toggleSidebar(false);
+                }
+            } else {
+                // Determine whether to complete closing
+                const displacement = endX - startX;
+                if (displacement < - (drawerWidth / 3)) {
+                    toggleSidebar(false);
+                } else {
+                    toggleSidebar(true);
+                }
+            }
+        });
 
         updateDateTime();
         setInterval(updateDateTime, 1000);
