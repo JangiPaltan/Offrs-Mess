@@ -551,6 +551,136 @@
             height: 20px;
             fill: var(--text-muted);
         }
+
+        /* INVENTORY VIEWER SCREEN & MODULES */
+        #inventory-screen {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.6s ease;
+        }
+
+        .search-container {
+            width: 100%;
+            margin-bottom: 20px;
+        }
+
+        .search-bar {
+            width: 100%;
+            background: rgba(19, 28, 24, 0.8);
+            border: 1px solid var(--mustard-gold);
+            border-radius: 8px;
+            padding: 14px 18px;
+            color: var(--text-white);
+            font-size: 1rem;
+            outline: none;
+            letter-spacing: 1px;
+            transition: box-shadow 0.2s ease;
+        }
+
+        .search-bar:focus {
+            box-shadow: 0 0 10px rgba(225, 173, 1, 0.3);
+        }
+
+        .tab-controls {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-bottom: 20px;
+            width: 100%;
+        }
+
+        .tab-btn {
+            background: rgba(27, 67, 50, 0.2);
+            border: 1px solid rgba(225, 173, 1, 0.25);
+            padding: 12px;
+            color: var(--text-muted);
+            font-weight: 600;
+            border-radius: 6px;
+            cursor: pointer;
+            text-transform: uppercase;
+            font-size: 0.8rem;
+            transition: all 0.2s ease;
+            text-align: center;
+        }
+
+        .tab-btn.active {
+            background: var(--mustard-gold);
+            color: var(--bg-dark);
+            border-color: var(--mustard-gold);
+        }
+
+        .inventory-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            width: 100%;
+            max-height: 60vh;
+            overflow-y: auto;
+            padding-right: 5px;
+        }
+
+        .inventory-list::-webkit-scrollbar {
+            width: 4px;
+        }
+        .inventory-list::-webkit-scrollbar-thumb {
+            background: rgba(225, 173, 1, 0.25);
+            border-radius: 2px;
+        }
+
+        .inventory-item-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(19, 28, 24, 0.5);
+            border: 1px solid rgba(225, 173, 1, 0.1);
+            border-radius: 8px;
+            padding: 16px;
+        }
+
+        .inv-name {
+            font-weight: 500;
+            font-size: 0.95rem;
+            color: var(--text-white);
+            text-align: left;
+            max-width: 70%;
+        }
+
+        .inv-qty {
+            font-weight: 700;
+            font-size: 1.1rem;
+            color: var(--mustard-gold);
+            background: rgba(225, 173, 1, 0.08);
+            border: 1px solid rgba(225, 173, 1, 0.2);
+            padding: 4px 12px;
+            border-radius: 6px;
+            min-width: 60px;
+            text-align: center;
+        }
+
+        .loading-indicator {
+            text-align: center;
+            padding: 40px;
+            color: var(--text-muted);
+            font-size: 1rem;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .spinner {
+            width: 30px;
+            height: 30px;
+            border: 3px solid rgba(225, 173, 1, 0.1);
+            border-radius: 50%;
+            border-top-color: var(--mustard-gold);
+            animation: spin 1s ease-in-out infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
     </style>
 </head>
 <body>
@@ -565,11 +695,12 @@
             </div>
             <nav class="drawer-nav">
                 <!-- 1. Orders -->
-                <a href="PASTE_YOUR_NEW_ORDERS_SHEET_LINK_HERE" class="drawer-item" onclick="toggleSidebar(false)">Orders</a>
-                <!-- 2. Bills & Summary (Internal routing) -->
+                <a href="https://docs.google.com/spreadsheets/d/17rMvMusueD6IDAYGIjPvL9662G-z4z-CRSc_1jJrRaY/edit#gid=YOUR_ORDERS_GID" class="drawer-item" onclick="toggleSidebar(false)">Orders</a>
+                <!-- 2. Bills & Summary -->
                 <div class="drawer-item" onclick="openInternalSummary()">Bills & Summary</div>
+                <!-- 3. Check Inventory (In-App) -->
+                <div class="drawer-item" onclick="openInternalInventory()">Check Inventory</div>
                 <!-- Placeholder Menu Actions -->
-                <a href="#" class="drawer-item" onclick="toggleSidebar(false)">Check Inventory</a>
                 <a href="#" class="drawer-item" onclick="toggleSidebar(false)">Add New Item</a>
                 <a href="#" class="drawer-item" onclick="toggleSidebar(false)">Update Purchase</a>
                 <a href="#" class="drawer-item" onclick="toggleSidebar(false)">Edit Officers Name List</a>
@@ -642,7 +773,7 @@
         <div id="bills-summary-screen" style="display: none; opacity: 0; transform: translateY(20px) scale(0.98);">
             <header class="dashboard-header">
                 <div class="header-text-group">
-                    <span class="header-date-lbl" id="dash-live-date">15 July 2026</span>
+                    <span class="header-date-lbl" id="dash-live-date">16 July 2026</span>
                     <h1 class="header-title-lbl">Bills & Summary</h1>
                 </div>
                 <div class="header-action-container">
@@ -700,47 +831,36 @@
                         <svg viewBox="0 0 24 24"><path d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.41z"/></svg>
                     </div>
                 </div>
-
-                <!-- 6. Monthly Liquor Inventory -->
-                <div class="list-item-card" onclick="openPrintPreview('https://docs.google.com/spreadsheets/d/17rMvMusueD6IDAYGIjPvL9662G-z4z-CRSc_1jJrRaY/edit#gid=YOUR_LIQUOR_INVENTORY_GID')">
-                    <div class="card-left-group">
-                        <h2 class="card-title">Monthly Liquor Inventory</h2>
-                    </div>
-                    <div class="card-chevron">
-                        <svg viewBox="0 0 24 24"><path d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.41z"/></svg>
-                    </div>
-                </div>
-
-                <!-- 7. Monthly Soft Drink Inventory -->
-                <div class="list-item-card" onclick="openPrintPreview('https://docs.google.com/spreadsheets/d/17rMvMusueD6IDAYGIjPvL9662G-z4z-CRSc_1jJrRaY/edit#gid=YOUR_SOFT_DRINK_INVENTORY_GID')">
-                    <div class="card-left-group">
-                        <h2 class="card-title">Monthly Soft Drink Inventory</h2>
-                    </div>
-                    <div class="card-chevron">
-                        <svg viewBox="0 0 24 24"><path d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.41z"/></svg>
-                    </div>
-                </div>
-
-                <!-- 8. Liquor Price List -->
-                <div class="list-item-card" onclick="openPrintPreview('https://docs.google.com/spreadsheets/d/17rMvMusueD6IDAYGIjPvL9662G-z4z-CRSc_1jJrRaY/edit#gid=YOUR_LIQUOR_PRICELIST_GID')">
-                    <div class="card-left-group">
-                        <h2 class="card-title">Liquor Price List</h2>
-                    </div>
-                    <div class="card-chevron">
-                        <svg viewBox="0 0 24 24"><path d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.41z"/></svg>
-                    </div>
-                </div>
-
-                <!-- 9. Soft Drinks Price List -->
-                <div class="list-item-card" onclick="openPrintPreview('https://docs.google.com/spreadsheets/d/17rMvMusueD6IDAYGIjPvL9662G-z4z-CRSc_1jJrRaY/edit#gid=YOUR_SOFT_DRINKS_PRICELIST_GID')">
-                    <div class="card-left-group">
-                        <h2 class="card-title">Soft Drinks Price List</h2>
-                    </div>
-                    <div class="card-chevron">
-                        <svg viewBox="0 0 24 24"><path d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.41z"/></svg>
-                    </div>
-                </div>
             </main>
+        </div>
+
+        <!-- NEW INLINE SCREEN: INTERNAL LIVE INVENTORY VIEWER -->
+        <div id="inventory-screen" style="display: none; opacity: 0; transform: translateY(20px) scale(0.98);">
+            <header class="dashboard-header">
+                <div class="header-text-group">
+                    <span class="header-date-lbl">Current Stock Balance</span>
+                    <h1 class="header-title-lbl">Inventory</h1>
+                </div>
+                <div class="header-action-container">
+                    <button class="back-home-btn" onclick="switchInventoryView(false)">✕</button>
+                </div>
+            </header>
+
+            <div class="search-container">
+                <input type="text" id="inventorySearch" class="search-bar" placeholder="Search item..." oninput="filterInventoryItems()">
+            </div>
+
+            <div class="tab-controls">
+                <button id="tab-liquor" class="tab-btn active" onclick="switchInventoryTab('liquor')">Liquor</button>
+                <button id="tab-softdrinks" class="tab-btn" onclick="switchInventoryTab('softdrinks')">Soft Drinks</button>
+            </div>
+
+            <div id="inventoryLoader" class="loading-indicator">
+                <div class="spinner"></div>
+                <span>Fetching live figures...</span>
+            </div>
+
+            <main id="inventoryListContainer" class="inventory-list" style="display: none;"></main>
         </div>
     </div>
 
@@ -749,6 +869,14 @@
         let currentPin = "";
         let idleTimer;
         let isLocked = true;
+
+        // ENTER YOUR GOOGLE SPREADSHEET ID HERE
+        const SPREADSHEET_ID = "17rMvMusueD6IDAYGIjPvL9662G-z4z-CRSc_1jJrRaY";
+
+        // Global memory caches to hold live stock values once loaded
+        let liquorStockCache = [];
+        let softDrinkStockCache = [];
+        let currentInventoryTab = "liquor"; // Default active sub-tab
 
         // AUTOMATIC PAGE RESET ENGINE (2 Minute Expiration)
         function resetIdleTimer() {
@@ -785,7 +913,6 @@
             updateDots();
         }
 
-        // Backspace functionality (Removes only the last typed digit)
         function backspacePin() {
             resetIdleTimer();
             if (currentPin.length > 0) {
@@ -825,6 +952,7 @@
         function lockApp() {
             isLocked = true;
             switchDashboardView(false);
+            switchInventoryView(false);
             toggleSidebar(false);
 
             document.getElementById('lock-screen').style.transform = 'translateY(0)';
@@ -835,7 +963,6 @@
             clearPin();
         }
 
-        // Instant manual log out trigger
         function instantLogOut() {
             lockApp();
         }
@@ -851,7 +978,8 @@
             
             const compiledDateStr = `${day} ${month} ${year}`;
             document.getElementById('live-date').innerText = compiledDateStr;
-            document.getElementById('dash-live-date').innerText = compiledDateStr;
+            const dashLiveDate = document.getElementById('dash-live-date');
+            if (dashLiveDate) dashLiveDate.innerText = compiledDateStr;
 
             const hours = String(now.getHours()).padStart(2, '0');
             const minutes = String(now.getMinutes()).padStart(2, '0');
@@ -865,11 +993,13 @@
             resetIdleTimer();
             const homeScreen = document.getElementById('app-screen');
             const dashScreen = document.getElementById('bills-summary-screen');
+            const invScreen = document.getElementById('inventory-screen');
             
             if (showDashboard) {
                 homeScreen.style.display = 'none';
                 homeScreen.style.opacity = '0';
-                homeScreen.style.transform = 'translateY(20px) scale(0.98)';
+                invScreen.style.display = 'none';
+                invScreen.style.opacity = '0';
                 
                 dashScreen.style.display = 'flex';
                 setTimeout(() => {
@@ -879,8 +1009,39 @@
             } else {
                 dashScreen.style.display = 'none';
                 dashScreen.style.opacity = '0';
-                dashScreen.style.transform = 'translateY(20px) scale(0.98)';
                 
+                homeScreen.style.display = 'block';
+                setTimeout(() => {
+                    homeScreen.style.opacity = '1';
+                    homeScreen.style.transform = 'translateY(0) scale(1)';
+                }, 50);
+            }
+        }
+
+        function switchInventoryView(showInventory) {
+            resetIdleTimer();
+            const homeScreen = document.getElementById('app-screen');
+            const dashScreen = document.getElementById('bills-summary-screen');
+            const invScreen = document.getElementById('inventory-screen');
+
+            if (showInventory) {
+                homeScreen.style.display = 'none';
+                homeScreen.style.opacity = '0';
+                dashScreen.style.display = 'none';
+                dashScreen.style.opacity = '0';
+
+                invScreen.style.display = 'flex';
+                setTimeout(() => {
+                    invScreen.style.opacity = '1';
+                    invScreen.style.transform = 'translateY(0) scale(1)';
+                }, 50);
+                
+                // Trigger live fetch of spreadsheet data
+                loadLiveInventoryData();
+            } else {
+                invScreen.style.display = 'none';
+                invScreen.style.opacity = '0';
+
                 homeScreen.style.display = 'block';
                 setTimeout(() => {
                     homeScreen.style.opacity = '1';
@@ -894,6 +1055,11 @@
             switchDashboardView(true);
         }
 
+        function openInternalInventory() {
+            toggleSidebar(false);
+            switchInventoryView(true);
+        }
+
         function openPrintPreview(urlTarget) {
             resetIdleTimer();
             window.open(urlTarget, '_blank');
@@ -905,7 +1071,7 @@
         let drawerOpen = false;
 
         function toggleSidebar(open) {
-            if (isLocked) return; // Do not allow toggle if app is locked
+            if (isLocked) return; 
             resetIdleTimer();
             drawerOpen = open;
             if (open) {
@@ -914,29 +1080,30 @@
             } else {
                 sidebar.classList.remove('active');
                 overlay.classList.remove('active');
-                sidebar.style.transform = ''; // Clear touch-drag styles
             }
+            sidebar.style.transform = ''; 
+            overlay.style.opacity = '';
         }
 
         // Swiping gesture variables
         let startX = 0;
         let currentX = 0;
         let isDragging = false;
+        let startTimestamp = 0;
         const drawerWidth = 280;
 
         window.addEventListener('touchstart', (e) => {
             if (isLocked) return;
             const touch = e.touches[0];
             startX = touch.clientX;
+            startTimestamp = e.timeStamp;
             
-            // Allow dragging open from the far left of the screen (0px to 35px edge zone)
             if (!drawerOpen && startX < 35) {
                 isDragging = true;
                 sidebar.style.transition = 'none';
                 overlay.style.transition = 'none';
                 overlay.classList.add('active');
             } 
-            // Allow dragging closed from anywhere on the drawer panel when it is open
             else if (drawerOpen && startX <= drawerWidth) {
                 isDragging = true;
                 sidebar.style.transition = 'none';
@@ -951,19 +1118,15 @@
             
             let translateX = 0;
             if (!drawerOpen) {
-                // Dragging from Closed to Open (dragging right)
                 translateX = Math.min(0, -drawerWidth + currentX);
                 sidebar.style.transform = `translate3d(${translateX}px, 0, 0)`;
-                
                 const ratio = Math.min(1, currentX / drawerWidth);
                 overlay.style.opacity = ratio;
             } else {
-                // Dragging from Open to Closed (dragging left)
                 const displacement = currentX - startX;
                 if (displacement < 0) {
                     translateX = Math.min(0, displacement);
                     sidebar.style.transform = `translate3d(${translateX}px, 0, 0)`;
-                    
                     const ratio = Math.max(0, 1 + (displacement / drawerWidth));
                     overlay.style.opacity = ratio;
                 }
@@ -974,31 +1137,136 @@
             if (!isDragging) return;
             isDragging = false;
             
-            // Restore transitions
             sidebar.style.transition = '';
             overlay.style.transition = '';
-            overlay.style.opacity = '';
 
             const touch = e.changedTouches[0];
             const endX = touch.clientX;
+            const duration = e.timeStamp - startTimestamp;
+            const displacement = endX - startX;
+            const velocity = Math.abs(displacement) / duration; // Pixels per millisecond
 
             if (!drawerOpen) {
-                // Determine whether to complete opening
-                if (endX > drawerWidth / 3) {
+                // If swiping open: complete opening if dragged past 30% or swiped quickly to the right
+                if (endX > (drawerWidth * 0.3) || (velocity > 0.3 && displacement > 0)) {
                     toggleSidebar(true);
                 } else {
                     toggleSidebar(false);
                 }
             } else {
-                // Determine whether to complete closing
-                const displacement = endX - startX;
-                if (displacement < - (drawerWidth / 3)) {
+                // If swiping closed: complete closing if dragged left past 30% or swiped quickly to the left
+                if (displacement < - (drawerWidth * 0.3) || (velocity > 0.3 && displacement < 0)) {
                     toggleSidebar(false);
                 } else {
                     toggleSidebar(true);
                 }
             }
         });
+
+        // --- IN-APP INVENTORY CONTROLLER & GOOGLE SHEETS CONNECTOR ---
+        async function loadLiveInventoryData() {
+            // Show spinning loader
+            document.getElementById('inventoryLoader').style.display = 'flex';
+            document.getElementById('inventoryListContainer').style.display = 'none';
+            document.getElementById('inventorySearch').value = '';
+
+            try {
+                // Read from BOTH sheets using public Google Visualization endpoints
+                const liquorUrl = `https://docs.google.com/spreadsheets/d/${SPREADSHEET_ID}/gviz/tq?tqx=out:json&sheet=Liquor%20Inventory`;
+                const softDrinksUrl = `https://docs.google.com/spreadsheets/d/${SPREADSHEET_ID}/gviz/tq?tqx=out:json&sheet=Soft%20Drink%20Inventory`;
+
+                const [liquorRes, softRes] = await Promise.all([
+                    fetch(liquorUrl).then(r => r.text()),
+                    fetch(softDrinksUrl).then(r => r.text())
+                ]);
+
+                liquorStockCache = parseGoogleSheetGvizJson(liquorRes);
+                softDrinkStockCache = parseGoogleSheetGvizJson(softRes);
+
+                // Hide loader, render active tab
+                document.getElementById('inventoryLoader').style.display = 'none';
+                document.getElementById('inventoryListContainer').style.display = 'flex';
+                renderInventoryList();
+
+            } catch (err) {
+                console.error("Failed fetching live inventory:", err);
+                document.getElementById('inventoryLoader').innerHTML = `
+                    <span style="color: #ff0844; font-weight: bold;">Failed to Load Live Inventory.</span>
+                    <span style="font-size: 0.8rem; color: var(--text-muted);">Please confirm sheet is published to the web.</span>
+                `;
+            }
+        }
+
+        function parseGoogleSheetGvizJson(responseText) {
+            // Clean up the Google visualization wrapping syntax: google.visualization.Query.setResponse(...)
+            const match = responseText.match(/google\.visualization\.Query\.setResponse\(([\s\S\*\?]+)\)/);
+            if (!match) return [];
+            
+            const rawJson = JSON.parse(match[1]);
+            const rows = rawJson.table.rows;
+            const parsedItems = [];
+
+            // Skip structural header rows (Rows 0 to 5 correspond to header details in your sheet screenshots)
+            // Rows begin to populate actual stock items from Index 6 (corresponding to Spreadsheet Row 7)
+            for (let i = 6; i < rows.length; i++) {
+                const cells = rows[i].c;
+                if (!cells || cells.length === 0) continue;
+
+                // Column A: Item Name. Column F: Monthly Balance
+                const itemNameCell = cells[0];
+                const monthlyBalanceCell = cells[5]; // Index 5 matches column F
+
+                if (itemNameCell && itemNameCell.v !== null) {
+                    const name = String(itemNameCell.v).trim();
+                    
+                    // Filter out any blank values or non-product names
+                    if (name !== "" && name !== "VALUE" && !name.includes("SUMMARY") && !name.includes("MONTH")) {
+                        const balance = (monthlyBalanceCell && monthlyBalanceCell.v !== null) ? Number(monthlyBalanceCell.v) : 0;
+                        parsedItems.push({ name: name, qty: balance });
+                    }
+                }
+            }
+            return parsedItems;
+        }
+
+        function renderInventoryList() {
+            const container = document.getElementById('inventoryListContainer');
+            container.innerHTML = '';
+
+            const currentCache = (currentInventoryTab === 'liquor') ? liquorStockCache : softDrinkStockCache;
+            const filterQuery = document.getElementById('inventorySearch').value.toLowerCase().trim();
+
+            const filtered = currentCache.filter(item => item.name.toLowerCase().includes(filterQuery));
+
+            if (filtered.length === 0) {
+                container.innerHTML = `<div style="text-align: center; color: var(--text-muted); padding: 30px 10px;">No matching items found.</div>`;
+                return;
+            }
+
+            filtered.forEach(item => {
+                const row = document.createElement('div');
+                row.className = 'inventory-item-row';
+                row.innerHTML = `
+                    <div class="inv-name">${item.name}</div>
+                    <div class="inv-qty">${item.qty}</div>
+                `;
+                container.appendChild(row);
+            });
+        }
+
+        function filterInventoryItems() {
+            renderInventoryList();
+        }
+
+        function switchInventoryTab(tabName) {
+            currentInventoryTab = tabName;
+            
+            // Toggle UI states
+            document.getElementById('tab-liquor').classList.toggle('active', tabName === 'liquor');
+            document.getElementById('tab-softdrinks').classList.toggle('active', tabName === 'softdrinks');
+
+            renderInventoryList();
+        }
 
         updateDateTime();
         setInterval(updateDateTime, 1000);
