@@ -72,7 +72,7 @@
             position: fixed;
             top: 0;
             left: 0;
-            z-index: 1000; /* Pushed fully to front layer */
+            z-index: 1000; 
             background: #0A0F0D;
             background-image: radial-gradient(circle at 50% 50%, #111a15 0%, #0a0f0d 100%);
             transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.6s ease;
@@ -930,337 +930,225 @@
 
         function lockApp() {
             isLocked = true;
+            currentPin = "";
+            updateDots();
+            const lockScreen = document.getElementById('lock-screen');
+            lockScreen.style.display = 'flex';
+            setTimeout(() => {
+                lockScreen.style.transform = 'translateY(0)';
+                lockScreen.style.opacity = '1';
+            }, 50);
+            document.getElementById('app-screen').style.opacity = '0';
+            document.getElementById('app-screen').style.transform = 'translateY(20px) scale(0.98)';
             switchDashboardView(false);
             switchInventoryView(false);
             toggleSidebar(false);
-
-            document.getElementById('lock-screen').style.display = 'flex';
-            setTimeout(() => {
-                document.getElementById('lock-screen').style.transform = 'translateY(0)';
-                document.getElementById('lock-screen').style.opacity = '1';
-            }, 10);
-            
-            document.getElementById('app-screen').style.opacity = '0';
-            document.getElementById('app-screen').style.transform = 'translateY(20px) scale(0.98)';
-            clearPin();
         }
 
         function instantLogOut() {
             lockApp();
         }
 
-        function updateDateTime() {
-            const now = new Date();
-            const day = now.getDate();
-            const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
-            const month = months[now.getMonth()];
-            const year = now.getFullYear();
-            
-            const compiledDateStr = `${day} ${month} ${year}`;
-            document.getElementById('live-date').innerText = compiledDateStr;
-            const dashLiveDate = document.getElementById('dash-live-date');
-            if (dashLiveDate) dashLiveDate.innerText = compiledDateStr;
-
-            const hours = String(now.getHours()).padStart(2, '0');
-            const minutes = String(now.getMinutes()).padStart(2, '0');
-            const seconds = String(now.getSeconds()).padStart(2, '0');
-            
-            document.getElementById('live-time').innerText = `${hours}:${minutes}:${seconds}`;
-        }
-
-        function switchDashboardView(showDashboard) {
-            resetIdleTimer();
-            const homeScreen = document.getElementById('app-screen');
-            const dashScreen = document.getElementById('bills-summary-screen');
-            const invScreen = document.getElementById('inventory-screen');
-            
-            if (showDashboard) {
-                homeScreen.style.display = 'none';
-                homeScreen.style.opacity = '0';
-                invScreen.style.display = 'none';
-                invScreen.style.opacity = '0';
-                
-                dashScreen.style.display = 'flex';
-                setTimeout(() => {
-                    dashScreen.style.opacity = '1';
-                    dashScreen.style.transform = 'translateY(0) scale(1)';
-                }, 50);
+        function toggleSidebar(open) {
+            const drawer = document.getElementById('sidebarDrawer');
+            const overlay = document.getElementById('drawerOverlay');
+            if (open) {
+                drawer.classList.add('active');
+                overlay.classList.add('active');
             } else {
-                dashScreen.style.display = 'none';
-                dashScreen.style.opacity = '0';
-                
-                homeScreen.style.display = 'block';
-                setTimeout(() => {
-                    homeScreen.style.opacity = '1';
-                    homeScreen.style.transform = 'translateY(0) scale(1)';
-                }, 50);
-            }
-        }
-
-        function switchInventoryView(showInventory) {
-            resetIdleTimer();
-            const homeScreen = document.getElementById('app-screen');
-            const dashScreen = document.getElementById('bills-summary-screen');
-            const invScreen = document.getElementById('inventory-screen');
-
-            if (showInventory) {
-                homeScreen.style.display = 'none';
-                homeScreen.style.opacity = '0';
-                dashScreen.style.display = 'none';
-                dashScreen.style.opacity = '0';
-
-                invScreen.style.display = 'flex';
-                setTimeout(() => {
-                    invScreen.style.opacity = '1';
-                    invScreen.style.transform = 'translateY(0) scale(1)';
-                }, 50);
-                
-                loadLiveInventoryData();
-            } else {
-                invScreen.style.display = 'none';
-                invScreen.style.opacity = '0';
-
-                homeScreen.style.display = 'block';
-                setTimeout(() => {
-                    homeScreen.style.opacity = '1';
-                    homeScreen.style.transform = 'translateY(0) scale(1)';
-                }, 50);
+                drawer.classList.remove('active');
+                overlay.classList.remove('active');
             }
         }
 
         function openInternalSummary() {
             toggleSidebar(false);
+            switchInventoryView(false);
             switchDashboardView(true);
         }
 
         function openInternalInventory() {
             toggleSidebar(false);
+            switchDashboardView(false);
             switchInventoryView(true);
+            loadInventoryData();
         }
 
-        function openPrintPreview(urlTarget) {
-            resetIdleTimer();
-            window.open(urlTarget, '_blank');
+        function switchDashboardView(show) {
+            const dash = document.getElementById('bills-summary-screen');
+            if (show) {
+                dash.style.display = 'flex';
+                setTimeout(() => {
+                    dash.style.opacity = '1';
+                    dash.style.transform = 'translateY(0) scale(1)';
+                }, 50);
+                document.getElementById('app-screen').style.display = 'none';
+            } else {
+                dash.style.opacity = '0';
+                dash.style.transform = 'translateY(20px) scale(0.98)';
+                setTimeout(() => {
+                    dash.style.display = 'none';
+                }, 400);
+                document.getElementById('app-screen').style.display = 'block';
+            }
         }
 
-        // --- GESTURE SIDEBAR DRAWER PHYSICS ENGINE ---
-        const sidebar = document.getElementById('sidebarDrawer');
-        const overlay = document.getElementById('drawerOverlay');
-        let drawerOpen = false;
-
-        function toggleSidebar(open) {
-            if (isLocked) return; 
-            resetIdleTimer();
-            drawerOpen = open;
-            if (open) {
-                sidebar.classList.add('active');
-                overlay.classList.add('active');
+        function switchInventoryView(show) {
+            const inv = document.getElementById('inventory-screen');
+            if (show) {
+                inv.style.display = 'flex';
+                setTimeout(() => {
+                    inv.style.opacity = '1';
+                    inv.style.transform = 'translateY(0) scale(1)';
+                }, 50);
+                document.getElementById('app-screen').style.display = 'none';
             } else {
-                sidebar.classList.remove('active');
-                overlay.classList.remove('active');
+                inv.style.opacity = '0';
+                inv.style.transform = 'translateY(20px) scale(0.98)';
+                setTimeout(() => {
+                    inv.style.display = 'none';
+                }, 400);
+                document.getElementById('app-screen').style.display = 'block';
+                document.getElementById('inventorySearch').value = "";
             }
-            sidebar.style.transform = ''; 
-            overlay.style.opacity = '';
         }
 
-        let startX = 0;
-        let currentX = 0;
-        let isDragging = false;
-        let startTimestamp = 0;
-        const drawerWidth = 280;
+        function openPrintPreview(url) {
+            window.open(url, '_blank');
+        }
 
-        window.addEventListener('touchstart', (e) => {
-            if (isLocked) return;
-            const touch = e.touches[0];
-            startX = touch.clientX;
-            startTimestamp = e.timeStamp;
+        function updateClock() {
+            const optionsDate = { day: 'numeric', month: 'long', year: 'numeric' };
+            const optionsTime = { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false };
+            const now = new Date();
             
-            if (!drawerOpen && startX < 35) {
-                isDragging = true;
-                sidebar.style.transition = 'none';
-                overlay.style.transition = 'none';
-                overlay.classList.add('active');
-            } 
-            else if (drawerOpen && startX <= drawerWidth) {
-                isDragging = true;
-                sidebar.style.transition = 'none';
-                overlay.style.transition = 'none';
-            }
-        }, { passive: true });
+            const dateStr = now.toLocaleDateString('en-GB', optionsDate);
+            const timeStr = now.toLocaleTimeString('en-GB', optionsTime);
 
-        window.addEventListener('touchmove', (e) => {
-            if (!isDragging) return;
-            const touch = e.touches[0];
-            currentX = touch.clientX;
+            const elDate = document.getElementById('live-date');
+            const elTime = document.getElementById('live-time');
+            const elDashDate = document.getElementById('dash-live-date');
+
+            if(elDate) elDate.innerText = dateStr;
+            if(elTime) elTime.innerText = timeStr;
+            if(elDashDate) elDashDate.innerText = dateStr;
+        }
+        setInterval(updateClock, 1000);
+        updateClock();
+
+        function switchInventoryTab(tab) {
+            currentInventoryTab = tab;
+            document.getElementById('tab-liquor').classList.toggle('active', tab === 'liquor');
+            document.getElementById('tab-softdrinks').classList.toggle('active', tab === 'softdrinks');
+            renderInventoryItems();
+        }
+
+        function loadInventoryData() {
+            const loader = document.getElementById('inventoryLoader');
+            const container = document.getElementById('inventoryListContainer');
             
-            let translateX = 0;
-            if (!drawerOpen) {
-                translateX = Math.min(0, -drawerWidth + currentX);
-                sidebar.style.transform = `translate3d(${translateX}px, 0, 0)`;
-                const ratio = Math.min(1, currentX / drawerWidth);
-                overlay.style.opacity = ratio;
-            } else {
-                const displacement = currentX - startX;
-                if (displacement < 0) {
-                    translateX = Math.min(0, displacement);
-                    sidebar.style.transform = `translate3d(${translateX}px, 0, 0)`;
-                    const ratio = Math.max(0, 1 + (displacement / drawerWidth));
-                    overlay.style.opacity = ratio;
-                }
-            }
-        }, { passive: true });
+            loader.style.display = 'flex';
+            container.style.display = 'none';
 
-        window.addEventListener('touchend', (e) => {
-            if (!isDragging) return;
-            isDragging = false;
-            
-            sidebar.style.transition = '';
-            overlay.style.transition = '';
+            // Tab 1 (Liquor Inventory) GID: 1541094054
+            const liquorUrl = `https://docs.google.com/spreadsheets/d/${SPREADSHEET_ID}/gviz/tq?tqx=out:json&gid=1541094054`;
+            // Tab 2 (Soft Drink Inventory) GID: 1046914580
+            const softDrinkUrl = `https://docs.google.com/spreadsheets/d/${SPREADSHEET_ID}/gviz/tq?tqx=out:json&gid=1046914580`;
 
-            const touch = e.changedTouches[0];
-            const endX = touch.clientX;
-            const duration = e.timeStamp - startTimestamp;
-            const displacement = endX - startX;
-            const velocity = Math.abs(displacement) / duration; 
-
-            if (!drawerOpen) {
-                if (endX > (drawerWidth * 0.3) || (velocity > 0.3 && displacement > 0)) {
-                    toggleSidebar(true);
-                } else {
-                    toggleSidebar(false);
-                }
-            } else {
-                if (displacement < - (drawerWidth * 0.3) || (velocity > 0.3 && displacement < 0)) {
-                    toggleSidebar(false);
-                } else {
-                    toggleSidebar(true);
-                }
-            }
-        });
-
-        // --- LIVE SPREADSHEET INVENTORY INTEGRATION ---
-        async function loadLiveInventoryData() {
-            document.getElementById('inventoryLoader').style.display = 'flex';
-            document.getElementById('inventoryListContainer').style.display = 'none';
-            document.getElementById('inventorySearch').value = '';
-
-            try {
-                const liquorUrl = `https://docs.google.com/spreadsheets/d/${SPREADSHEET_ID}/gviz/tq?tqx=out:json&sheet=Liquor%20Inventory`;
-                const softDrinksUrl = `https://docs.google.com/spreadsheets/d/${SPREADSHEET_ID}/gviz/tq?tqx=out:json&sheet=Soft%20Drink%20Inventory`;
-
-                const [liquorRes, softRes] = await Promise.all([
-                    fetch(liquorUrl).then(r => r.text()),
-                    fetch(softDrinksUrl).then(r => r.text())
-                ]);
-
-                liquorStockCache = parseGoogleSheetGvizJson(liquorRes);
-                softDrinkStockCache = parseGoogleSheetGvizJson(softRes);
-
-                document.getElementById('inventoryLoader').style.display = 'none';
-                document.getElementById('inventoryListContainer').style.display = 'flex';
-                renderInventoryList();
-
-            } catch (err) {
-                console.error("Failed fetching live inventory:", err);
-                document.getElementById('inventoryLoader').innerHTML = `
-                    <span style="color: #ff0844; font-weight: bold;">Failed to Load Live Inventory.</span>
-                    <span style="font-size: 0.8rem; color: var(--text-muted); display: block; margin-top: 5px;">Please confirm the sheet is published to the web.</span>
-                `;
-            }
+            Promise.all([
+                fetch(liquorUrl).then(res => res.text()),
+                fetch(softDrinkUrl).then(res => res.text())
+            ])
+            .then(([liquorRaw, softDrinkRaw]) => {
+                liquorStockCache = parseGoogleSheetGvizJson(liquorRaw, 'liquor');
+                softDrinkStockCache = parseGoogleSheetGvizJson(softDrinkRaw, 'softdrinks');
+                
+                loader.style.display = 'none';
+                container.style.display = 'flex';
+                renderInventoryItems();
+            })
+            .catch(err => {
+                console.error("Error loading inventory layout records:", err);
+                loader.innerHTML = "<span>Failed to retrieve database assets. Verify connection parameters.</span>";
+            });
         }
 
         function parseGoogleSheetGvizJson(rawText, tabType) {
-  try {
-    // 1. Clean the Google API wrapper text safely
-    const startIdx = rawText.indexOf('{');
-    const endIdx = rawText.lastIndexOf('}');
-    if (startIdx === -1 || endIdx === -1) return [];
-    
-    const jsonStr = rawText.substring(startIdx, endIdx + 1);
-    const jsonObj = JSON.parse(jsonStr);
-    
-    if (!jsonObj.table || !jsonObj.table.rows) return [];
-    
-    const rows = jsonObj.table.rows;
-    const inventoryList = [];
-    
-    // 2. Loop through all rows starting at index 6 (Row 7 in your spreadsheet)
-    for (let i = 6; i < rows.length; i++) {
-      const row = rows[i];
-      if (!row || !row.c) continue;
-      
-      // Column A (Index 0): Item Name
-      const nameObj = row.c[0];
-      // Column F (Index 5): Monthly Balance / Current Stock
-      const stockObj = row.c[5];
-      
-      const itemName = nameObj && nameObj.v ? String(nameObj.v).trim() : '';
-      
-      // Skip row if the item name is completely blank, or matches spreadsheet labels
-      if (!itemName || itemName.toUpperCase() === 'TOTAL' || itemName.toUpperCase() === 'VALUE') {
-        continue;
-      }
-      
-      // Get the stock value safely (Default to 0 if it's empty or null)
-      let currentStock = 0;
-      if (stockObj && stockObj.v !== null && stockObj.v !== undefined) {
-        currentStock = parseInt(stockObj.v, 10) || 0;
-      }
-      
-      // 3. NO FILTERING: Grab everything on this tab
-      inventoryList.push({
-        name: itemName,
-        stock: currentStock,
-        type: tabType // Correctly categorizes it based on which sheet tab fetched it
-     });
-    }
-    return inventoryList;
-  } catch (error) {
-    console.error("Error parsing sheet layout logic: ", error);
-    return [];
-  }
-}
+            try {
+                const startIdx = rawText.indexOf('{');
+                const endIdx = rawText.lastIndexOf('}');
+                if (startIdx === -1 || endIdx === -1) return [];
+                
+                const jsonStr = rawText.substring(startIdx, endIdx + 1);
+                const jsonObj = JSON.parse(jsonStr);
+                
+                if (!jsonObj.table || !jsonObj.table.rows) return [];
+                
+                const rows = jsonObj.table.rows;
+                const inventoryList = [];
+                
+                for (let i = 6; i < rows.length; i++) {
+                    const row = rows[i];
+                    if (!row || !row.c) continue;
+                    
+                    const nameObj = row.c[0];
+                    const stockObj = row.c[5];
+                    
+                    const itemName = nameObj && nameObj.v ? String(nameObj.v).trim() : '';
+                    
+                    if (!itemName || itemName.toUpperCase() === 'TOTAL' || itemName.toUpperCase() === 'VALUE') {
+                        continue;
+                    }
+                    
+                    let currentStock = 0;
+                    if (stockObj && stockObj.v !== null && stockObj.v !== undefined) {
+                        currentStock = parseInt(stockObj.v, 10) || 0;
+                    }
+                    
+                    inventoryList.push({
+                        itemName: itemName,
+                        monthlyBalance: currentStock,
+                        category: tabType 
+                    });
+                }
+                
+                return inventoryList;
+            } catch (error) {
+                console.error("Error parsing sheet layout logic: ", error);
+                return [];
+            }
+        }
 
-        function renderInventoryList() {
+        function renderInventoryItems() {
             const container = document.getElementById('inventoryListContainer');
-            container.innerHTML = '';
+            container.innerHTML = "";
 
-            const currentCache = (currentInventoryTab === 'liquor') ? liquorStockCache : softDrinkStockCache;
-            const filterQuery = document.getElementById('inventorySearch').value.toLowerCase().trim();
+            const targetData = (currentInventoryTab === 'liquor') ? liquorStockCache : softDrinkStockCache;
+            const query = document.getElementById('inventorySearch').value.toLowerCase().trim();
 
-            const filtered = currentCache.filter(item => item.name.toLowerCase().includes(filterQuery));
+            const filteredData = targetData.filter(item => {
+                return item.itemName.toLowerCase().includes(query);
+            });
 
-            if (filtered.length === 0) {
-                container.innerHTML = `<div style="text-align: center; color: var(--text-muted); padding: 30px 10px;">No matching items found.</div>`;
+            if (filteredData.length === 0) {
+                container.innerHTML = `<div class="loading-indicator" style="width:100%;"><span>No matching items found.</span></div>`;
                 return;
             }
 
-            filtered.forEach(item => {
+            filteredData.forEach(item => {
                 const row = document.createElement('div');
                 row.className = 'inventory-item-row';
                 row.innerHTML = `
-                    <div class="inv-name">${item.name}</div>
-                    <div class="inv-qty">${item.qty}</div>
+                    <span class="inv-name">${item.itemName}</span>
+                    <span class="inv-qty">${item.monthlyBalance}</span>
                 `;
                 container.appendChild(row);
             });
         }
 
         function filterInventoryItems() {
-            renderInventoryList();
+            renderInventoryItems();
         }
-
-        function switchInventoryTab(tabName) {
-            currentInventoryTab = tabName;
-            
-            document.getElementById('tab-liquor').classList.toggle('active', tabName === 'liquor');
-            document.getElementById('tab-softdrinks').classList.toggle('active', tabName === 'softdrinks');
-
-            renderInventoryList();
-        }
-
-        updateDateTime();
-        setInterval(updateDateTime, 1000);
     </script>
 </body>
 </html>
