@@ -32,7 +32,7 @@
             padding: 0;
             user-select: none;
             letter-spacing: 1.5px;
-            -webkit-tap-highlight-color: transparent; /* Removes default gray box tap highlight on mobile devices */
+            -webkit-tap-highlight-color: transparent;
         }
 
         body {
@@ -125,7 +125,7 @@
             cursor: pointer;
             text-transform: uppercase;
             transition: background 0.1s, transform 0.1s;
-            overflow: hidden; /* Ensures active light states stay strictly circular */
+            overflow: hidden;
             position: relative;
         }
 
@@ -173,9 +173,9 @@
         #live-date {
             font-size: 1.1rem;
             letter-spacing: 2px;
-            font-weight: 400; /* Removed bold, matched intensity of time */
+            font-weight: 400;
             color: var(--text-white);
-            text-transform: uppercase; /* Styled in full CAPS */
+            text-transform: uppercase;
         }
 
         #live-time {
@@ -185,7 +185,7 @@
             color: var(--text-muted);
         }
 
-        /* CONSOLE ACTION GRID - ORIGINAL RECTANGULAR LAYOUT */
+        /* CONSOLE ACTION GRID */
         .grid-container {
             display: flex;
             flex-direction: column;
@@ -194,7 +194,7 @@
             margin: 30px 0;
         }
 
-        /* RECTANGULAR GLASS BUTTONS WITH PRINTSHOPS HIGH-GLOSS FINISH */
+        /* RECTANGULAR GLASS BUTTONS */
         .btn-card {
             background: linear-gradient(135deg, #18231f 0%, #0d1613 50%, #050a08 100%);
             backdrop-filter: blur(10px);
@@ -217,7 +217,6 @@
             transition: transform 0.1s cubic-bezier(0.25, 0.8, 0.25, 1), box-shadow 0.1s;
         }
 
-        /* Glossy Highlight Reflection Layer */
         .btn-card::after {
             content: '';
             position: absolute;
@@ -230,7 +229,6 @@
             pointer-events: none;
         }
 
-        /* Moving Light Shimmer */
         .btn-card::before {
             content: '';
             position: absolute;
@@ -394,6 +392,7 @@
             display: flex;
             align-items: center;
             gap: 15px;
+            margin-left: auto; /* Pushes the actions strictly to the extreme right */
         }
 
         .back-home-btn {
@@ -415,12 +414,6 @@
             background: rgba(225, 173, 1, 0.2);
             border-color: var(--mustard-gold);
         }
-        
-        .dashboard-logo {
-            width: 45px;
-            height: auto;
-            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.5));
-        }
 
         .dashboard-list {
             display: flex;
@@ -436,7 +429,7 @@
             background-color: #131c18;
             border: 1px solid rgba(225, 173, 1, 0.15);
             border-radius: 14px;
-            padding: 16px;
+            padding: 20px 16px;
             cursor: pointer;
             transition: background-color 0.2s, transform 0.2s;
             text-decoration: none;
@@ -453,35 +446,6 @@
         .card-left-group {
             display: flex;
             align-items: center;
-            gap: 14px;
-        }
-
-        .card-icon-wrapper {
-            width: 42px;
-            height: 42px;
-            border-radius: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .card-icon-wrapper svg {
-            width: 22px;
-            height: 22px;
-            fill: #ffffff;
-        }
-
-        /* Icon Background Gradients */
-        .blue-gradient { background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); }
-        .amber-gradient { background: linear-gradient(135deg, #f6d365 0%, #fda085 100%); }
-        .green-gradient { background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%); }
-        .purple-gradient { background: linear-gradient(135deg, #a18cd1 0%, #fbc2eb 100%); }
-        .red-gradient { background: linear-gradient(135deg, #ff0844 0%, #ffb199 100%); }
-
-        .card-text-details {
-            display: flex;
-            flex-direction: column;
-            gap: 3px;
             text-align: left;
         }
 
@@ -489,13 +453,6 @@
             font-size: 15px;
             font-weight: 600;
             color: #ffffff;
-            margin: 0;
-            letter-spacing: 0.5px;
-        }
-
-        .card-subtitle {
-            font-size: 11px;
-            color: var(--text-muted);
             margin: 0;
             letter-spacing: 0.5px;
         }
@@ -566,7 +523,7 @@
 
             <!-- BOTTOM ACTION PANEL -->
             <div class="bottom-actions-container">
-                <a href="https://docs.google.com/spreadsheets/d/17rMvMusueD6IDAYGIjPvL9662G-z4z-CRSc_1jJrRaY/edit?gid=318068113#gid=318068113" target="_self" class="btn-admin">
+                <a href="PASTE_YOUR_NEW_ORDERS_SHEET_LINK_HERE" target="_self" class="btn-admin">
                     Orders
                 </a>
                 
@@ -587,80 +544,94 @@
                 </div>
                 <div class="header-action-container">
                     <button class="back-home-btn" onclick="switchDashboardView(false)">✕</button>
-                    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/ec/Maratha_Light_Infantry.svg/500px-Maratha_Light_Infantry.svg.png" class="dashboard-logo" alt="Logo">
                 </div>
             </header>
 
             <main class="dashboard-list">
-                <div class="list-item-card" onclick="openPrintPreview('https://docs.google.com/spreadsheets/d/17rMvMusueD6IDAYGIjPvL9662G-z4z-CRSc_1jJrRaY/edit#gid=1634296846')">
-                    <div class="card-left-group">
-                        <div class="card-icon-wrapper blue-gradient">
-                            <svg viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/></svg>
-                        </div>
-                        <div class="card-text-details">
-                            <h2 class="card-title">Monthly Bill Summary</h2>
-                            <p class="card-subtitle">Complete ledger for the current month</p>
-                        </div>
-                    </div>
-                    <div class="card-chevron">
-                        <svg viewBox="0 0 24 24"><path d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.41z"/></svg>
-                    </div>
-                </div>
-
-                <div class="list-item-card" onclick="openPrintPreview('https://docs.google.com/spreadsheets/d/17rMvMusueD6IDAYGIjPvL9662G-z4z-CRSc_1jJrRaY/edit#gid=YOUR_LIQUOR_GID_HERE')">
-                    <div class="card-left-group">
-                        <div class="card-icon-wrapper amber-gradient">
-                            <svg viewBox="0 0 24 24"><path d="M7.5 11c0 .83-.67 1.5-1.5 1.5s-1.5-.67-1.5-1.5.67-1.5 1.5-1.5 1.5.67 1.5 1.5zm10.5-1.5c-.83 0-1.5.67-1.5 1.5s.67 1.5 1.5 1.5 1.5-.67 1.5-1.5-.67-1.5-1.5-1.5zm-6-2c-.83 0-1.5.67-1.5 1.5s.67 1.5 1.5 1.5 1.5-.67 1.5-1.5-.67-1.5-1.5-1.5zm0 8c-.83 0-1.5.67-1.5 1.5s.67 1.5 1.5 1.5 1.5-.67 1.5-1.5-.67-1.5-1.5-1.5z"/></svg>
-                        </div>
-                        <div class="card-text-details">
-                            <h2 class="card-title">Monthly Liquor Summary</h2>
-                            <p class="card-subtitle">Liquor distribution and totals</p>
-                        </div>
-                    </div>
-                    <div class="card-chevron">
-                        <svg viewBox="0 0 24 24"><path d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.41z"/></svg>
-                    </div>
-                </div>
-
-                <div class="list-item-card" onclick="openPrintPreview('https://docs.google.com/spreadsheets/d/17rMvMusueD6IDAYGIjPvL9662G-z4z-CRSc_1jJrRaY/edit#gid=YOUR_SOFT_DRINKS_GID_HERE')">
-                    <div class="card-left-group">
-                        <div class="card-icon-wrapper green-gradient">
-                            <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.53c-.26-.81-1-1.4-1.9-1.4h-1v-3c0-.55-.45-1-1-1h-6v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg>
-                        </div>
-                        <div class="card-text-details">
-                            <h2 class="card-title">Monthly Soft Drink Summary</h2>
-                            <p class="card-subtitle">Soft drink sales and inventories</p>
-                        </div>
-                    </div>
-                    <div class="card-chevron">
-                        <svg viewBox="0 0 24 24"><path d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.41z"/></svg>
-                    </div>
-                </div>
-
+                <!-- 1. Officer's Monthly Bill -->
                 <div class="list-item-card" onclick="openPrintPreview('https://docs.google.com/spreadsheets/d/17rMvMusueD6IDAYGIjPvL9662G-z4z-CRSc_1jJrRaY/edit#gid=YOUR_OFFICER_BILL_GID_HERE')">
                     <div class="card-left-group">
-                        <div class="card-icon-wrapper purple-gradient">
-                            <svg viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
-                        </div>
-                        <div class="card-text-details">
-                            <h2 class="card-title">Officer Bill</h2>
-                            <p class="card-subtitle">Print individual officer mess invoice</p>
-                        </div>
+                        <h2 class="card-title">Officer's Monthly Bill</h2>
                     </div>
                     <div class="card-chevron">
                         <svg viewBox="0 0 24 24"><path d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.41z"/></svg>
                     </div>
                 </div>
 
+                <!-- 2. Guest Bill -->
                 <div class="list-item-card" onclick="openPrintPreview('https://docs.google.com/spreadsheets/d/17rMvMusueD6IDAYGIjPvL9662G-z4z-CRSc_1jJrRaY/edit#gid=YOUR_GUEST_BILL_GID_HERE')">
                     <div class="card-left-group">
-                        <div class="card-icon-wrapper red-gradient">
-                            <svg viewBox="0 0 24 24"><path d="M17 12h-5v5h5v-5zM16 1v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2h-1V1h-2zm3 18H5V8h14v11z"/></svg>
-                        </div>
-                        <div class="card-text-details">
-                            <h2 class="card-title">Guest Bill</h2>
-                            <p class="card-subtitle">Print guest room temporary invoice</p>
-                        </div>
+                        <h2 class="card-title">Guest Bill</h2>
+                    </div>
+                    <div class="card-chevron">
+                        <svg viewBox="0 0 24 24"><path d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.41z"/></svg>
+                    </div>
+                </div>
+
+                <!-- 3. Officers Monthly Summary -->
+                <div class="list-item-card" onclick="openPrintPreview('https://docs.google.com/spreadsheets/d/17rMvMusueD6IDAYGIjPvL9662G-z4z-CRSc_1jJrRaY/edit#gid=1634296846')">
+                    <div class="card-left-group">
+                        <h2 class="card-title">Officers Monthly Summary</h2>
+                    </div>
+                    <div class="card-chevron">
+                        <svg viewBox="0 0 24 24"><path d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.41z"/></svg>
+                    </div>
+                </div>
+
+                <!-- 4. Monthly Liquor Summary -->
+                <div class="list-item-card" onclick="openPrintPreview('https://docs.google.com/spreadsheets/d/17rMvMusueD6IDAYGIjPvL9662G-z4z-CRSc_1jJrRaY/edit#gid=YOUR_LIQUOR_GID_HERE')">
+                    <div class="card-left-group">
+                        <h2 class="card-title">Monthly Liquor Summary</h2>
+                    </div>
+                    <div class="card-chevron">
+                        <svg viewBox="0 0 24 24"><path d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.41z"/></svg>
+                    </div>
+                </div>
+
+                <!-- 5. Monthly Soft Drink Summary -->
+                <div class="list-item-card" onclick="openPrintPreview('https://docs.google.com/spreadsheets/d/17rMvMusueD6IDAYGIjPvL9662G-z4z-CRSc_1jJrRaY/edit#gid=YOUR_SOFT_DRINKS_GID_HERE')">
+                    <div class="card-left-group">
+                        <h2 class="card-title">Monthly Soft Drink Summary</h2>
+                    </div>
+                    <div class="card-chevron">
+                        <svg viewBox="0 0 24 24"><path d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.41z"/></svg>
+                    </div>
+                </div>
+
+                <!-- 6. Monthly Liquor Inventory -->
+                <div class="list-item-card" onclick="openPrintPreview('https://docs.google.com/spreadsheets/d/17rMvMusueD6IDAYGIjPvL9662G-z4z-CRSc_1jJrRaY/edit#gid=YOUR_LIQUOR_INVENTORY_GID')">
+                    <div class="card-left-group">
+                        <h2 class="card-title">Monthly Liquor Inventory</h2>
+                    </div>
+                    <div class="card-chevron">
+                        <svg viewBox="0 0 24 24"><path d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.41z"/></svg>
+                    </div>
+                </div>
+
+                <!-- 7. Monthly Soft Drink Inventory -->
+                <div class="list-item-card" onclick="openPrintPreview('https://docs.google.com/spreadsheets/d/17rMvMusueD6IDAYGIjPvL9662G-z4z-CRSc_1jJrRaY/edit#gid=YOUR_SOFT_DRINK_INVENTORY_GID')">
+                    <div class="card-left-group">
+                        <h2 class="card-title">Monthly Soft Drink Inventory</h2>
+                    </div>
+                    <div class="card-chevron">
+                        <svg viewBox="0 0 24 24"><path d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.41z"/></svg>
+                    </div>
+                </div>
+
+                <!-- 8. Liquor Price List -->
+                <div class="list-item-card" onclick="openPrintPreview('https://docs.google.com/spreadsheets/d/17rMvMusueD6IDAYGIjPvL9662G-z4z-CRSc_1jJrRaY/edit#gid=YOUR_LIQUOR_PRICELIST_GID')">
+                    <div class="card-left-group">
+                        <h2 class="card-title">Liquor Price List</h2>
+                    </div>
+                    <div class="card-chevron">
+                        <svg viewBox="0 0 24 24"><path d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.41z"/></svg>
+                    </div>
+                </div>
+
+                <!-- 9. Soft Drinks Price List -->
+                <div class="list-item-card" onclick="openPrintPreview('https://docs.google.com/spreadsheets/d/17rMvMusueD6IDAYGIjPvL9662G-z4z-CRSc_1jJrRaY/edit#gid=YOUR_SOFT_DRINKS_PRICELIST_GID')">
+                    <div class="card-left-group">
+                        <h2 class="card-title">Soft Drinks Price List</h2>
                     </div>
                     <div class="card-chevron">
                         <svg viewBox="0 0 24 24"><path d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.41z"/></svg>
