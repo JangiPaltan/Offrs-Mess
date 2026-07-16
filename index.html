@@ -32,6 +32,7 @@
             padding: 0;
             user-select: none;
             letter-spacing: 1.5px;
+            -webkit-tap-highlight-color: transparent; /* Removes default gray box tap highlight on mobile devices */
         }
 
         body {
@@ -114,6 +115,7 @@
             border: 1px solid rgba(225, 173, 1, 0.15);
             background: rgba(27, 67, 50, 0.2);
             backdrop-filter: blur(5px);
+            -webkit-backdrop-filter: blur(5px);
             color: var(--text-white);
             font-size: 1.5rem;
             font-weight: 300;
@@ -123,6 +125,8 @@
             cursor: pointer;
             text-transform: uppercase;
             transition: background 0.1s, transform 0.1s;
+            overflow: hidden; /* Ensures active light states stay strictly circular */
+            position: relative;
         }
 
         .key:active {
@@ -169,8 +173,9 @@
         #live-date {
             font-size: 1.1rem;
             letter-spacing: 2px;
-            font-weight: 500;
+            font-weight: 400; /* Removed bold, matched intensity of time */
             color: var(--text-white);
+            text-transform: uppercase; /* Styled in full CAPS */
         }
 
         #live-time {
@@ -527,7 +532,7 @@
             <div class="key" onclick="pressNum(9)">9</div>
             <div class="key" style="font-size: 0.75rem;" onclick="clearPin()">CLEAR</div>
             <div class="key" onclick="pressNum(0)">0</div>
-            <div class="key" style="font-size: 0.75rem;" onclick="lockApp()">LOCK</div>
+            <div class="key" style="font-size: 1.1rem; font-weight: bold;" onclick="backspacePin()">⌫</div>
         </div>
     </div>
 
@@ -561,8 +566,8 @@
 
             <!-- BOTTOM ACTION PANEL -->
             <div class="bottom-actions-container">
-                <a href="https://docs.google.com/spreadsheets/d/17rMvMusueD6IDAYGIjPvL9662G-z4z-CRSc_1jJrRaY/edit?gid=1634296846#gid=1634296846" target="_self" class="btn-admin">
-                    Mess Ledger
+                <a href="https://docs.google.com/spreadsheets/d/17rMvMusueD6IDAYGIjPvL9662G-z4z-CRSc_1jJrRaY/edit?gid=318068113#gid=318068113" target="_self" class="btn-admin">
+                    Orders
                 </a>
                 
                 <button class="print-hub-trigger" onclick="switchDashboardView(true)" aria-label="Open Bills and Summary">
@@ -701,6 +706,15 @@
             resetIdleTimer();
             currentPin = "";
             updateDots();
+        }
+
+        // Backspace functionality (Removes only the last typed digit)
+        function backspacePin() {
+            resetIdleTimer();
+            if (currentPin.length > 0) {
+                currentPin = currentPin.slice(0, -1);
+                updateDots();
+            }
         }
 
         function updateDots() {
