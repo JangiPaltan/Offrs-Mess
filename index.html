@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Jangi Paltan Officers Mess</title>
     <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" contepnt="black-translucent">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     
     <link rel="icon" type="image/png" href="https://upload.wikimedia.org/wikipedia/commons/thumb/e/ec/Maratha_Light_Infantry.svg/500px-Maratha_Light_Infantry.svg.png?v=5">
     <link rel="apple-touch-icon" href="https://upload.wikimedia.org/wikipedia/commons/thumb/e/ec/Maratha_Light_Infantry.svg/500px-Maratha_Light_Infantry.svg.png?v=5">
@@ -270,6 +270,10 @@
                 0 2px 4px rgba(0, 0, 0, 0.3);
         }
 
+        .btn-card:hover h2 {
+            color: var(--mustard-gold);
+        }
+
         .btn-card h2 {
             color: var(--mustard-gold);
             font-size: 1.3rem;
@@ -332,6 +336,7 @@
             justify-content: space-between;
             padding: 30px 20px;
             box-shadow: 10px 0 30px rgba(0, 0, 0, 0.6);
+            overflow: hidden; /* Hide panel sliding overflow */
         }
 
         .sidebar-drawer.active {
@@ -400,6 +405,44 @@
             background: var(--mustard-gold);
             color: var(--bg-dark);
             transform: scale(0.97);
+        }
+
+        /* SLIDING SUB-PANEL SYSTEM[cite: 1] */
+        .sub-drawer-panel {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(10, 15, 13, 0.95);
+            backdrop-filter: blur(25px);
+            -webkit-backdrop-filter: blur(25px);
+            padding: 30px 20px;
+            transform: translate3d(100%, 0, 0);
+            transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            z-index: 100;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .sub-drawer-panel.active {
+            transform: translate3d(0, 0, 0);
+        }
+
+        .sub-panel-back-btn {
+            background: none;
+            border: none;
+            color: var(--mustard-gold);
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 25px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid rgba(225, 173, 1, 0.15);
+            text-transform: uppercase;
         }
 
         .drawer-footer {
@@ -707,6 +750,7 @@
 
     <div id="drawerOverlay" class="drawer-overlay" onclick="toggleSidebar(false)"></div>
     <div id="sidebarDrawer" class="sidebar-drawer">
+        <!-- MAIN DRAWER VIEW -->
         <div>
             <div class="drawer-header">
                 <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/ec/Maratha_Light_Infantry.svg/500px-Maratha_Light_Infantry.svg.png" class="drawer-logo" alt="Logo">
@@ -717,13 +761,39 @@
                 <div class="drawer-item" onclick="openInternalSummary()">Bills & Summary</div>
                 <div class="drawer-item" onclick="openInternalInventory()">Check Inventory</div>
                 <a href="https://docs.google.com/forms/d/e/1FAIpQLSdr2ahQe2ham_Yl2GsLEsmE2H1KBl6Ou8MdlxJBE7W9ZrTxrA/viewform" class="drawer-item" onclick="toggleSidebar(false)">Add New Item</a>
-                <a href="#" class="drawer-item" onclick="toggleSidebar(false)">Update Purchase</a>
+                <div class="drawer-item" onclick="toggleSubDrawer('purchase-panel', true)">Update Purchase</div>
                 <a href="https://docs.google.com/spreadsheets/d/17rMvMusueD6IDAYGIjPvL9662G-z4z-CRSc_1jJrRaY/edit?gid=0#gid=0" class="drawer-item" onclick="toggleSidebar(false)">Edit Officers Details</a>
-                <a href="#" class="drawer-item" onclick="toggleSidebar(false)">Edit Price of Items</a>
+                <div class="drawer-item" onclick="toggleSubDrawer('prices-panel', true)">Edit Price of Items</div>
             </nav>
         </div>
         <div class="drawer-footer">
             <button class="btn-logout" onclick="instantLogOut()">Log Out</button>
+        </div>
+
+        <!-- 1. UPDATE PURCHASE SLIDING PANEL[cite: 1] -->
+        <div id="purchase-panel" class="sub-drawer-panel">
+            <button class="sub-panel-back-btn" onclick="toggleSubDrawer('purchase-panel', false)">⟵ Back</button>
+            <div class="drawer-header" style="margin-bottom: 25px;">
+                <span class="drawer-brand-title" style="font-size: 1rem;">Update Purchase</span>
+            </div>
+            <nav class="drawer-nav">
+                <!-- Replace # below with your direct Google Form URL links[cite: 1] -->
+                <a href="#" class="drawer-item" onclick="toggleSidebar(false)">Update Liquor</a>
+                <a href="#" class="drawer-item" onclick="toggleSidebar(false)">Update Soft Drinks</a>
+            </nav>
+        </div>
+
+        <!-- 2. EDIT PRICES SLIDING PANEL[cite: 1] -->
+        <div id="prices-panel" class="sub-drawer-panel">
+            <button class="sub-panel-back-btn" onclick="toggleSubDrawer('prices-panel', false)">⟵ Back</button>
+            <div class="drawer-header" style="margin-bottom: 25px;">
+                <span class="drawer-brand-title" style="font-size: 1rem;">Edit Prices</span>
+            </div>
+            <nav class="drawer-nav">
+                <!-- Replace # below with your Spreadsheet Tab URLs[cite: 1] -->
+                <a href="#" class="drawer-item" onclick="toggleSidebar(false)">Edit Liquor Prices</a>
+                <a href="#" class="drawer-item" onclick="toggleSidebar(false)">Edit Soft Drinks Prices</a>
+            </nav>
         </div>
     </div>
 
@@ -949,6 +1019,16 @@
             lockApp();
         }
 
+        // CONTROL SLIDING SUB-DRAWERS[cite: 1]
+        function toggleSubDrawer(panelId, open) {
+            const panel = document.getElementById(panelId);
+            if (open) {
+                panel.classList.add('active');
+            } else {
+                panel.classList.remove('active');
+            }
+        }
+
         function toggleSidebar(open) {
             const drawer = document.getElementById('sidebarDrawer');
             const overlay = document.getElementById('drawerOverlay');
@@ -958,6 +1038,9 @@
             } else {
                 drawer.classList.remove('active');
                 overlay.classList.remove('active');
+                // Auto-close any open sub-panels when the entire drawer closes[cite: 1]
+                toggleSubDrawer('purchase-panel', false);
+                toggleSubDrawer('prices-panel', false);
             }
         }
 
@@ -1114,7 +1197,7 @@
             const query = document.getElementById('inventorySearch').value.toLowerCase().trim();
 
             const filteredData = targetData.filter(item => {
-                return item.itemName.toLowerCase().includes(query);
+                return item.name.toLowerCase().includes(query);
             });
 
             if (filteredData.length === 0) {
@@ -1126,8 +1209,8 @@
                 const row = document.createElement('div');
                 row.className = 'inventory-item-row';
                 row.innerHTML = `
-                    <span class="inv-name">${item.itemName}</span>
-                    <span class="inv-qty">${item.monthlyBalance}</span>
+                    <span class="inv-name">${item.name}</span>
+                    <span class="inv-qty">${item.qty}</span>
                 `;
                 container.appendChild(row);
             });
