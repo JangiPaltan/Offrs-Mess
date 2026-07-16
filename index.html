@@ -1073,7 +1073,7 @@
             });
         }
 
-        function parseGoogleSheetGvizJson(rawText, tabType) {
+       function parseGoogleSheetGvizJson(rawText, tabType) {
     try {
         const startIdx = rawText.indexOf('{');
         const endIdx = rawText.lastIndexOf('}');
@@ -1087,24 +1087,21 @@
         const rows = jsonObj.table.rows;
         const inventoryList = [];
 
-        // Loop through item rows starting at index 6
+        // Loop through data items starting exactly at Row 7 (index 6)
         for (let i = 6; i < rows.length; i++) {
             const row = rows[i];
             if (!row || !row.c) continue;
 
-            const nameObj = row.c[0]; // Column A
-            const stockObj = row.c[5]; // Column F
+            const nameObj = row.c[0];  // Column A: Item Name
+            const stockObj = row.c[5]; // Column F: Monthly Balance
 
-            let itemName = '';
+            let nameStr = '';
             if (nameObj && nameObj.v !== null && nameObj.v !== undefined) {
-                itemName = String(nameObj.v).trim();
+                nameStr = String(nameObj.v).trim();
             }
 
-            // Skip garbage/dates/header-labels
-            if (!itemName || 
-                itemName.toUpperCase() === 'TOTAL' || 
-                itemName.toUpperCase() === 'VALUE' || 
-                itemName.startsWith('Date(')) {
+            // Clean out summary totals or empty rows
+            if (!nameStr || nameStr.toUpperCase() === 'TOTAL' || nameStr.toUpperCase() === 'VALUE') {
                 continue;
             }
 
@@ -1114,11 +1111,11 @@
                 currentStock = !isNaN(numericValue) ? Math.floor(numericValue) : 0;
             }
 
-            // MUST match your exact UI keys: itemName, monthlyBalance, category
+            // Pushes matching UI parameters
             inventoryList.push({
-                itemName: itemName,
+                itemName: nameStr,
                 monthlyBalance: currentStock,
-                category: tabType 
+                category: tabType
             });
         }
 
