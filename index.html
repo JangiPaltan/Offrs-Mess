@@ -1073,8 +1073,9 @@
             });
         }
 
-       function parseGoogleSheetGvizJson(rawText, tabType) {
+      function parseGoogleSheetGvizJson(rawText, tabType) {
     try {
+        // 1. Clean the Google API wrapper text safely
         const startIdx = rawText.indexOf('{');
         const endIdx = rawText.lastIndexOf('}');
         if (startIdx === -1 || endIdx === -1) return [];
@@ -1087,35 +1088,34 @@
         const rows = jsonObj.table.rows;
         const inventoryList = [];
 
-        // Loop through data items starting exactly at Row 7 (index 6)
+        // 2. Loop through all rows starting at index 6 (Row 7 in your spreadsheet)
         for (let i = 6; i < rows.length; i++) {
             const row = rows[i];
             if (!row || !row.c) continue;
 
-            const nameObj = row.c[0];  // Column A: Item Name
-            const stockObj = row.c[5]; // Column F: Monthly Balance
+            // Column A (Index 0): Item Name
+            const nameObj = row.c[0];
+            // Column F (Index 5): Monthly Balance / Current Stock
+            const stockObj = row.c[5];
 
-            let nameStr = '';
-            if (nameObj && nameObj.v !== null && nameObj.v !== undefined) {
-                nameStr = String(nameObj.v).trim();
-            }
+            const itemName = nameObj && nameObj.v ? String(nameObj.v).trim() : '';
 
-            // Clean out summary totals or empty rows
-            if (!nameStr || nameStr.toUpperCase() === 'TOTAL' || nameStr.toUpperCase() === 'VALUE') {
+            // Skip row if the item name is completely blank, or matches spreadsheet labels
+            if (!itemName || itemName.toUpperCase() === 'TOTAL' || itemName.toUpperCase() === 'VALUE') {
                 continue;
             }
 
+            // Get the stock value safely (Default to 0 if it's empty or null)
             let currentStock = 0;
             if (stockObj && stockObj.v !== null && stockObj.v !== undefined) {
-                const numericValue = parseFloat(stockObj.v);
-                currentStock = !isNaN(numericValue) ? Math.floor(numericValue) : 0;
+                currentStock = parseInt(stockObj.v, 10) || 0;
             }
 
-            // Pushes matching UI parameters
+            // 3. NO FILTERING: Grab everything on this tab
             inventoryList.push({
-                itemName: nameStr,
-                monthlyBalance: currentStock,
-                category: tabType
+                name: itemName,
+                stock: currentStock,
+                type: tabType // Correctly categorizes it based on which sheet tab fetched it
             });
         }
 
