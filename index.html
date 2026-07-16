@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Jangi Paltan Officers Mess</title>
     <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-status-bar-style" contepnt="black-translucent">
     
     <link rel="icon" type="image/png" href="https://upload.wikimedia.org/wikipedia/commons/thumb/e/ec/Maratha_Light_Infantry.svg/500px-Maratha_Light_Infantry.svg.png?v=5">
     <link rel="apple-touch-icon" href="https://upload.wikimedia.org/wikipedia/commons/thumb/e/ec/Maratha_Light_Infantry.svg/500px-Maratha_Light_Infantry.svg.png?v=5">
@@ -1100,8 +1100,11 @@
 
             const itemName = nameObj && nameObj.v ? String(nameObj.v).trim() : '';
 
-            // Skip row if the item name is completely blank, or matches spreadsheet labels
-            if (!itemName || itemName.toUpperCase() === 'TOTAL' || itemName.toUpperCase() === 'VALUE') {
+            // Skip row if completely blank, matches headers, OR is a weird Google Date string
+            if (!itemName || 
+                itemName.toUpperCase() === 'TOTAL' || 
+                itemName.toUpperCase() === 'VALUE' ||
+                itemName.startsWith('Date(')) {
                 continue;
             }
 
@@ -1111,11 +1114,15 @@
                 currentStock = parseInt(stockObj.v, 10) || 0;
             }
 
-            // 3. NO FILTERING: Grab everything on this tab
+            // 3. NO FILTERING: Grab everything on this tab. 
+            // Pushing multiple key names so your UI finds it no matter what it's searching for.
             inventoryList.push({
-                name: itemName,
-                stock: currentStock,
-                type: tabType // Correctly categorizes it based on which sheet tab fetched it
+                name: itemName,               // Fallback for V109 logic
+                itemName: itemName,           // Protects against "No items found"
+                stock: currentStock,          // Fallback for V109 logic
+                monthlyBalance: currentStock, // Protects against "undefined" balances
+                type: tabType,                // Fallback for V109 logic
+                category: tabType             // Protects tab switching
             });
         }
 
