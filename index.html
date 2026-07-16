@@ -375,7 +375,6 @@
             padding-right: 5px;
         }
 
-        /* Custom scrollbar styling for clean scrollable sidebar */
         .drawer-nav::-webkit-scrollbar {
             width: 4px;
         }
@@ -408,7 +407,6 @@
             transform: scale(0.97);
         }
 
-        /* Logout Container Styled Separately at Bottom */
         .drawer-footer {
             border-top: 1px solid rgba(225, 173, 1, 0.15);
             padding-top: 20px;
@@ -685,7 +683,6 @@
 </head>
 <body>
 
-    <!-- SIDEBAR DRAWER OVERLAY & SYSTEM -->
     <div id="drawerOverlay" class="drawer-overlay" onclick="toggleSidebar(false)"></div>
     <div id="sidebarDrawer" class="sidebar-drawer">
         <div>
@@ -694,13 +691,9 @@
                 <span class="drawer-brand-title">Jangi Paltan<br>Officers Mess</span>
             </div>
             <nav class="drawer-nav">
-                <!-- 1. Orders -->
                 <a href="https://docs.google.com/spreadsheets/d/17rMvMusueD6IDAYGIjPvL9662G-z4z-CRSc_1jJrRaY/edit#gid=YOUR_ORDERS_GID" class="drawer-item" onclick="toggleSidebar(false)">Orders</a>
-                <!-- 2. Bills & Summary -->
                 <div class="drawer-item" onclick="openInternalSummary()">Bills & Summary</div>
-                <!-- 3. Check Inventory (In-App) -->
                 <div class="drawer-item" onclick="openInternalInventory()">Check Inventory</div>
-                <!-- Placeholder Menu Actions -->
                 <a href="#" class="drawer-item" onclick="toggleSidebar(false)">Add New Item</a>
                 <a href="#" class="drawer-item" onclick="toggleSidebar(false)">Update Purchase</a>
                 <a href="#" class="drawer-item" onclick="toggleSidebar(false)">Edit Officers Name List</a>
@@ -740,7 +733,6 @@
     </div>
 
     <div class="page-container">
-        <!-- APP SCREEN CONSOLE (HOME) -->
         <div id="app-screen">
             <header>
                 <button class="hamburger-btn" onclick="toggleSidebar(true)" aria-label="Open Sidebar Menu">☰</button>
@@ -769,7 +761,6 @@
             </div>
         </div>
 
-        <!-- INLINE SCREEN: BILLS & SUMMARY VIEW -->
         <div id="bills-summary-screen" style="display: none; opacity: 0; transform: translateY(20px) scale(0.98);">
             <header class="dashboard-header">
                 <div class="header-text-group">
@@ -782,7 +773,6 @@
             </header>
 
             <main class="dashboard-list">
-                <!-- 1. Officer's Monthly Bill -->
                 <div class="list-item-card" onclick="openPrintPreview('https://docs.google.com/spreadsheets/d/17rMvMusueD6IDAYGIjPvL9662G-z4z-CRSc_1jJrRaY/edit#gid=YOUR_OFFICER_BILL_GID_HERE')">
                     <div class="card-left-group">
                         <h2 class="card-title">Officer's Monthly Bill</h2>
@@ -792,7 +782,6 @@
                     </div>
                 </div>
 
-                <!-- 2. Guest Bill -->
                 <div class="list-item-card" onclick="openPrintPreview('https://docs.google.com/spreadsheets/d/17rMvMusueD6IDAYGIjPvL9662G-z4z-CRSc_1jJrRaY/edit#gid=YOUR_GUEST_BILL_GID_HERE')">
                     <div class="card-left-group">
                         <h2 class="card-title">Guest Bill</h2>
@@ -802,7 +791,6 @@
                     </div>
                 </div>
 
-                <!-- 3. Officers Monthly Summary -->
                 <div class="list-item-card" onclick="openPrintPreview('https://docs.google.com/spreadsheets/d/17rMvMusueD6IDAYGIjPvL9662G-z4z-CRSc_1jJrRaY/edit#gid=1634296846')">
                     <div class="card-left-group">
                         <h2 class="card-title">Officers Monthly Summary</h2>
@@ -812,7 +800,6 @@
                     </div>
                 </div>
 
-                <!-- 4. Monthly Liquor Summary -->
                 <div class="list-item-card" onclick="openPrintPreview('https://docs.google.com/spreadsheets/d/17rMvMusueD6IDAYGIjPvL9662G-z4z-CRSc_1jJrRaY/edit#gid=YOUR_LIQUOR_GID_HERE')">
                     <div class="card-left-group">
                         <h2 class="card-title">Monthly Liquor Summary</h2>
@@ -822,7 +809,6 @@
                     </div>
                 </div>
 
-                <!-- 5. Monthly Soft Drink Summary -->
                 <div class="list-item-card" onclick="openPrintPreview('https://docs.google.com/spreadsheets/d/17rMvMusueD6IDAYGIjPvL9662G-z4z-CRSc_1jJrRaY/edit#gid=YOUR_SOFT_DRINKS_GID_HERE')">
                     <div class="card-left-group">
                         <h2 class="card-title">Monthly Soft Drink Summary</h2>
@@ -834,7 +820,6 @@
             </main>
         </div>
 
-        <!-- NEW INLINE SCREEN: INTERNAL LIVE INVENTORY VIEWER -->
         <div id="inventory-screen" style="display: none; opacity: 0; transform: translateY(20px) scale(0.98);">
             <header class="dashboard-header">
                 <div class="header-text-group">
@@ -870,406 +855,12 @@
         let idleTimer;
         let isLocked = true;
 
-        // ENTER YOUR GOOGLE SPREADSHEET ID HERE
+        // TARGET FILE SPREADSHEET ID DEFINITION
         const SPREADSHEET_ID = "17rMvMusueD6IDAYGIjPvL9662G-z4z-CRSc_1jJrRaY";
 
-        // Global memory caches to hold live stock values once loaded
         let liquorStockCache = [];
         let softDrinkStockCache = [];
-        let currentInventoryTab = "liquor"; // Default active sub-tab
+        let currentInventoryTab = "liquor"; 
 
-        // AUTOMATIC PAGE RESET ENGINE (2 Minute Expiration)
         function resetIdleTimer() {
-            clearTimeout(idleTimer);
-            if (!isLocked) {
-                idleTimer = setTimeout(function() {
-                    lockApp();
-                }, 120000); 
-            }
-        }
-
-        window.onload = resetIdleTimer;
-        window.onmousemove = resetIdleTimer;
-        window.onmousedown = resetIdleTimer;
-        window.ontouchstart = resetIdleTimer;
-        window.onclick = resetIdleTimer;
-        window.onkeydown = resetIdleTimer;
-
-        // Keypad Controller Logic
-        function pressNum(num) {
-            resetIdleTimer();
-            if (currentPin.length < 4) {
-                currentPin += num;
-                updateDots();
-                if (currentPin.length === 4) {
-                    setTimeout(verifyPin, 150);
-                }
-            }
-        }
-
-        function clearPin() {
-            resetIdleTimer();
-            currentPin = "";
-            updateDots();
-        }
-
-        function backspacePin() {
-            resetIdleTimer();
-            if (currentPin.length > 0) {
-                currentPin = currentPin.slice(0, -1);
-                updateDots();
-            }
-        }
-
-        function updateDots() {
-            for (let i = 1; i <= 4; i++) {
-                const dot = document.getElementById(`dot${i}`);
-                if (i <= currentPin.length) {
-                    dot.classList.add('active');
-                } else {
-                    dot.classList.remove('active');
-                }
-            }
-        }
-
-        // SMOOTH SLIDE PAGE TRANSITION
-        function verifyPin() {
-            if (currentPin === CORRECT_PIN) {
-                isLocked = false;
-                document.getElementById('lock-screen').style.transform = 'translateY(-100%)';
-                document.getElementById('lock-screen').style.opacity = '0';
-                
-                document.getElementById('app-screen').style.opacity = '1';
-                document.getElementById('app-screen').style.transform = 'translateY(0) scale(1)';
-                clearPin();
-                resetIdleTimer();
-            } else {
-                alert("ACCESS DENIED. INCORRECT PIN.");
-                clearPin();
-            }
-        }
-
-        function lockApp() {
-            isLocked = true;
-            switchDashboardView(false);
-            switchInventoryView(false);
-            toggleSidebar(false);
-
-            document.getElementById('lock-screen').style.transform = 'translateY(0)';
-            document.getElementById('lock-screen').style.opacity = '1';
-            
-            document.getElementById('app-screen').style.opacity = '0';
-            document.getElementById('app-screen').style.transform = 'translateY(20px) scale(0.98)';
-            clearPin();
-        }
-
-        function instantLogOut() {
-            lockApp();
-        }
-
-        // Clock Script
-        function updateDateTime() {
-            const now = new Date();
-
-            const day = now.getDate();
-            const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
-            const month = months[now.getMonth()];
-            const year = now.getFullYear();
-            
-            const compiledDateStr = `${day} ${month} ${year}`;
-            document.getElementById('live-date').innerText = compiledDateStr;
-            const dashLiveDate = document.getElementById('dash-live-date');
-            if (dashLiveDate) dashLiveDate.innerText = compiledDateStr;
-
-            const hours = String(now.getHours()).padStart(2, '0');
-            const minutes = String(now.getMinutes()).padStart(2, '0');
-            const seconds = String(now.getSeconds()).padStart(2, '0');
-            
-            document.getElementById('live-time').innerText = `${hours}:${minutes}:${seconds}`;
-        }
-
-        // View Transition Router Logic
-        function switchDashboardView(showDashboard) {
-            resetIdleTimer();
-            const homeScreen = document.getElementById('app-screen');
-            const dashScreen = document.getElementById('bills-summary-screen');
-            const invScreen = document.getElementById('inventory-screen');
-            
-            if (showDashboard) {
-                homeScreen.style.display = 'none';
-                homeScreen.style.opacity = '0';
-                invScreen.style.display = 'none';
-                invScreen.style.opacity = '0';
-                
-                dashScreen.style.display = 'flex';
-                setTimeout(() => {
-                    dashScreen.style.opacity = '1';
-                    dashScreen.style.transform = 'translateY(0) scale(1)';
-                }, 50);
-            } else {
-                dashScreen.style.display = 'none';
-                dashScreen.style.opacity = '0';
-                
-                homeScreen.style.display = 'block';
-                setTimeout(() => {
-                    homeScreen.style.opacity = '1';
-                    homeScreen.style.transform = 'translateY(0) scale(1)';
-                }, 50);
-            }
-        }
-
-        function switchInventoryView(showInventory) {
-            resetIdleTimer();
-            const homeScreen = document.getElementById('app-screen');
-            const dashScreen = document.getElementById('bills-summary-screen');
-            const invScreen = document.getElementById('inventory-screen');
-
-            if (showInventory) {
-                homeScreen.style.display = 'none';
-                homeScreen.style.opacity = '0';
-                dashScreen.style.display = 'none';
-                dashScreen.style.opacity = '0';
-
-                invScreen.style.display = 'flex';
-                setTimeout(() => {
-                    invScreen.style.opacity = '1';
-                    invScreen.style.transform = 'translateY(0) scale(1)';
-                }, 50);
-                
-                // Trigger live fetch of spreadsheet data
-                loadLiveInventoryData();
-            } else {
-                invScreen.style.display = 'none';
-                invScreen.style.opacity = '0';
-
-                homeScreen.style.display = 'block';
-                setTimeout(() => {
-                    homeScreen.style.opacity = '1';
-                    homeScreen.style.transform = 'translateY(0) scale(1)';
-                }, 50);
-            }
-        }
-
-        function openInternalSummary() {
-            toggleSidebar(false);
-            switchDashboardView(true);
-        }
-
-        function openInternalInventory() {
-            toggleSidebar(false);
-            switchInventoryView(true);
-        }
-
-        function openPrintPreview(urlTarget) {
-            resetIdleTimer();
-            window.open(urlTarget, '_blank');
-        }
-
-        // --- GESTURE & SIDEBAR NAVIGATION ENGINE ---
-        const sidebar = document.getElementById('sidebarDrawer');
-        const overlay = document.getElementById('drawerOverlay');
-        let drawerOpen = false;
-
-        function toggleSidebar(open) {
-            if (isLocked) return; 
-            resetIdleTimer();
-            drawerOpen = open;
-            if (open) {
-                sidebar.classList.add('active');
-                overlay.classList.add('active');
-            } else {
-                sidebar.classList.remove('active');
-                overlay.classList.remove('active');
-            }
-            sidebar.style.transform = ''; 
-            overlay.style.opacity = '';
-        }
-
-        // Swiping gesture variables
-        let startX = 0;
-        let currentX = 0;
-        let isDragging = false;
-        let startTimestamp = 0;
-        const drawerWidth = 280;
-
-        window.addEventListener('touchstart', (e) => {
-            if (isLocked) return;
-            const touch = e.touches[0];
-            startX = touch.clientX;
-            startTimestamp = e.timeStamp;
-            
-            if (!drawerOpen && startX < 35) {
-                isDragging = true;
-                sidebar.style.transition = 'none';
-                overlay.style.transition = 'none';
-                overlay.classList.add('active');
-            } 
-            else if (drawerOpen && startX <= drawerWidth) {
-                isDragging = true;
-                sidebar.style.transition = 'none';
-                overlay.style.transition = 'none';
-            }
-        }, { passive: true });
-
-        window.addEventListener('touchmove', (e) => {
-            if (!isDragging) return;
-            const touch = e.touches[0];
-            currentX = touch.clientX;
-            
-            let translateX = 0;
-            if (!drawerOpen) {
-                translateX = Math.min(0, -drawerWidth + currentX);
-                sidebar.style.transform = `translate3d(${translateX}px, 0, 0)`;
-                const ratio = Math.min(1, currentX / drawerWidth);
-                overlay.style.opacity = ratio;
-            } else {
-                const displacement = currentX - startX;
-                if (displacement < 0) {
-                    translateX = Math.min(0, displacement);
-                    sidebar.style.transform = `translate3d(${translateX}px, 0, 0)`;
-                    const ratio = Math.max(0, 1 + (displacement / drawerWidth));
-                    overlay.style.opacity = ratio;
-                }
-            }
-        }, { passive: true });
-
-        window.addEventListener('touchend', (e) => {
-            if (!isDragging) return;
-            isDragging = false;
-            
-            sidebar.style.transition = '';
-            overlay.style.transition = '';
-
-            const touch = e.changedTouches[0];
-            const endX = touch.clientX;
-            const duration = e.timeStamp - startTimestamp;
-            const displacement = endX - startX;
-            const velocity = Math.abs(displacement) / duration; // Pixels per millisecond
-
-            if (!drawerOpen) {
-                // If swiping open: complete opening if dragged past 30% or swiped quickly to the right
-                if (endX > (drawerWidth * 0.3) || (velocity > 0.3 && displacement > 0)) {
-                    toggleSidebar(true);
-                } else {
-                    toggleSidebar(false);
-                }
-            } else {
-                // If swiping closed: complete closing if dragged left past 30% or swiped quickly to the left
-                if (displacement < - (drawerWidth * 0.3) || (velocity > 0.3 && displacement < 0)) {
-                    toggleSidebar(false);
-                } else {
-                    toggleSidebar(true);
-                }
-            }
-        });
-
-        // --- IN-APP INVENTORY CONTROLLER & GOOGLE SHEETS CONNECTOR ---
-        async function loadLiveInventoryData() {
-            // Show spinning loader
-            document.getElementById('inventoryLoader').style.display = 'flex';
-            document.getElementById('inventoryListContainer').style.display = 'none';
-            document.getElementById('inventorySearch').value = '';
-
-            try {
-                // Read from BOTH sheets using public Google Visualization endpoints
-                const liquorUrl = `https://docs.google.com/spreadsheets/d/${SPREADSHEET_ID}/gviz/tq?tqx=out:json&sheet=Liquor%20Inventory`;
-                const softDrinksUrl = `https://docs.google.com/spreadsheets/d/${SPREADSHEET_ID}/gviz/tq?tqx=out:json&sheet=Soft%20Drink%20Inventory`;
-
-                const [liquorRes, softRes] = await Promise.all([
-                    fetch(liquorUrl).then(r => r.text()),
-                    fetch(softDrinksUrl).then(r => r.text())
-                ]);
-
-                liquorStockCache = parseGoogleSheetGvizJson(liquorRes);
-                softDrinkStockCache = parseGoogleSheetGvizJson(softRes);
-
-                // Hide loader, render active tab
-                document.getElementById('inventoryLoader').style.display = 'none';
-                document.getElementById('inventoryListContainer').style.display = 'flex';
-                renderInventoryList();
-
-            } catch (err) {
-                console.error("Failed fetching live inventory:", err);
-                document.getElementById('inventoryLoader').innerHTML = `
-                    <span style="color: #ff0844; font-weight: bold;">Failed to Load Live Inventory.</span>
-                    <span style="font-size: 0.8rem; color: var(--text-muted);">Please confirm sheet is published to the web.</span>
-                `;
-            }
-        }
-
-        function parseGoogleSheetGvizJson(responseText) {
-            // Clean up the Google visualization wrapping syntax: google.visualization.Query.setResponse(...)
-            const match = responseText.match(/google\.visualization\.Query\.setResponse\(([\s\S\*\?]+)\)/);
-            if (!match) return [];
-            
-            const rawJson = JSON.parse(match[1]);
-            const rows = rawJson.table.rows;
-            const parsedItems = [];
-
-            // Skip structural header rows (Rows 0 to 5 correspond to header details in your sheet screenshots)
-            // Rows begin to populate actual stock items from Index 6 (corresponding to Spreadsheet Row 7)
-            for (let i = 6; i < rows.length; i++) {
-                const cells = rows[i].c;
-                if (!cells || cells.length === 0) continue;
-
-                // Column A: Item Name. Column F: Monthly Balance
-                const itemNameCell = cells[0];
-                const monthlyBalanceCell = cells[5]; // Index 5 matches column F
-
-                if (itemNameCell && itemNameCell.v !== null) {
-                    const name = String(itemNameCell.v).trim();
-                    
-                    // Filter out any blank values or non-product names
-                    if (name !== "" && name !== "VALUE" && !name.includes("SUMMARY") && !name.includes("MONTH")) {
-                        const balance = (monthlyBalanceCell && monthlyBalanceCell.v !== null) ? Number(monthlyBalanceCell.v) : 0;
-                        parsedItems.push({ name: name, qty: balance });
-                    }
-                }
-            }
-            return parsedItems;
-        }
-
-        function renderInventoryList() {
-            const container = document.getElementById('inventoryListContainer');
-            container.innerHTML = '';
-
-            const currentCache = (currentInventoryTab === 'liquor') ? liquorStockCache : softDrinkStockCache;
-            const filterQuery = document.getElementById('inventorySearch').value.toLowerCase().trim();
-
-            const filtered = currentCache.filter(item => item.name.toLowerCase().includes(filterQuery));
-
-            if (filtered.length === 0) {
-                container.innerHTML = `<div style="text-align: center; color: var(--text-muted); padding: 30px 10px;">No matching items found.</div>`;
-                return;
-            }
-
-            filtered.forEach(item => {
-                const row = document.createElement('div');
-                row.className = 'inventory-item-row';
-                row.innerHTML = `
-                    <div class="inv-name">${item.name}</div>
-                    <div class="inv-qty">${item.qty}</div>
-                `;
-                container.appendChild(row);
-            });
-        }
-
-        function filterInventoryItems() {
-            renderInventoryList();
-        }
-
-        function switchInventoryTab(tabName) {
-            currentInventoryTab = tabName;
-            
-            // Toggle UI states
-            document.getElementById('tab-liquor').classList.toggle('active', tabName === 'liquor');
-            document.getElementById('tab-softdrinks').classList.toggle('active', tabName === 'softdrinks');
-
-            renderInventoryList();
-        }
-
-        updateDateTime();
-        setInterval(updateDateTime, 1000);
-    </script>
-</body>
-</html>
+            clearTimeout(idleTimer
