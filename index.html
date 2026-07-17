@@ -1743,8 +1743,10 @@
         }
     }, 200);
 
-    // Dynamic self-url fetch to execute the script command directly
-    var scriptUrl = window.location.href.split('?')[0] + '?action=sync';
+    // Dynamic Self-URL Constructor: Preserves your existing token parameter securely
+    var currentUrl = new URL(window.location.href);
+    currentUrl.searchParams.set('action', 'sync'); // Safely appends or replaces the action keyword
+    var scriptUrl = currentUrl.toString();
 
     fetch(scriptUrl)
         .then(response => response.text())
@@ -1765,7 +1767,8 @@
             statusMsg.style.color = "#f44336";
             console.error(error);
         });
-}     
+}
+        
 </script>
 </body>
 </html>
