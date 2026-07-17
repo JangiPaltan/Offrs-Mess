@@ -856,6 +856,71 @@
         </div>
     </div>
 
+    <!-- ISOLATED LOCKSCREEN CONTROLLER -->
+<script>
+    window.CORRECT_PIN = "1768";
+    window.currentPin = "";
+    window.isLocked = true;
+
+    window.pressNum = function(num) {
+        if (window.currentPin.length < 4) {
+            window.currentPin += String(num);
+            window.updatePinDots();
+            if (window.currentPin.length === 4) {
+                setTimeout(window.checkPin, 200);
+            }
+        }
+    };
+
+    window.clearPin = function() {
+        window.currentPin = "";
+        window.updatePinDots();
+    };
+
+    window.backspacePin = function() {
+        if (window.currentPin.length > 0) {
+            window.currentPin = window.currentPin.slice(0, -1);
+            window.updatePinDots();
+        }
+    };
+
+    window.updatePinDots = function() {
+        // Matches your exact HTML classes: loops through dot1 to dot4
+        for (let i = 1; i <= 4; i++) {
+            const dot = document.getElementById(`dot${i}`);
+            if (dot) {
+                if (i <= window.currentPin.length) {
+                    dot.classList.add('active');
+                } else {
+                    dot.classList.remove('active');
+                }
+            }
+        }
+    };
+
+    window.checkPin = function() {
+        if (window.currentPin === window.CORRECT_PIN) {
+            const lockScreen = document.getElementById('lock-screen');
+            if (lockScreen) lockScreen.style.display = 'none';
+            window.isLocked = false;
+            window.clearPin();
+            
+            // Safely fires off data fetching if the bottom script is happy
+            if (typeof loadPendingOrdersData === 'function') {
+                loadPendingOrdersData();
+            }
+        } else {
+            // Target the correct container name from line 837
+            const pinContainer = document.querySelector('.pin-dots');
+            if (pinContainer) {
+                pinContainer.classList.add('shake');
+                setTimeout(() => pinContainer.classList.remove('shake'), 500);
+            }
+            window.clearPin();
+        }
+    };
+</script>
+
     <div id="drawerOverlay" class="drawer-overlay" onclick="toggleSidebar(false)"></div>
     <div id="sidebarDrawer" class="sidebar-drawer">
         <div>
@@ -1662,114 +1727,8 @@
             }
         });
 
-        // ==========================================
-        // LOCKSCREEN PIN CORE FUNCTIONS
-        // ==========================================
-        window.pressNum = function(num) {
-            if (currentPin.length < 4) {
-                currentPin += num;
-                updatePinDots();
-                if (currentPin.length === 4) {
-                    setTimeout(checkPin, 200);
-                }
-            }
-        };
+     
 
-        window.clearPin = function() {
-            currentPin = "";
-            updatePinDots();
-        };
-
-        function updatePinDots() {
-            const dots = document.querySelectorAll('.pin-dot');
-            dots.forEach((dot, index) => {
-                if (index < currentPin.length) {
-                    dot.classList.add('active');
-                } else {
-                    dot.classList.remove('active');
-                }
-            });
-        }
-
-        function checkPin() {
-            if (currentPin === CORRECT_PIN) {
-                document.getElementById('lock-screen').style.display = 'none';
-                isLocked = false;
-                clearPin();
-            } else {
-                const pinContainer = document.querySelector('.pin-dots-container');
-                if (pinContainer) {
-                    pinContainer.classList.add('shake');
-                    setTimeout(() => pinContainer.classList.remove('shake'), 500);
-                }
-                clearPin();
-            }
-        }
-
-      // ==========================================
-// LOCKSCREEN PIN CORE FUNCTIONS (ULTIMATE BINDING)
-// ==========================================
-window.currentPin = ""; // Explicitly attach the state to window
-
-window.pressNum = function(num) {
-    // Fallback check to ensure global variables exist
-    if (typeof window.currentPin === 'undefined') window.currentPin = "";
-    const correctPinStr = typeof CORRECT_PIN !== 'undefined' ? CORRECT_PIN : "1768";
-
-    if (window.currentPin.length < 4) {
-        window.currentPin += String(num); // Force it to act as a string concatenation
-        window.updatePinDots();
-        
-        if (window.currentPin.length === 4) {
-            setTimeout(window.checkPin, 200);
-        }
-    }
-};
-
-window.clearPin = function() {
-    window.currentPin = "";
-    window.updatePinDots();
-};
-
-window.backspacePin = function() {
-    if (typeof window.currentPin === 'string' && window.currentPin.length > 0) {
-        window.currentPin = window.currentPin.slice(0, -1);
-        window.updatePinDots();
-    }
-};
-
-window.updatePinDots = function() {
-    const dots = document.querySelectorAll('.pin-dot');
-    if (!dots || dots.length === 0) return;
-    
-    dots.forEach((dot, index) => {
-        if (index < window.currentPin.length) {
-            dot.classList.add('active');
-        } else {
-            dot.classList.remove('active');
-        }
-    });
-};
-
-window.checkPin = function() {
-    const correctPinStr = typeof CORRECT_PIN !== 'undefined' ? CORRECT_PIN : "1768";
-    
-    if (window.currentPin === correctPinStr) {
-        const lockScreen = document.getElementById('lock-screen');
-        if (lockScreen) {
-            lockScreen.style.display = 'none';
-        }
-        if (typeof isLocked !== 'undefined') isLocked = false;
-        window.clearPin();
-    } else {
-        const pinContainer = document.querySelector('.pin-dots-container');
-        if (pinContainer) {
-            pinContainer.classList.add('shake');
-            setTimeout(() => pinContainer.classList.remove('shake'), 500);
-        }
-        window.clearPin();
-    }
-};
         
 </script>
 </body>
