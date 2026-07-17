@@ -730,6 +730,71 @@
         @keyframes spin {
             to { transform: rotate(360deg); }
         }
+
+        
+        /* PENDING ORDERS SCREEN STYLES */
+        #pending-orders-screen {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.6s ease;
+        }
+
+        .order-card {
+            display: flex;
+            align-items: center;
+            background-color: #131c18;
+            border: 1px solid rgba(225, 173, 1, 0.15);
+            border-radius: 14px;
+            padding: 16px;
+            margin-bottom: 12px;
+            position: relative;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .order-card-logo {
+            width: 48px;
+            height: 48px;
+            margin-right: 16px;
+            flex-shrink: 0;
+        }
+
+        .order-card-content {
+            flex-grow: 1;
+            text-align: left;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .order-card-date {
+            font-size: 10px;
+            text-transform: uppercase;
+            color: var(--text-muted);
+            letter-spacing: 1px;
+            margin-bottom: 4px;
+        }
+
+        .order-card-name {
+            font-size: 16px;
+            font-weight: 700;
+            color: #ffffff;
+            letter-spacing: 0.5px;
+            margin-bottom: 6px;
+        }
+
+        .order-card-items {
+            font-size: 13px;
+            color: #d1d1d1;
+            line-height: 1.4;
+            letter-spacing: 0.5px;
+        }
+
+        .order-item-line {
+            display: block;
+            border-bottom: 1px dashed rgba(255, 255, 255, 0.05);
+            padding: 2px 0;
+        }
+        
     </style>
 </head>
 <body>
@@ -769,7 +834,7 @@
                 <span class="drawer-brand-title">Jangi Paltan<br>Officers Mess</span>
             </div>
             <nav class="drawer-nav">
-                <a href="https://docs.google.com/spreadsheets/d/17rMvMusueD6IDAYGIjPvL9662G-z4z-CRSc_1jJrRaY/edit#gid=YOUR_ORDERS_GID" class="drawer-item" onclick="toggleSidebar(false)">Orders</a>
+                <div class="drawer-item" onclick="toggleSubDrawer('orders-panel', true)">Orders</div>
                 <div class="drawer-item" onclick="openInternalSummary()">Bills & Summary</div>
                 <div class="drawer-item" onclick="openInternalInventory()">Check Inventory</div>
                 <a href="https://docs.google.com/forms/d/e/1FAIpQLSdr2ahQe2ham_Yl2GsLEsmE2H1KBl6Ou8MdlxJBE7W9ZrTxrA/viewform" class="drawer-item" onclick="toggleSidebar(false)">Add New Item</a>
@@ -812,6 +877,21 @@
             </nav>
         </div>
     </div>
+
+        <div id="orders-panel" class="sub-drawer-panel">
+            <button class="sub-panel-back-btn" onclick="toggleSubDrawer('orders-panel', false)" aria-label="Go Back">
+                <svg viewBox="0 0 24 24">
+                    <path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/>
+                </svg>
+            </button>
+            <div class="drawer-header" style="margin-bottom: 25px;">
+                <span class="drawer-brand-title" style="font-size: 1rem;">Manage Orders</span>
+            </div>
+            <nav class="drawer-nav">
+                <div class="drawer-item" onclick="openPendingOrdersView()">Pending Orders</div>
+                <a href="https://docs.google.com/spreadsheets/d/17rMvMusueD6IDAYGIjPvL9662G-z4z-CRSc_1jJrRaY/edit#gid=318068113" class="drawer-item" onclick="toggleSidebar(false)">All Orders</a>
+            </nav>
+        </div>
 
     <div class="page-container">
         <div id="app-screen">
@@ -955,6 +1035,27 @@
 
             <main id="inventoryListContainer" class="inventory-list" style="display: none;"></main>
         </div>
+
+        <!-- PENDING ORDERS SCREEN -->
+        <div id="pending-orders-screen" style="display: none; opacity: 0; transform: translateY(20px) scale(0.98);">
+            <header class="dashboard-header">
+                <div class="header-text-group">
+                    <span class="header-date-lbl">System Monitoring</span>
+                    <h1 class="header-title-lbl">Pending Orders</h1>
+                </div>
+                <div class="header-action-container">
+                    <button class="back-home-btn" onclick="switchPendingOrdersView(false)">✕</button>
+                </div>
+            </header>
+
+            <div id="ordersLoader" class="loading-indicator">
+                <div class="spinner"></div>
+                <span>Scanning active queue...</span>
+            </div>
+
+            <main id="pendingOrdersContainer" class="dashboard-list" style="display: none;"></main>
+        </div>
+
     </div>
 
     <script>
@@ -1300,6 +1401,132 @@
         function filterInventoryItems() {
             renderInventoryItems();
         }
+
+        // Ensure sub-drawers are handled correctly
+        // (Modify your existing toggleSidebar function so it handles 'orders-panel' auto-closures)
+        const originalToggleSidebar = toggleSidebar;
+        toggleSidebar = function(open) {
+            originalToggleSidebar(open);
+            if (!open) {
+                toggleSubDrawer('orders-panel', false);
+            }
+        };
+
+        function openPendingOrdersView() {
+            toggleSidebar(false);
+            switchDashboardView(false);
+            switchInventoryView(false);
+            switchPendingOrdersView(true);
+            loadPendingOrdersData();
+        }
+
+        function switchPendingOrdersView(show) {
+            const screen = document.getElementById('pending-orders-screen');
+            if (show) {
+                screen.style.display = 'flex';
+                setTimeout(() => {
+                    screen.style.opacity = '1';
+                    screen.style.transform = 'translateY(0) scale(1)';
+                }, 50);
+                document.getElementById('app-screen').style.display = 'none';
+            } else {
+                screen.style.opacity = '0';
+                screen.style.transform = 'translateY(20px) scale(0.98)';
+                setTimeout(() => {
+                    screen.style.display = 'none';
+                }, 400);
+                document.getElementById('app-screen').style.display = 'block';
+            }
+        }
+
+        function loadPendingOrdersData() {
+            const loader = document.getElementById('ordersLoader');
+            const container = document.getElementById('pendingOrdersContainer');
+            
+            loader.style.display = 'flex';
+            container.style.display = 'none';
+            container.innerHTML = "";
+
+            // Use your primary orders tab GID. Replace 'YOUR_ORDERS_GID' if you have a specific one
+            const ordersUrl = `https://docs.google.com/spreadsheets/d/${SPREADSHEET_ID}/gviz/tq?tqx=out:json&gid=YOUR_ORDERS_GID`;
+
+            fetch(ordersUrl)
+                .then(res => res.text())
+                .then(responseText => {
+                    const jsonStart = responseText.indexOf('{');
+                    const jsonEnd = responseText.lastIndexOf('}');
+                    if (jsonStart === -1 || jsonEnd === -1) throw new Error("JSON format error");
+
+                    const jsonString = responseText.substring(jsonStart, jsonEnd + 1);
+                    const rawJson = JSON.parse(jsonString);
+                    
+                    if (!rawJson.table || !rawJson.table.rows) return;
+                    
+                    const rows = rawJson.table.rows;
+                    let pendingCount = 0;
+
+                    for (let i = 0; i < rows.length; i++) {
+                        const cells = rows[i].c;
+                        if (!cells || cells.length < 3) continue;
+
+                        // Identify columns:
+                        // A (0) = Date/Timestamp, B (1) = Officer Name, C (2) = Items, Last column or Col D (3) = Status
+                        const dateVal = cells[0] ? String(cells[0].v || '') : '';
+                        const officerName = cells[1] ? String(cells[1].v || '').trim() : '';
+                        const itemsVal = cells[2] ? String(cells[2].v || '').trim() : '';
+                        
+                        // Dynamically scan remaining cells for "Pending" status
+                        let isPending = false;
+                        for (let j = 3; j < cells.length; j++) {
+                            if (cells[j] && String(cells[j].v).toLowerCase().includes('pending')) {
+                                isPending = true;
+                                break;
+                            }
+                        }
+
+                        // Skip headers and non-pending orders
+                        if (!officerName || officerName === "Officer Name" || !isPending) continue;
+
+                        pendingCount++;
+
+                        // Format the internal items lists if separated by commas
+                        const itemLines = itemsVal.split(',').map(item => 
+                            `<span class="order-item-line">• ${item.trim()}</span>`
+                        ).join('');
+
+                        // Create Card structure containing warning SVG logo (with exact vector match from image)
+                        const card = document.createElement('div');
+                        card.className = 'order-card';
+                        card.innerHTML = `
+                            <div class="order-card-logo">
+                                <svg viewBox="0 0 100 100" style="width:100%; height:100%;">
+                                    <circle cx="50" cy="50" r="45" fill="#E1AD01" />
+                                    <rect x="46" y="22" width="8" height="38" rx="4" fill="#FFFFFF" />
+                                    <circle cx="50" cy="71" r="5.5" fill="#FFFFFF" />
+                                </svg>
+                            </div>
+                            <div class="order-card-content">
+                                <span class="order-card-date">${dateVal}</span>
+                                <span class="order-card-name">${officerName}</span>
+                                <div class="order-card-items">${itemLines}</div>
+                            </div>
+                        `;
+                        container.appendChild(card);
+                    }
+
+                    loader.style.display = 'none';
+                    container.style.display = 'block';
+
+                    if (pendingCount === 0) {
+                        container.innerHTML = `<div class="loading-indicator" style="width:100%; padding: 40px;"><span>No pending orders.</span></div>`;
+                    }
+                })
+                .catch(err => {
+                    console.error("Orders load failed:", err);
+                    loader.innerHTML = "<span>Failed to retrieve database queue. Check worksheet connection.</span>";
+                });
+        }
+        
     </script>
 </body>
 </html>
