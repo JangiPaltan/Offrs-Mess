@@ -1705,6 +1705,51 @@
                 clearPin();
             }
         }
+
+        // ==========================================
+        // LOCKSCREEN PIN CORE FUNCTIONS
+        // ==========================================
+        window.pressNum = function(num) {
+            if (currentPin.length < 4) {
+                currentPin += num;
+                updatePinDots();
+                if (currentPin.length === 4) {
+                    setTimeout(checkPin, 200);
+                }
+            }
+        };
+
+        window.clearPin = function() {
+            currentPin = "";
+            updatePinDots();
+        };
+
+        function updatePinDots() {
+            const dots = document.querySelectorAll('.pin-dot');
+            dots.forEach((dot, index) => {
+                if (index < currentPin.length) {
+                    dot.classList.add('active');
+                } else {
+                    dot.classList.remove('active');
+                }
+            });
+        }
+
+        function checkPin() {
+            if (currentPin === CORRECT_PIN) {
+                document.getElementById('lock-screen').style.display = 'none';
+                isLocked = false;
+                window.clearPin();
+            } else {
+                const pinContainer = document.querySelector('.pin-dots-container');
+                if (pinContainer) {
+                    pinContainer.classList.add('shake');
+                    setTimeout(() => pinContainer.classList.remove('shake'), 500);
+                }
+                window.clearPin();
+            }
+        }
+        
 </script>
 </body>
 </html>
