@@ -868,6 +868,13 @@
                 <div class="drawer-item" onclick="openInternalSummary()">Bills & Summary</div>
                 <div class="drawer-item" onclick="openInternalInventory()">Check Inventory</div>
                 <a href="https://docs.google.com/forms/d/e/1FAIpQLSdr2ahQe2ham_Yl2GsLEsmE2H1KBl6Ou8MdlxJBE7W9ZrTxrA/viewform" class="drawer-item" onclick="toggleSidebar(false)">Add New Item</a>
+                <!-- Form Sync Administration Control Section -->
+                <div class="admin-sync-container" style="margin: 10px 0; padding: 10px 0; border-top: 1px dashed rgba(225, 173, 1, 0.3); text-align: center;">
+                    <button id="sync-forms-btn" onclick="triggerFormDropdownSync()" style="width: 100%; background: rgba(27, 67, 50, 0.2); border: 1px solid var(--mustard-gold); color: var(--mustard-gold); padding: 12px; border-radius: 6px; font-weight: bold; letter-spacing: 1px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; text-transform: uppercase; font-size: 0.8rem;">
+                        🔄 Sync Forms with Price List
+                    </button>
+                    <div id="sync-status-msg" style="font-size: 11px; color: var(--text-muted); margin-top: 6px; height: 16px;"></div>
+                </div>
                 <div class="drawer-item" onclick="toggleSubDrawer('purchase-panel', true)">Update Purchase</div>
                 <a href="https://docs.google.com/spreadsheets/d/17rMvMusueD6IDAYGIjPvL9662G-z4z-CRSc_1jJrRaY/edit?gid=0#gid=0" class="drawer-item" onclick="toggleSidebar(false)">Edit Officers Details</a>
                 <div class="drawer-item" onclick="toggleSubDrawer('prices-panel', true)">Edit Price of Items</div>
@@ -1479,15 +1486,19 @@
             }
         }
 
+// ==========================================
+        // PENDING ORDERS CORE FUNCTIONS
+        // ==========================================
+        let cachedOrdersData = {};
+
         function loadPendingOrdersData() {
             const loader = document.getElementById('ordersLoader');
             const container = document.getElementById('pendingOrdersContainer');
             
-            loader.style.display = 'flex';
-            container.style.display = 'none';
-            container.innerHTML = "";
+            if (loader) loader.style.display = 'flex';
+            if (container) container.style.display = 'none';
+            if (container) container.innerHTML = "";
 
-            // Use your primary orders tab GID. Replace 'YOUR_ORDERS_GID' if you have a specific one
             const ordersUrl = `https://docs.google.com/spreadsheets/d/${SPREADSHEET_ID}/gviz/tq?tqx=out:json&gid=YOUR_ORDERS_GID`;
 
             fetch(ordersUrl)
@@ -1502,208 +1513,198 @@
                     
                     if (!rawJson.table || !rawJson.table.rows) return;
                     
-                    const rows = rawJson.table.rows;
-                   // --- 1. GROUP PENDING ORDERS BY OFFICER NAME ---
-        const groupedOrders = {};
+                    processAndRenderOrders(rawJson.table.rows);
 
-        // Loop through all data rows to build grouped profiles
-        for (let i = 0; i < rows.length; i++) {
-            const cells = rows[i].c;
-            if (!cells || cells.length < 3) continue;
-
-            // Column Mapping based on your Google Sheet:
-            // Column B (Index 1) = Billing Date
-            // Column C (Index 2) = Officer Name
-            // Column D (Index 3) = Item Name
-            // Column G (Index 6) = Quantity
-            const rawDate = cells[1] ? String(cells[1].v || '').trim() : '';
-            const officerName = cells[2] ? String(cells[2].v || '').trim() : 'UNKNOWN OFFICER';
-            const itemName = cells[3] ? String(cells[3].v || '').trim() : '';
-            const itemQty = cells[6] ? String(cells[6].v || '').trim() : '1';
-
-            // Check if this row represents a "Pending" order
-            let isPending = false;
-            for (let j = 3; j < cells.length; j++) {
-                if (cells[j] && String(cells[j].v).toLowerCase().includes('pending')) {
-                    isPending = true;
-                    break;
-                }
-            }
-
-            // Skip headers, blank names, or non-pending rows
-            if (!officerName || officerName === "Offr Name" || !isPending) continue;
-
-            // Format raw DATE(...) values properly if found
-            let formattedDate = rawDate;
-            if (rawDate.toUpperCase().includes("DATE")) {
-                const match = rawDate.match(/DATE\s*\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)/i);
-                if (match) {
-                    const year = match[1];
-                    const month = String(Number(match[2]) + 1).padStart(2, '0');
-                    const day = match[3].padStart(2, '0');
-                    formattedDate = `${day} ${month} ${year}`;
-                }
-            }
-
-            // Grouping logic: Initialize an entry for this officer if it doesn't exist
-            if (!groupedOrders[officerName]) {
-                groupedOrders[officerName] = {
-                    date: formattedDate,
-                    items: []
-                };
-            }
-
-            // Add the item details under this officer's grouping
-            if (itemName) {
-                groupedOrders[officerName].items.push({
-                    name: itemName,
-                    qty: itemQty
+                    if (loader) loader.style.display = 'none';
+                    if (container) container.style.display = 'block';
+                    const syncStamp = document.getElementById('sync-timestamp');
+                    if (syncStamp) syncStamp.innerText = `Last synced: ${new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}`;
+                })
+                .catch(err => {
+                    console.error("Orders load failed:", err);
+                    if (loader) loader.innerHTML = "<span>Failed to retrieve database queue. Check worksheet connection.</span>";
                 });
+        }
+
+        function processAndRenderOrders(rows) {
+            const groupedOrders = {};
+
+            for (let i = 0; i < rows.length; i++) {
+                const cells = rows[i].c;
+                if (!cells || cells.length < 3) continue;
+
+                const rawDate = cells[1] ? String(cells[1].v || '').trim() : '';
+                const officerName = cells[2] ? String(cells[2].v || '').trim() : 'UNKNOWN OFFICER';
+                const itemName = cells[3] ? String(cells[3].v || '').trim() : '';
+                const itemQty = cells[6] ? String(cells[6].v || '').trim() : '1';
+
+                let isPending = false;
+                for (let j = 3; j < cells.length; j++) {
+                    if (cells[j] && String(cells[j].v).toLowerCase().includes('pending')) {
+                        isPending = true;
+                        break;
+                    }
+                }
+
+                if (!officerName || officerName === "Offr Name" || !isPending) continue;
+
+                let formattedDate = rawDate;
+                if (rawDate.toUpperCase().includes("DATE")) {
+                    const match = rawDate.match(/DATE\s*\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)/i);
+                    if (match) {
+                        const year = match[1];
+                        const month = String(Number(match[2]) + 1).padStart(2, '0');
+                        const day = match[3].padStart(2, '0');
+                        formattedDate = `${day} ${month} ${year}`;
+                    }
+                }
+
+                if (!groupedOrders[officerName]) {
+                    groupedOrders[officerName] = {
+                        date: formattedDate,
+                        items: []
+                    };
+                }
+
+                if (itemName) {
+                    groupedOrders[officerName].items.push({
+                        name: itemName,
+                        qty: itemQty
+                    });
+                }
+            }
+
+            cachedOrdersData = groupedOrders; 
+            renderFilteredCards(""); 
+        }
+
+        window.filterOrders = function() {
+            const query = document.getElementById('order-search-input').value.toLowerCase();
+            renderFilteredCards(query);
+        };
+
+        function renderFilteredCards(query) {
+            const container = document.getElementById('pendingOrdersContainer');
+            if (!container) return;
+            container.innerHTML = "";
+            let matchCount = 0;
+
+            Object.keys(cachedOrdersData).forEach(officer => {
+                const orderData = cachedOrdersData[officer];
+                const itemsMatch = orderData.items.filter(item => item.name.toLowerCase().includes(query));
+                const nameMatches = officer.toLowerCase().includes(query);
+
+                if (!nameMatches && itemsMatch.length === 0) return;
+                matchCount++;
+
+                const itemsHtml = orderData.items.map(item => `
+                    <div class="order-card-item">
+                        <span class="item-name">${item.name}</span>
+                        <span class="item-multiplier">x</span>
+                        <span class="item-qty">${item.qty}</span>
+                    </div>
+                `).join('');
+
+                const card = document.createElement('div');
+                card.className = 'pending-order-card';
+                card.innerHTML = `
+                    <div class="order-status-indicator">
+                        <svg viewBox="0 0 100 100" style="width:100%; height:100%;">
+                            <circle cx="50" cy="50" r="46" fill="#3E4E53" />
+                            <circle cx="50" cy="50" r="41" fill="#FFD54F" />
+                            <path d="M50 25 L50 63" stroke="#2C3E50" stroke-width="6" stroke-linecap="round" />
+                            <circle cx="50" cy="75" r="4" fill="#2C3E50" />
+                        </svg>
+                    </div>
+                    <div class="order-card-content">
+                        <div class="order-card-date">${orderData.date}</div>
+                        <h3 class="order-card-officer-name">${officer}</h3>
+                        <div class="order-card-items-list">${itemsHtml}</div>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+
+            if (matchCount === 0) {
+                container.innerHTML = `<div class="loading-indicator" style="width:100%; padding: 40px;"><span>No matching entries found.</span></div>`;
             }
         }
 
-      // --- 2. RENDER THE GROUPED CARDS WITH LIVE FILTERS ---
-        cachedOrdersData = groupedOrders; 
-        renderFilteredCards(""); 
-    }
+        window.refreshOrdersData = function() {
+            const syncStamp = document.getElementById('sync-timestamp');
+            if (syncStamp) syncStamp.innerText = "Syncing...";
+            
+            const ordersUrl = `https://docs.google.com/spreadsheets/d/${SPREADSHEET_ID}/gviz/tq?tqx=out:json&gid=YOUR_ORDERS_GID`;
+            
+            fetch(ordersUrl)
+                .then(res => res.text())
+                .then(responseText => {
+                    const jsonStart = responseText.indexOf('{');
+                    const jsonEnd = responseText.lastIndexOf('}');
+                    const jsonString = responseText.substring(jsonStart, jsonEnd + 1);
+                    const rawJson = JSON.parse(jsonString);
+                    
+                    processAndRenderOrders(rawJson.table.rows);
+                    if (syncStamp) syncStamp.innerText = `Last synced: ${new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}`;
+                })
+                .catch(err => {
+                    console.error("Sync error:", err);
+                    if (syncStamp) syncStamp.innerText = "Sync failed";
+                });
+        };
 
-    window.filterOrders = function() {
-        const query = document.getElementById('order-search-input').value.toLowerCase();
-        renderFilteredCards(query);
-    };
-
-    function renderFilteredCards(query) {
-        container.innerHTML = "";
-        let matchCount = 0;
-
-        Object.keys(cachedOrdersData).forEach(officer => {
-            const orderData = cachedOrdersData[officer];
-            const itemsMatch = orderData.items.filter(item => item.name.toLowerCase().includes(query));
-            const nameMatches = officer.toLowerCase().includes(query);
-
-            if (!nameMatches && itemsMatch.length === 0) return;
-            matchCount++;
-
-            const itemsHtml = orderData.items.map(item => `
-                <div class="order-card-item">
-                    <span class="item-name">${item.name}</span>
-                    <span class="item-multiplier">x</span>
-                    <span class="item-qty">${item.qty}</span>
-                </div>
-            `).join('');
-
-            const card = document.createElement('div');
-            card.className = 'pending-order-card';
-            card.innerHTML = `
-                <div class="order-status-indicator">
-                    <svg viewBox="0 0 100 100" style="width:100%; height:100%;">
-                        <circle cx="50" cy="50" r="46" fill="#3E4E53" />
-                        <circle cx="50" cy="50" r="41" fill="#FFD54F" />
-                        <path d="M50 25 L50 63" stroke="#2C3E50" stroke-width="6" stroke-linecap="round" />
-                        <circle cx="50" cy="75" r="4" fill="#2C3E50" />
-                    </svg>
-                </div>
-                <div class="order-card-content">
-                    <div class="order-card-date">${orderData.date}</div>
-                    <h3 class="order-card-officer-name">${officer}</h3>
-                    <div class="order-card-items-list">${itemsHtml}</div>
-                </div>
-            `;
-            container.appendChild(card);
+        let touchStart = 0;
+        window.addEventListener('touchstart', e => { touchStart = e.touches[0].clientY; });
+        window.addEventListener('touchend', e => {
+            const touchEnd = e.changedTouches[0].clientY;
+            if (window.scrollY === 0 && touchEnd - touchStart > 150) {
+                refreshOrdersData(); 
+            }
         });
 
-        if (matchCount === 0) {
-            container.innerHTML = `<div class="loading-indicator" style="width:100%; padding: 40px;"><span>No matching entries found.</span></div>`;
-        }
-    }
+        // ==========================================
+        // LOCKSCREEN PIN CORE FUNCTIONS
+        // ==========================================
+        window.pressNum = function(num) {
+            if (currentPin.length < 4) {
+                currentPin += num;
+                updatePinDots();
+                if (currentPin.length === 4) {
+                    setTimeout(checkPin, 200);
+                }
+            }
+        };
 
-    window.refreshOrdersData = function() {
-        const timeNow = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-        const syncStamp = document.getElementById('sync-timestamp');
-        if (syncStamp) syncStamp.innerText = "Syncing...";
-        
-        fetch(ordersUrl)
-            .then(res => res.text())
-            .then(responseText => {
-                const jsonStart = responseText.indexOf('{');
-                const jsonEnd = responseText.lastIndexOf('}');
-                const jsonString = responseText.substring(jsonStart, jsonEnd + 1);
-                const rawJson = JSON.parse(jsonString);
-                
-                processAndRenderOrders(rawJson.table.rows);
-                if (syncStamp) syncStamp.innerText = `Last synced: ${timeNow}`;
-                if (loader) loader.style.display = 'none';
-                if (container) container.style.display = 'block';
-            })
-            .catch(err => {
-                console.error("Sync error:", err);
-                if (syncStamp) syncStamp.innerText = "Sync failed";
+        window.clearPin = function() {
+            currentPin = "";
+            updatePinDots();
+        };
+
+        function updatePinDots() {
+            const dots = document.querySelectorAll('.pin-dot');
+            dots.forEach((dot, index) => {
+                if (index < currentPin.length) {
+                    dot.classList.add('active');
+                } else {
+                    dot.classList.remove('active');
+                }
             });
-    };
-
-    let touchStart = 0;
-    window.addEventListener('touchstart', e => { touchStart = e.touches[0].clientY; });
-    window.addEventListener('touchend', e => {
-        const touchEnd = e.changedTouches[0].clientY;
-        if (window.scrollY === 0 && touchEnd - touchStart > 150) {
-            refreshOrdersData(); 
         }
-    });
 
-    processAndRenderOrders(rawJson.table.rows);
-    if (loader) loader.style.display = 'none';
-    if (container) container.style.display = 'block';
-    const syncStamp = document.getElementById('sync-timestamp');
-    if (syncStamp) syncStamp.innerText = `Last synced: ${new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}`;
-})
-.catch(err => {
-    console.error("Orders load failed:", err);
-    if (loader) loader.innerHTML = "<span>Failed to retrieve database queue. Check worksheet connection.</span>";
-});
-
-// ==========================================
-// LOCKSCREEN PIN CORE FUNCTIONS (RESTORED)
-// ==========================================
-window.pressNum = function(num) {
-    if (currentPin.length < 4) {
-        currentPin += num;
-        updatePinDots();
-        if (currentPin.length === 4) {
-            setTimeout(checkPin, 200);
+        function checkPin() {
+            if (currentPin === CORRECT_PIN) {
+                document.getElementById('lock-screen').style.display = 'none';
+                isLocked = false;
+                clearPin();
+            } else {
+                const pinContainer = document.querySelector('.pin-dots-container');
+                if (pinContainer) {
+                    pinContainer.classList.add('shake');
+                    setTimeout(() => pinContainer.classList.remove('shake'), 500);
+                }
+                clearPin();
+            }
         }
-    }
-};
-
-window.clearPin = function() {
-    currentPin = "";
-    updatePinDots();
-};
-
-function updatePinDots() {
-    const dots = document.querySelectorAll('.pin-dot');
-    dots.forEach((dot, index) => {
-        if (index < currentPin.length) {
-            dot.classList.add('active');
-        } else {
-            dot.classList.remove('active');
-        }
-    });
-}
-
-function checkPin() {
-    if (currentPin === CORRECT_PIN) {
-        document.getElementById('lock-screen').style.display = 'none';
-        isLocked = false;
-        clearPin();
-    } else {
-        const pinContainer = document.querySelector('.pin-dots-container');
-        if (pinContainer) {
-            pinContainer.classList.add('shake');
-            setTimeout(() => pinContainer.classList.remove('shake'), 500);
-        }
-        clearPin();
-    }
-}
 </script>
 </body>
 </html>
