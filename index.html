@@ -917,8 +917,8 @@
                 <span class="drawer-brand-title" style="font-size: 1rem;">Manage Orders</span>
             </div>
             <nav class="drawer-nav">
-                <div class="drawer-item" onclick="openPendingOrdersView()">Pending Orders</div>
-                <a href="https://docs.google.com/spreadsheets/d/17rMvMusueD6IDAYGIjPvL9662G-z4z-CRSc_1jJrRaY/edit#gid=318068113" class="drawer-item" onclick="toggleSidebar(false)">All Orders</a>
+                <div class="drawer-item" onclick="openPendingOrdersView()">Status</div>
+                <a href="https://docs.google.com/spreadsheets/d/17rMvMusueD6IDAYGIjPvL9662G-z4z-CRSc_1jJrRaY/edit#gid=318068113" class="drawer-item" onclick="toggleSidebar(false)">Open Ledger</a>
             </nav>
         </div>
     </div> 
@@ -1078,6 +1078,15 @@
                     <button class="back-home-btn" onclick="switchPendingOrdersView(false)">✕</button>
                 </div>
             </header>
+
+            <!-- Search and Filter Controls Container -->
+<div class="filter-controls" style="padding: 10px; display: flex; gap: 10px; flex-direction: column;">
+    <input type="text" id="order-search-input" placeholder="Search officer or item..." oninput="filterOrders()" style="width: 100%; padding: 10px; border-radius: 6px; border: 1px solid #3E4E53; bg: #1a262b; color: #fff;">
+    <div style="display: flex; justify-content: space-between; align-items: center;">
+        <span id="sync-timestamp" style="font-size: 12px; color: #8a9a9f;">Last synced: Just now</span>
+        <button onclick="refreshOrdersData()" style="background: none; border: none; color: #FFD54F; cursor: pointer; font-size: 14px;">🔄 Sync Now</button>
+    </div>
+</div>
 
             <div id="ordersLoader" class="loading-indicator">
                 <div class="spinner"></div>
@@ -1553,12 +1562,28 @@
             }
         }
 
-        // --- 2. RENDER THE GROUPED CARDS ---
-        // Loop through the grouped orders object and output one card per officer
-        Object.keys(groupedOrders).forEach(officer => {
-            const orderData = groupedOrders[officer];
+      // --- 2. RENDER THE GROUPED CARDS WITH LIVE FILTERS ---
+        cachedOrdersData = groupedOrders; 
+        renderFilteredCards(""); 
+    }
 
-            // Join all items for this officer into a single list
+    window.filterOrders = function() {
+        const query = document.getElementById('order-search-input').value.toLowerCase();
+        renderFilteredCards(query);
+    };
+
+    function renderFilteredCards(query) {
+        container.innerHTML = "";
+        let matchCount = 0;
+
+        Object.keys(cachedOrdersData).forEach(officer => {
+            const orderData = cachedOrdersData[officer];
+            const itemsMatch = orderData.items.filter(item => item.name.toLowerCase().includes(query));
+            const nameMatches = officer.toLowerCase().includes(query);
+
+            if (!nameMatches && itemsMatch.length === 0) return;
+            matchCount++;
+
             const itemsHtml = orderData.items.map(item => `
                 <div class="order-card-item">
                     <span class="item-name">${item.name}</span>
@@ -1567,11 +1592,9 @@
                 </div>
             `).join('');
 
-            // Build the unified card structure
             const card = document.createElement('div');
             card.className = 'pending-order-card';
             card.innerHTML = `
-                <!-- Custom SVG Alert Icon -->
                 <div class="order-status-indicator">
                     <svg viewBox="0 0 100 100" style="width:100%; height:100%;">
                         <circle cx="50" cy="50" r="46" fill="#3E4E53" />
@@ -1581,33 +1604,56 @@
                     </svg>
                 </div>
                 <div class="order-card-content">
-                    <!-- Correct Billing Date -->
                     <div class="order-card-date">${orderData.date}</div>
-                    <!-- Officer Name as the Main Header -->
                     <h3 class="order-card-officer-name">${officer}</h3>
-                    <!-- All pending items grouped together -->
-                    <div class="order-card-items-list">
-                        ${itemsHtml}
-                    </div>
+                    <div class="order-card-items-list">${itemsHtml}</div>
                 </div>
             `;
-
-           container.appendChild(card);
+            container.appendChild(card);
         });
 
-        // Hide the loading spinner and show the container
-        loader.style.display = 'none';
-        container.style.display = 'block';
-
-        // Show a message if there are no pending orders
-        if (pendingCount === 0) {
-            container.innerHTML = `<div class="loading-indicator" style="width:100%; padding: 40px;"><span>No pending orders.</span></div>`;
+        if (matchCount === 0) {
+            container.innerHTML = `<div class="loading-indicator" style="width:100%; padding: 40px;"><span>No matching entries found.</span></div>`;
         }
-    })
-    .catch(err => {
-        console.error("Orders load failed:", err);
-        loader.innerHTML = "<span>Failed to retrieve database queue. Check worksheet connection.</span>";
+    }
+
+    window.refreshOrdersData = function() {
+        const timeNow = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+        document.getElementById('sync-timestamp').innerText = "Syncing...";
+        
+        fetch(ordersUrl)
+            .then(res => res.text())
+            .then(responseText => {
+                const jsonStart = responseText.indexOf('{');
+                const jsonEnd = responseText.lastIndexOf('}');
+                const jsonString = responseText.substring(jsonStart, jsonEnd + 1);
+                const rawJson = JSON.parse(jsonString);
+                
+                processAndRenderOrders(rawJson.table.rows);
+                document.getElementById('sync-timestamp').innerText = `Last synced: ${timeNow}`;
+                loader.style.display = 'none';
+                container.style.display = 'block';
+            })
+            .catch(err => {
+                console.error("Sync error:", err);
+                document.getElementById('sync-timestamp').innerText = "Sync failed";
+            });
+    };
+
+    let touchStart = 0;
+    window.addEventListener('touchstart', e => { touchStart = e.touches[0].clientY; });
+    window.addEventListener('touchend', e => {
+        const touchEnd = e.changedTouches[0].clientY;
+        if (window.scrollY === 0 && touchEnd - touchStart > 150) {
+            refreshOrdersData(); 
+        }
     });
+
+    // Initialize display execution loop context setup
+    processAndRenderOrders(rawJson.table.rows);
+    loader.style.display = 'none';
+    container.style.display = 'block';
+    document.getElementById('sync-timestamp').innerText = `Last synced: ${new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}`;
         }
         
     </script>
