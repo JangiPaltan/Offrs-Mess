@@ -1706,49 +1706,60 @@
             }
         }
 
-        // ==========================================
-// LOCKSCREEN PIN CORE FUNCTIONS (EXPLICIT BINDING)
+      // ==========================================
+// LOCKSCREEN PIN CORE FUNCTIONS (ULTIMATE BINDING)
 // ==========================================
+window.currentPin = ""; // Explicitly attach the state to window
+
 window.pressNum = function(num) {
-    // Force currentPin to be string format if it got cleared out
-    if (typeof currentPin === 'undefined') {
-        currentPin = "";
-    }
-    
-    if (currentPin.length < 4) {
-        currentPin += num;
-        updatePinDots();
-        if (currentPin.length === 4) {
-            setTimeout(checkPin, 200);
+    // Fallback check to ensure global variables exist
+    if (typeof window.currentPin === 'undefined') window.currentPin = "";
+    const correctPinStr = typeof CORRECT_PIN !== 'undefined' ? CORRECT_PIN : "1768";
+
+    if (window.currentPin.length < 4) {
+        window.currentPin += String(num); // Force it to act as a string concatenation
+        window.updatePinDots();
+        
+        if (window.currentPin.length === 4) {
+            setTimeout(window.checkPin, 200);
         }
     }
 };
 
 window.clearPin = function() {
-    currentPin = "";
-    updatePinDots();
+    window.currentPin = "";
+    window.updatePinDots();
 };
 
-function updatePinDots() {
+window.backspacePin = function() {
+    if (typeof window.currentPin === 'string' && window.currentPin.length > 0) {
+        window.currentPin = window.currentPin.slice(0, -1);
+        window.updatePinDots();
+    }
+};
+
+window.updatePinDots = function() {
     const dots = document.querySelectorAll('.pin-dot');
     if (!dots || dots.length === 0) return;
     
     dots.forEach((dot, index) => {
-        if (index < currentPin.length) {
+        if (index < window.currentPin.length) {
             dot.classList.add('active');
         } else {
             dot.classList.remove('active');
         }
     });
-}
+};
 
-function checkPin() {
-    if (currentPin === CORRECT_PIN) {
+window.checkPin = function() {
+    const correctPinStr = typeof CORRECT_PIN !== 'undefined' ? CORRECT_PIN : "1768";
+    
+    if (window.currentPin === correctPinStr) {
         const lockScreen = document.getElementById('lock-screen');
         if (lockScreen) {
             lockScreen.style.display = 'none';
         }
-        isLocked = false;
+        if (typeof isLocked !== 'undefined') isLocked = false;
         window.clearPin();
     } else {
         const pinContainer = document.querySelector('.pin-dots-container');
@@ -1758,7 +1769,7 @@ function checkPin() {
         }
         window.clearPin();
     }
-}
+};
         
 </script>
 </body>
