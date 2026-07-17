@@ -1592,25 +1592,22 @@
                 </div>
             `;
 
-            container.appendChild(card);
+           container.appendChild(card);
         });
 
-        container.appendChild(card);
+        // Hide the loading spinner and show the container
+        loader.style.display = 'none';
+        container.style.display = 'block';
 
-        container.appendChild(card);
-                    }
-
-                    loader.style.display = 'none';
-                    container.style.display = 'block';
-
-                    if (pendingCount === 0) {
-                        container.innerHTML = `<div class="loading-indicator" style="width:100%; padding: 40px;"><span>No pending orders.</span></div>`;
-                    }
-                })
-                .catch(err => {
-                    console.error("Orders load failed:", err);
-                    loader.innerHTML = "<span>Failed to retrieve database queue. Check worksheet connection.</span>";
-                });
+        // Show a message if there are no pending orders
+        if (pendingCount === 0) {
+            container.innerHTML = `<div class="loading-indicator" style="width:100%; padding: 40px;"><span>No pending orders.</span></div>`;
+        }
+    })
+    .catch(err => {
+        console.error("Orders load failed:", err);
+        loader.innerHTML = "<span>Failed to retrieve database queue. Check worksheet connection.</span>";
+    });
         }
         
     </script>
