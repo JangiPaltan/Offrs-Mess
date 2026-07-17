@@ -1743,17 +1743,14 @@
         }
     }, 400);
 
-    // Using a completely unique parameter name to avoid routing conflicts
-    var currentUrl = new URL(window.location.href);
-    currentUrl.searchParams.set('runMasterSyncProcess', 'true');
-    var scriptUrl = currentUrl.toString();
+    // TARGET GOOGLE SCRIPT ENDPOINT (Bypasses GitHub Pages completely)
+    // Replace the URL string below with the exact macro URL from your Apps Script Deploy window
+    var scriptUrl = "https://script.google.com/macros/s/AKfycbwfEUynFOSq5KA_AzDtXMhUs4t4mfSF36QFiK-56pTyez73LefFnqZYNroG1OZiBoS/exec?runMasterSyncProcess=true";
 
     fetch(scriptUrl)
         .then(response => response.text())
         .then(text => {
             clearInterval(progressInterval);
-            // Alerting the exact text to see what the server is actually returning
-            alert("Server Response: " + text);
             
             if (text.includes("Sync Complete")) {
                 statusMsg.innerText = "Syncing with master database... 100% (Complete!)";
