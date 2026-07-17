@@ -1619,7 +1619,8 @@
 
     window.refreshOrdersData = function() {
         const timeNow = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-        document.getElementById('sync-timestamp').innerText = "Syncing...";
+        const syncStamp = document.getElementById('sync-timestamp');
+        if (syncStamp) syncStamp.innerText = "Syncing...";
         
         fetch(ordersUrl)
             .then(res => res.text())
@@ -1630,13 +1631,13 @@
                 const rawJson = JSON.parse(jsonString);
                 
                 processAndRenderOrders(rawJson.table.rows);
-                document.getElementById('sync-timestamp').innerText = `Last synced: ${timeNow}`;
-                loader.style.display = 'none';
-                container.style.display = 'block';
+                if (syncStamp) syncStamp.innerText = `Last synced: ${timeNow}`;
+                if (loader) loader.style.display = 'none';
+                if (container) container.style.display = 'block';
             })
             .catch(err => {
                 console.error("Sync error:", err);
-                document.getElementById('sync-timestamp').innerText = "Sync failed";
+                if (syncStamp) syncStamp.innerText = "Sync failed";
             });
     };
 
@@ -1649,13 +1650,61 @@
         }
     });
 
-    // Initialize display execution loop context setup
     processAndRenderOrders(rawJson.table.rows);
-    loader.style.display = 'none';
-    container.style.display = 'block';
-    document.getElementById('sync-timestamp').innerText = `Last synced: ${new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}`;
+    if (loader) loader.style.display = 'none';
+    if (container) container.style.display = 'block';
+    const syncStamp = document.getElementById('sync-timestamp');
+    if (syncStamp) syncStamp.innerText = `Last synced: ${new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}`;
+})
+.catch(err => {
+    console.error("Orders load failed:", err);
+    if (loader) loader.innerHTML = "<span>Failed to retrieve database queue. Check worksheet connection.</span>";
+});
+
+// ==========================================
+// LOCKSCREEN PIN CORE FUNCTIONS (RESTORED)
+// ==========================================
+window.pressNum = function(num) {
+    if (currentPin.length < 4) {
+        currentPin += num;
+        updatePinDots();
+        if (currentPin.length === 4) {
+            setTimeout(checkPin, 200);
         }
-        
-    </script>
+    }
+};
+
+window.clearPin = function() {
+    currentPin = "";
+    updatePinDots();
+};
+
+function updatePinDots() {
+    const dots = document.querySelectorAll('.pin-dot');
+    dots.forEach((dot, index) => {
+        if (index < currentPin.length) {
+            dot.classList.add('active');
+        } else {
+            dot.classList.remove('active');
+        }
+    });
+}
+
+function checkPin() {
+    if (currentPin === CORRECT_PIN) {
+        document.getElementById('lock-screen').style.display = 'none';
+        isLocked = false;
+        clearPin();
+    } else {
+        const pinContainer = document.querySelector('.pin-dots-container');
+        if (pinContainer) {
+            pinContainer.classList.add('shake');
+            setTimeout(() => pinContainer.classList.remove('shake'), 500);
+        }
+        clearPin();
+    }
+}
+</script>
 </body>
 </html>
+        
