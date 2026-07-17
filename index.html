@@ -1727,42 +1727,45 @@
 
         // ... your existing code (like touchstart, parseGoogleSheetGvizJson, etc.) ...
 
-        function triggerFormDropdownSync() {
-            const statusMsg = document.getElementById('sync-status-msg');
-            if (!statusMsg) return;
+       function triggerFormDropdownSync() {
+    const statusMsg = document.getElementById('sync-status-msg');
+    if (!statusMsg) return;
 
-            statusMsg.style.color = "var(--text-muted)";
-            statusMsg.innerText = "Syncing 0%";
-            
-            let progress = 0;
-            const progressInterval = setInterval(() => {
-                if (progress < 90) {
-                    progress += Math.floor(Math.random() * 10) + 2;
-                    if (progress > 90) progress = 90;
-                    statusMsg.innerText = `Syncing with master database... ${progress}%`;
-                }
-            }, 400);
-
-            google.script.run
-                .withSuccessHandler(function(response) {
-                    clearInterval(progressInterval);
-                    statusMsg.innerText = "Syncing 100% (Complete!)";
-                    statusMsg.style.color = "#17bf1e    ";
-                    setTimeout(() => { statusMsg.innerText = ""; }, 4000);
-                })
-                .withFailureHandler(function(error) {
-                    clearInterval(progressInterval);
-                    statusMsg.innerText = "Sync failed. Please try again.";
-                    statusMsg.style.color = "#f44336";
-                    console.error(error);
-                })
-                .forceMasterSync();(); 
+    statusMsg.style.color = "var(--text-muted)";
+    statusMsg.innerText = "Syncing with master database... 0%";
+    
+    let progress = 0;
+    const progressInterval = setInterval(() => {
+        if (progress < 90) {
+            progress += Math.floor(Math.random() * 10) + 5;
+            if (progress > 90) progress = 90;
+            statusMsg.innerText = `Syncing with master database... ${progress}%`;
         }
-        
-    </script>
-</body>
-</html>
-     
+    }, 200);
+
+    // Dynamic self-url fetch to execute the script command directly
+    var scriptUrl = window.location.href.split('?')[0] + '?action=sync';
+
+    fetch(scriptUrl)
+        .then(response => response.text())
+        .then(text => {
+            clearInterval(progressInterval);
+            if (text.includes("Success")) {
+                statusMsg.innerText = "Syncing with master database... 100% (Complete!)";
+                statusMsg.style.color = "#4caf50";
+            } else {
+                statusMsg.innerText = "Sync failure: " + text;
+                statusMsg.style.color = "#f44336";
+            }
+            setTimeout(() => { statusMsg.innerText = ""; }, 4000);
+        })
+        .catch(error => {
+            clearInterval(progressInterval);
+            statusMsg.innerText = "Network transmission failed.";
+            statusMsg.style.color = "#f44336";
+            console.error(error);
+        });
+}     
 </script>
 </body>
 </html>
