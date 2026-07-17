@@ -1513,13 +1513,14 @@
 
                         pendingCount++;
 
-                       // 1. Format the raw DATE(...) string to "DD MM YYYY"
+// 1. Correct the 0-based month index from the raw Google Sheets DATE string
         let formattedDate = "";
         if (dateVal) {
             const match = dateVal.match(/DATE\s*\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)/i);
             if (match) {
                 const year = match[1];
-                const month = match[2].padStart(2, '0');
+                // Convert 0-based month to 1-based month (e.g., 6 becomes 07)
+                const month = String(Number(match[2]) + 1).padStart(2, '0');
                 const day = match[3].padStart(2, '0');
                 formattedDate = `${day} ${month} ${year}`;
             } else {
@@ -1527,54 +1528,51 @@
             }
         }
 
-        // 2. Format the internal items list (splits by commas or newlines and parses quantities)
+        // 2. Parse the individual items and quantities from columns D and G
+        const itemName = cells[3] ? String(cells[3].v || '').trim() : '';
+        const itemQty = cells[6] ? String(cells[6].v || '').trim() : '1';
+
         let itemsHtml = "";
-        if (itemsVal) {
-            const itemsArray = itemsVal.split(/[\n,]+/);
-            itemsHtml = itemsArray.map(itemStr => {
-                const trimmed = itemStr.trim();
-                if (!trimmed) return "";
-                
-                // Matches patterns like "Item Name x 2", "2 x Item Name", or "Item Name - 2"
-                const qtyMatch = trimmed.match(/(\d+)\s*x\s*(.+)/i) || trimmed.match(/(.+?)\s*x\s*(\d+)/i);
-                if (qtyMatch) {
-                    const name = qtyMatch[1].match(/^\d+$/) ? qtyMatch[2] : qtyMatch[1];
-                    const qty = qtyMatch[1].match(/^\d+$/) ? qtyMatch[1] : qtyMatch[2];
-                    return `
-                        <div class="order-card-item">
-                            <span class="item-name">${name.trim()}</span>
-                            <span class="item-multiplier">X</span>
-                            <span class="item-qty">${qty.trim()}</span>
-                        </div>
-                    `;
-                }
-                
-                // Fallback for items with no multiplier
-                return `
-                    <div class="order-card-item">
-                        <span class="item-name">${trimmed}</span>
-                    </div>
-                `;
-            }).join('');
+        if (itemName) {
+            itemsHtml = `
+                <div class="order-card-item">
+                    <span class="item-name">${itemName}</span>
+                    <span class="item-multiplier">x</span>
+                    <span class="item-qty">${itemQty}</span>
+                </div>
+            `;
         }
 
-        // 3. Assemble the updated HTML card structure using the new CSS classes
+        // 3. Assemble the updated HTML card structure
         const card = document.createElement('div');
         card.className = 'pending-order-card';
         card.innerHTML = `
+            <!-- Custom SVG replicating your alert icon -->
             <div class="order-status-indicator">
-                <svg viewBox="0 0 24 24">
-                    <circle cx="12" cy="12" r="10" fill="#FFEB3B"/>
+                <svg viewBox="0 0 100 100" style="width:100%; height:100%;">
+                    <!-- Dark grey outer ring -->
+                    <circle cx="50" cy="50" r="46" fill="#3E4E53" />
+                    <!-- Yellow inner circle -->
+                    <circle cx="50" cy="50" r="41" fill="#FFD54F" />
+                    <!-- Alert line -->
+                    <path d="M50 25 L50 63" stroke="#2C3E50" stroke-width="6" stroke-linecap="round" />
+                    <!-- Alert dot -->
+                    <circle cx="50" cy="75" r="4" fill="#2C3E50" />
                 </svg>
             </div>
             <div class="order-card-content">
+                <!-- Human-readable corrected date -->
                 <div class="order-card-date">${formattedDate}</div>
+                <!-- Large Bold Title: Officer Name -->
                 <h3 class="order-card-officer-name">${officerName}</h3>
+                <!-- List of items below -->
                 <div class="order-card-items-list">
                     ${itemsHtml}
                 </div>
             </div>
         `;
+
+        container.appendChild(card);
 
         container.appendChild(card);
                     }
