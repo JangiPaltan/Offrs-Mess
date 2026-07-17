@@ -739,78 +739,85 @@
         transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.6s ease;
     }
 
-    /* REPLACED STYLES FOR THE NEW CARD LAYOUT */
+    /* PENDING ORDERS SCREEN STYLES */
+    #pending-orders-screen {
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.6s ease;
+    }
+
     .pending-order-card {
         display: flex;
         align-items: flex-start;
         background-color: #0b0f10;
         border: 1.5px solid #1c2421;
         border-radius: 24px;
-        padding: 20px 24px;
-        margin-bottom: 16px;
-        gap: 20px;
+        padding: 24px 28px; /* Increased padding for more space */
+        margin-bottom: 20px; /* Increased space between cards */
+        gap: 24px;
     }
 
     .order-status-indicator {
         display: flex;
         align-items: center;
         justify-content: center;
-        width: 40px;
-        height: 40px;
+        width: 44px;
+        height: 44px;
         flex-shrink: 0;
-        margin-top: 22px;
-    }
-
-    .order-status-indicator svg {
-        width: 32px;
-        height: 32px;
+        margin-top: 24px; /* Adjusted to align with the name header nicely */
     }
 
     .order-card-content {
         display: flex;
         flex-direction: column;
         flex-grow: 1;
+        gap: 8px; /* Adds consistent vertical spacing between Date, Name, and Items */
     }
 
     .order-card-date {
-        font-size: 0.75rem;
+        font-size: 0.8rem;
         color: #8a9296;
-        letter-spacing: 0.1em;
-        margin-bottom: 4px;
+        letter-spacing: 0.12em;
         font-family: inherit;
+        margin-bottom: 2px;
     }
 
     .order-card-officer-name {
-        font-size: 1.5rem;
+        font-size: 1.55rem;
         font-weight: 600;
         color: #ffffff;
-        margin: 0 0 8px 0;
+        margin: 0;
         letter-spacing: 0.05em;
         text-transform: uppercase;
+        line-height: 1.2;
     }
 
     .order-card-items-list {
         display: flex;
         flex-direction: column;
-        gap: 4px;
-        margin-left: 2px;
+        gap: 12px; /* INCREASED: Generous line spacing between items */
+        margin-top: 10px;
+        border-top: 1px solid #1c2421; /* Subtle divider above items list */
+        padding-top: 12px;
     }
 
     .order-card-item {
         display: flex;
         align-items: center;
-        font-size: 0.95rem;
+        font-size: 1rem;
         color: #d1d5db;
         font-family: monospace;
+        line-height: 1.5; /* More breathing room inside item rows */
     }
 
     .order-card-item .item-name {
-        min-width: 120px;
+        min-width: 140px;
         text-transform: uppercase;
     }
 
     .order-card-item .item-multiplier {
-        margin: 0 12px;
+        margin: 0 16px;
         color: #6b7280;
     }
 
@@ -1487,90 +1494,106 @@
                     if (!rawJson.table || !rawJson.table.rows) return;
                     
                     const rows = rawJson.table.rows;
-                    let pendingCount = 0;
+                   // --- 1. GROUP PENDING ORDERS BY OFFICER NAME ---
+        const groupedOrders = {};
 
-                    for (let i = 0; i < rows.length; i++) {
-                        const cells = rows[i].c;
-                        if (!cells || cells.length < 3) continue;
+        // Loop through all data rows to build grouped profiles
+        for (let i = 0; i < rows.length; i++) {
+            const cells = rows[i].c;
+            if (!cells || cells.length < 3) continue;
 
-                        // Identify columns:
-                        // A (0) = Date/Timestamp, B (1) = Officer Name, C (2) = Items, Last column or Col D (3) = Status
-                        const dateVal = cells[0] ? String(cells[0].v || '') : '';
-                        const officerName = cells[1] ? String(cells[1].v || '').trim() : '';
-                        const itemsVal = cells[2] ? String(cells[2].v || '').trim() : '';
-                        
-                        // Dynamically scan remaining cells for "Pending" status
-                        let isPending = false;
-                        for (let j = 3; j < cells.length; j++) {
-                            if (cells[j] && String(cells[j].v).toLowerCase().includes('pending')) {
-                                isPending = true;
-                                break;
-                            }
-                        }
+            // Column Mapping based on your Google Sheet:
+            // Column B (Index 1) = Billing Date
+            // Column C (Index 2) = Officer Name
+            // Column D (Index 3) = Item Name
+            // Column G (Index 6) = Quantity
+            const rawDate = cells[1] ? String(cells[1].v || '').trim() : '';
+            const officerName = cells[2] ? String(cells[2].v || '').trim() : 'UNKNOWN OFFICER';
+            const itemName = cells[3] ? String(cells[3].v || '').trim() : '';
+            const itemQty = cells[6] ? String(cells[6].v || '').trim() : '1';
 
-                        // Skip headers and non-pending orders
-                        if (!officerName || officerName === "Officer Name" || !isPending) continue;
+            // Check if this row represents a "Pending" order
+            let isPending = false;
+            for (let j = 3; j < cells.length; j++) {
+                if (cells[j] && String(cells[j].v).toLowerCase().includes('pending')) {
+                    isPending = true;
+                    break;
+                }
+            }
 
-                        pendingCount++;
+            // Skip headers, blank names, or non-pending rows
+            if (!officerName || officerName === "Offr Name" || !isPending) continue;
 
-// 1. Correct the 0-based month index from the raw Google Sheets DATE string
-        let formattedDate = "";
-        if (dateVal) {
-            const match = dateVal.match(/DATE\s*\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)/i);
-            if (match) {
-                const year = match[1];
-                // Convert 0-based month to 1-based month (e.g., 6 becomes 07)
-                const month = String(Number(match[2]) + 1).padStart(2, '0');
-                const day = match[3].padStart(2, '0');
-                formattedDate = `${day} ${month} ${year}`;
-            } else {
-                formattedDate = dateVal; // Fallback if format is different
+            // Format raw DATE(...) values properly if found
+            let formattedDate = rawDate;
+            if (rawDate.toUpperCase().includes("DATE")) {
+                const match = rawDate.match(/DATE\s*\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)/i);
+                if (match) {
+                    const year = match[1];
+                    const month = String(Number(match[2]) + 1).padStart(2, '0');
+                    const day = match[3].padStart(2, '0');
+                    formattedDate = `${day} ${month} ${year}`;
+                }
+            }
+
+            // Grouping logic: Initialize an entry for this officer if it doesn't exist
+            if (!groupedOrders[officerName]) {
+                groupedOrders[officerName] = {
+                    date: formattedDate,
+                    items: []
+                };
+            }
+
+            // Add the item details under this officer's grouping
+            if (itemName) {
+                groupedOrders[officerName].items.push({
+                    name: itemName,
+                    qty: itemQty
+                });
             }
         }
 
-        // 2. Parse the individual items and quantities from columns D and G
-        const itemName = cells[3] ? String(cells[3].v || '').trim() : '';
-        const itemQty = cells[6] ? String(cells[6].v || '').trim() : '1';
+        // --- 2. RENDER THE GROUPED CARDS ---
+        // Loop through the grouped orders object and output one card per officer
+        Object.keys(groupedOrders).forEach(officer => {
+            const orderData = groupedOrders[officer];
 
-        let itemsHtml = "";
-        if (itemName) {
-            itemsHtml = `
+            // Join all items for this officer into a single list
+            const itemsHtml = orderData.items.map(item => `
                 <div class="order-card-item">
-                    <span class="item-name">${itemName}</span>
+                    <span class="item-name">${item.name}</span>
                     <span class="item-multiplier">x</span>
-                    <span class="item-qty">${itemQty}</span>
+                    <span class="item-qty">${item.qty}</span>
+                </div>
+            `).join('');
+
+            // Build the unified card structure
+            const card = document.createElement('div');
+            card.className = 'pending-order-card';
+            card.innerHTML = `
+                <!-- Custom SVG Alert Icon -->
+                <div class="order-status-indicator">
+                    <svg viewBox="0 0 100 100" style="width:100%; height:100%;">
+                        <circle cx="50" cy="50" r="46" fill="#3E4E53" />
+                        <circle cx="50" cy="50" r="41" fill="#FFD54F" />
+                        <path d="M50 25 L50 63" stroke="#2C3E50" stroke-width="6" stroke-linecap="round" />
+                        <circle cx="50" cy="75" r="4" fill="#2C3E50" />
+                    </svg>
+                </div>
+                <div class="order-card-content">
+                    <!-- Correct Billing Date -->
+                    <div class="order-card-date">${orderData.date}</div>
+                    <!-- Officer Name as the Main Header -->
+                    <h3 class="order-card-officer-name">${officer}</h3>
+                    <!-- All pending items grouped together -->
+                    <div class="order-card-items-list">
+                        ${itemsHtml}
+                    </div>
                 </div>
             `;
-        }
 
-        // 3. Assemble the updated HTML card structure
-        const card = document.createElement('div');
-        card.className = 'pending-order-card';
-        card.innerHTML = `
-            <!-- Custom SVG replicating your alert icon -->
-            <div class="order-status-indicator">
-                <svg viewBox="0 0 100 100" style="width:100%; height:100%;">
-                    <!-- Dark grey outer ring -->
-                    <circle cx="50" cy="50" r="46" fill="#3E4E53" />
-                    <!-- Yellow inner circle -->
-                    <circle cx="50" cy="50" r="41" fill="#FFD54F" />
-                    <!-- Alert line -->
-                    <path d="M50 25 L50 63" stroke="#2C3E50" stroke-width="6" stroke-linecap="round" />
-                    <!-- Alert dot -->
-                    <circle cx="50" cy="75" r="4" fill="#2C3E50" />
-                </svg>
-            </div>
-            <div class="order-card-content">
-                <!-- Human-readable corrected date -->
-                <div class="order-card-date">${formattedDate}</div>
-                <!-- Large Bold Title: Officer Name -->
-                <h3 class="order-card-officer-name">${officerName}</h3>
-                <!-- List of items below -->
-                <div class="order-card-items-list">
-                    ${itemsHtml}
-                </div>
-            </div>
-        `;
+            container.appendChild(card);
+        });
 
         container.appendChild(card);
 
