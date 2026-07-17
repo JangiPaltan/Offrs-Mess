@@ -1727,7 +1727,7 @@
 
         // ... your existing code (like touchstart, parseGoogleSheetGvizJson, etc.) ...
 
-       function triggerFormDropdownSync() {
+      function triggerFormDropdownSync() {
     const statusMsg = document.getElementById('sync-status-msg');
     if (!statusMsg) return;
 
@@ -1737,29 +1737,32 @@
     let progress = 0;
     const progressInterval = setInterval(() => {
         if (progress < 90) {
-            progress += Math.floor(Math.random() * 10) + 5;
+            progress += Math.floor(Math.random() * 5) + 2;
             if (progress > 90) progress = 90;
             statusMsg.innerText = `Syncing with master database... ${progress}%`;
         }
-    }, 200);
+    }, 400);
 
-    // Dynamic Self-URL Constructor: Preserves your existing token parameter securely
+    // Using a completely unique parameter name to avoid routing conflicts
     var currentUrl = new URL(window.location.href);
-    currentUrl.searchParams.set('action', 'sync'); // Safely appends or replaces the action keyword
+    currentUrl.searchParams.set('runMasterSyncProcess', 'true');
     var scriptUrl = currentUrl.toString();
 
     fetch(scriptUrl)
         .then(response => response.text())
         .then(text => {
             clearInterval(progressInterval);
-            if (text.includes("Success")) {
+            // Alerting the exact text to see what the server is actually returning
+            alert("Server Response: " + text);
+            
+            if (text.includes("Sync Complete")) {
                 statusMsg.innerText = "Syncing with master database... 100% (Complete!)";
                 statusMsg.style.color = "#4caf50";
             } else {
-                statusMsg.innerText = "Sync failure: " + text;
+                statusMsg.innerText = "Sync Alert: " + text;
                 statusMsg.style.color = "#f44336";
             }
-            setTimeout(() => { statusMsg.innerText = ""; }, 4000);
+            setTimeout(() => { statusMsg.innerText = ""; }, 5000);
         })
         .catch(error => {
             clearInterval(progressInterval);
