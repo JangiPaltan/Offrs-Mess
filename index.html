@@ -935,9 +935,9 @@
                 <a href="https://docs.google.com/forms/d/e/1FAIpQLSdr2ahQe2ham_Yl2GsLEsmE2H1KBl6Ou8MdlxJBE7W9ZrTxrA/viewform" class="drawer-item" onclick="toggleSidebar(false)">Add New Item</a>
                 <!-- Form Sync Administration Control Section -->
 <div class="admin-sync-container" style="margin: 10px 0; padding: 10px 0; border-top: 1px dashed rgba(225, 173, 1, 0.3); text-align: center;">
-    <button id="sync-forms-btn" onclick="triggerFormDropdownSync()" class="menu-btn" style="width: 100%;">
+    <div class="drawer-item" onclick="triggerFormDropdownSync()">
         SYNC FORMS
-    </button>
+    </div>
     <div id="sync-status-msg" style="font-size: 11px; color: var(--text-muted); margin-top: 6px; height: 16px;"></div>
 </div>
                 <div class="drawer-item" onclick="toggleSubDrawer('purchase-panel', true)">Update Purchase</div>
@@ -1727,9 +1727,24 @@
             }
         });
 
-     
+        function triggerFormDropdownSync() {
+    const statusMsg = document.getElementById('sync-status-msg');
+    if (statusMsg) statusMsg.innerText = "Syncing with master database...";
+    
+    // Calls the background function deployed on your Google Apps Script
+    google.script.run
+        .withSuccessHandler(function(response) {
+            if (statusMsg) statusMsg.innerText = "Sync complete!";
+            setTimeout(() => { if (statusMsg) statusMsg.innerText = ""; }, 3000);
+        })
+        .withFailureHandler(function(error) {
+            if (statusMsg) statusMsg.innerText = "Sync failed. Try again.";
+            console.error(error);
+        })
+        .triggerFormDropdownSync(); // Matches the handler signature in your Apps Script editor
+}
 
-        
+     
 </script>
 </body>
 </html>
