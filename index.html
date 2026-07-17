@@ -934,12 +934,12 @@
                 <div class="drawer-item" onclick="openInternalInventory()">Check Inventory</div>
                 <a href="https://docs.google.com/forms/d/e/1FAIpQLSdr2ahQe2ham_Yl2GsLEsmE2H1KBl6Ou8MdlxJBE7W9ZrTxrA/viewform" class="drawer-item" onclick="toggleSidebar(false)">Add New Item</a>
                 <!-- Form Sync Administration Control Section -->
-                <div class="admin-sync-container" style="margin: 10px 0; padding: 10px 0; border-top: 1px dashed rgba(225, 173, 1, 0.3); text-align: center;">
-                    <button id="sync-forms-btn" onclick="triggerFormDropdownSync()" style="width: 100%; background: rgba(27, 67, 50, 0.2); border: 1px solid var(--mustard-gold); color: var(--mustard-gold); padding: 12px; border-radius: 6px; font-weight: bold; letter-spacing: 1px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; text-transform: uppercase; font-size: 0.8rem;">
-                        🔄 Sync Forms with Price List
-                    </button>
-                    <div id="sync-status-msg" style="font-size: 11px; color: var(--text-muted); margin-top: 6px; height: 16px;"></div>
-                </div>
+<div class="admin-sync-container" style="margin: 10px 0; padding: 10px 0; border-top: 1px dashed rgba(225, 173, 1, 0.3); text-align: center;">
+    <button id="sync-forms-btn" onclick="triggerFormDropdownSync()" class="menu-btn" style="width: 100%;">
+        SYNC FORMS
+    </button>
+    <div id="sync-status-msg" style="font-size: 11px; color: var(--text-muted); margin-top: 6px; height: 16px;"></div>
+</div>
                 <div class="drawer-item" onclick="toggleSubDrawer('purchase-panel', true)">Update Purchase</div>
                 <a href="https://docs.google.com/spreadsheets/d/17rMvMusueD6IDAYGIjPvL9662G-z4z-CRSc_1jJrRaY/edit?gid=0#gid=0" class="drawer-item" onclick="toggleSidebar(false)">Edit Officers Details</a>
                 <div class="drawer-item" onclick="toggleSubDrawer('prices-panel', true)">Edit Price of Items</div>
