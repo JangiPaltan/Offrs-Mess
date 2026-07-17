@@ -1707,48 +1707,58 @@
         }
 
         // ==========================================
-        // LOCKSCREEN PIN CORE FUNCTIONS
-        // ==========================================
-        window.pressNum = function(num) {
-            if (currentPin.length < 4) {
-                currentPin += num;
-                updatePinDots();
-                if (currentPin.length === 4) {
-                    setTimeout(checkPin, 200);
-                }
-            }
-        };
-
-        window.clearPin = function() {
-            currentPin = "";
-            updatePinDots();
-        };
-
-        function updatePinDots() {
-            const dots = document.querySelectorAll('.pin-dot');
-            dots.forEach((dot, index) => {
-                if (index < currentPin.length) {
-                    dot.classList.add('active');
-                } else {
-                    dot.classList.remove('active');
-                }
-            });
+// LOCKSCREEN PIN CORE FUNCTIONS (EXPLICIT BINDING)
+// ==========================================
+window.pressNum = function(num) {
+    // Force currentPin to be string format if it got cleared out
+    if (typeof currentPin === 'undefined') {
+        currentPin = "";
+    }
+    
+    if (currentPin.length < 4) {
+        currentPin += num;
+        updatePinDots();
+        if (currentPin.length === 4) {
+            setTimeout(checkPin, 200);
         }
+    }
+};
 
-        function checkPin() {
-            if (currentPin === CORRECT_PIN) {
-                document.getElementById('lock-screen').style.display = 'none';
-                isLocked = false;
-                window.clearPin();
-            } else {
-                const pinContainer = document.querySelector('.pin-dots-container');
-                if (pinContainer) {
-                    pinContainer.classList.add('shake');
-                    setTimeout(() => pinContainer.classList.remove('shake'), 500);
-                }
-                window.clearPin();
-            }
+window.clearPin = function() {
+    currentPin = "";
+    updatePinDots();
+};
+
+function updatePinDots() {
+    const dots = document.querySelectorAll('.pin-dot');
+    if (!dots || dots.length === 0) return;
+    
+    dots.forEach((dot, index) => {
+        if (index < currentPin.length) {
+            dot.classList.add('active');
+        } else {
+            dot.classList.remove('active');
         }
+    });
+}
+
+function checkPin() {
+    if (currentPin === CORRECT_PIN) {
+        const lockScreen = document.getElementById('lock-screen');
+        if (lockScreen) {
+            lockScreen.style.display = 'none';
+        }
+        isLocked = false;
+        window.clearPin();
+    } else {
+        const pinContainer = document.querySelector('.pin-dots-container');
+        if (pinContainer) {
+            pinContainer.classList.add('shake');
+            setTimeout(() => pinContainer.classList.remove('shake'), 500);
+        }
+        window.clearPin();
+    }
+}
         
 </script>
 </body>
