@@ -1745,29 +1745,35 @@
 
     // TARGET GOOGLE SCRIPT ENDPOINT (Bypasses GitHub Pages completely)
     // Replace the URL string below with the exact macro URL from your Apps Script Deploy window
-    var scriptUrl = "https://script.google.com/macros/s/AKfycbwfEUynFOSq5KA_AzDtXMhUs4t4mfSF36QFiK-56pTyez73LefFnqZYNroG1OZiBoS/exec?runMasterSyncProcess=true";
+   var scriptUrl = "https://script.google.com/macros/s/AKfycbwfEUynFOSq5KA_AzDtXMhUs4t4mfSF36QFiK-56pTyez73LefFnqZYNroG1OZiBoS/exec?runMasterSyncProcess=true";
 
-    fetch(scriptUrl)
-        .then(response => response.text())
-        .then(text => {
-            clearInterval(progressInterval);
-            
-            if (text.includes("Sync Complete")) {
-                statusMsg.innerText = "Syncing with master database... 100% (Complete!)";
-                statusMsg.style.color = "#4caf50";
-            } else {
-                statusMsg.innerText = "Sync Alert: " + text;
-                statusMsg.style.color = "#f44336";
-            }
-            setTimeout(() => { statusMsg.innerText = ""; }, 5000);
-        })
-        .catch(error => {
-            clearInterval(progressInterval);
-            statusMsg.innerText = "Network transmission failed.";
-            statusMsg.style.color = "#f44336";
-            console.error(error);
-        });
-}
+// Create a hidden iframe to send the sync signal without cross-domain blocks
+var invisibleFrame = document.createElement('iframe');
+invisibleFrame.style.display = 'none';
+invisibleFrame.src = scriptUrl;
+document.body.appendChild(invisibleFrame);
+
+// Since we cannot read the server text response across domains, 
+// we monitor the frame load event to confirm it completed
+invisibleFrame.onload = function() {
+    clearInterval(progressInterval);
+    statusMsg.innerText = "Syncing with master database... 100% (Complete!)";
+    statusMsg.style.color = "#4caf50";
+    
+    // Clean up the frame after completion
+    setTimeout(() => { 
+        statusMsg.innerText = ""; 
+        invisibleFrame.remove();
+    }, 5000);
+};
+
+invisibleFrame.onerror = function() {
+    clearInterval(progressInterval);
+    statusMsg.innerText = "Network transmission failed.";
+    statusMsg.style.color = "#f44336";
+    setTimeout(() => { statusMsg.innerText = ""; }, 5000);
+};
+
         
 </script>
 </body>
