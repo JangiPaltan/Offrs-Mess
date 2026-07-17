@@ -934,12 +934,10 @@
                 <div class="drawer-item" onclick="openInternalInventory()">Check Inventory</div>
                 <a href="https://docs.google.com/forms/d/e/1FAIpQLSdr2ahQe2ham_Yl2GsLEsmE2H1KBl6Ou8MdlxJBE7W9ZrTxrA/viewform" class="drawer-item" onclick="toggleSidebar(false)">Add New Item</a>
                 <!-- Form Sync Administration Control Section -->
-<div class="admin-sync-container" style="margin: 10px 0; padding: 10px 0; border-top: 1px dashed rgba(225, 173, 1, 0.3); text-align: center;">
-    <div class="drawer-item" onclick="triggerFormDropdownSync()">
-        SYNC FORMS
-    </div>
-    <div id="sync-status-msg" style="font-size: 11px; color: var(--text-muted); margin-top: 6px; height: 16px;"></div>
+<div class="drawer-item" onclick="triggerFormDropdownSync()">
+    SYNC FORMS
 </div>
+<div id="sync-status-msg" style="font-size: 11px; color: var(--text-muted); margin-top: 4px; padding-left: 10px; height: 16px; font-style: italic;"></div>
                 <div class="drawer-item" onclick="toggleSubDrawer('purchase-panel', true)">Update Purchase</div>
                 <a href="https://docs.google.com/spreadsheets/d/17rMvMusueD6IDAYGIjPvL9662G-z4z-CRSc_1jJrRaY/edit?gid=0#gid=0" class="drawer-item" onclick="toggleSidebar(false)">Edit Officers Details</a>
                 <div class="drawer-item" onclick="toggleSubDrawer('prices-panel', true)">Edit Price of Items</div>
@@ -1727,23 +1725,43 @@
             }
         });
 
-        function triggerFormDropdownSync() {
-    const statusMsg = document.getElementById('sync-status-msg');
-    if (statusMsg) statusMsg.innerText = "Syncing with master database...";
-    
-    // Calls the background function deployed on your Google Apps Script
-    google.script.run
-        .withSuccessHandler(function(response) {
-            if (statusMsg) statusMsg.innerText = "Sync complete!";
-            setTimeout(() => { if (statusMsg) statusMsg.innerText = ""; }, 3000);
-        })
-        .withFailureHandler(function(error) {
-            if (statusMsg) statusMsg.innerText = "Sync failed. Try again.";
-            console.error(error);
-        })
-        .triggerFormDropdownSync(); // Matches the handler signature in your Apps Script editor
-}
+        // ... your existing code (like touchstart, parseGoogleSheetGvizJson, etc.) ...
 
+        function triggerFormDropdownSync() {
+            const statusMsg = document.getElementById('sync-status-msg');
+            if (!statusMsg) return;
+
+            statusMsg.style.color = "var(--text-muted)";
+            statusMsg.innerText = "Syncing 0%";
+            
+            let progress = 0;
+            const progressInterval = setInterval(() => {
+                if (progress < 90) {
+                    progress += Math.floor(Math.random() * 10) + 2;
+                    if (progress > 90) progress = 90;
+                    statusMsg.innerText = `Syncing with master database... ${progress}%`;
+                }
+            }, 400);
+
+            google.script.run
+                .withSuccessHandler(function(response) {
+                    clearInterval(progressInterval);
+                    statusMsg.innerText = "Syncing 100% (Complete!)";
+                    statusMsg.style.color = "#17bf1e    ";
+                    setTimeout(() => { statusMsg.innerText = ""; }, 4000);
+                })
+                .withFailureHandler(function(error) {
+                    clearInterval(progressInterval);
+                    statusMsg.innerText = "Sync failed. Please try again.";
+                    statusMsg.style.color = "#f44336";
+                    console.error(error);
+                })
+                .runMasterSyncProcedures(); 
+        }
+        
+    </script>
+</body>
+</html>
      
 </script>
 </body>
