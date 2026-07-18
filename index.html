@@ -1502,9 +1502,10 @@
                 }
 
                 filteredData.forEach(item => {
-                    const row = document.createElement('div');
-                    row.className = 'inventory-item-row';
-                    row.innerHTML = `
+                   const row = document.createElement('div');
+row.className = 'inventory-item-row';
+row.classList.add('fade-in-card'); // <--- PASTE THIS EXACT LINE HERE
+row.innerHTML = `
                         <span class="inv-name">${item.itemName}</span>
                         <span class="inv-qty">${item.monthlyBalance}</span>
                     `;
