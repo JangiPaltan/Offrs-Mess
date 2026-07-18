@@ -822,6 +822,22 @@
             font-weight: 500;
             color: var(--mustard-gold);
         }
+
+        /* Paste this inside your existing <style> tag */
+.fade-in-card {
+  animation: fadeIn 0.3s ease-in-out forwards;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
     </style>
 </head>
 <body>
@@ -1677,9 +1693,10 @@
                 }
 
                 // POINT 5: Build out card structure natively serving precisely one dynamic item block per node view
-                const card = document.createElement('div');
-                card.className = 'pending-order-card';
-                card.innerHTML = `
+               const card = document.createElement('div');
+card.className = 'pending-order-card';
+card.classList.add('fade-in-card');
+card.innerHTML = `
                     <div class="order-status-indicator">
                         ${iconSvg}
                     </div>
