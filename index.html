@@ -336,7 +336,7 @@
             justify-content: space-between;
             padding: 30px 20px;
             box-shadow: 10px 0 30px rgba(0, 0, 0, 0.6);
-            overflow: hidden; /* Hide panel sliding overflow */
+            overflow: hidden;
         }
 
         .sidebar-drawer.active {
@@ -429,7 +429,6 @@
             transform: translate3d(0, 0, 0);
         }
 
-        /* CUSTOM CIRCULAR SUB-PANEL ARROW BUTTON */
         .sub-panel-back-btn {
             background: none;
             border: 1px solid rgba(225, 173, 1, 0.3);
@@ -639,6 +638,15 @@
             width: 100%;
         }
 
+        /* NEW STATUS TAB CONTROLS CONTAINER STYLE */
+        .status-tab-controls {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 8px;
+            margin-bottom: 20px;
+            width: 100%;
+        }
+
         .tab-btn {
             background: rgba(27, 67, 50, 0.2);
             border: 1px solid rgba(225, 173, 1, 0.25);
@@ -731,100 +739,89 @@
             to { transform: rotate(360deg); }
         }
 
-        /* PENDING ORDERS SCREEN STYLES */
-    #pending-orders-screen {
-        width: 100%;
-        display: flex;
-        flex-direction: column;
-        transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.6s ease;
-    }
+        /* STATUS ORDERS VIEWER SYSTEM STYLES */
+        #pending-orders-screen {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.6s ease;
+        }
 
-    /* PENDING ORDERS SCREEN STYLES */
-    #pending-orders-screen {
-        width: 100%;
-        display: flex;
-        flex-direction: column;
-        transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.6s ease;
-    }
+        .pending-order-card {
+            display: flex;
+            align-items: flex-start;
+            background-color: #131c18;
+            border: 1px solid rgba(225, 173, 1, 0.15);
+            border-radius: 14px;
+            padding: 20px 16px;
+            margin-bottom: 12px; 
+            gap: 18px;
+        }
 
-    .pending-order-card {
-        display: flex;
-        align-items: flex-start;
-        background-color: #0b0f10;
-        border: 1.5px solid #1c2421;
-        border-radius: 24px;
-        padding: 24px 28px; /* Increased padding for more space */
-        margin-bottom: 20px; /* Increased space between cards */
-        gap: 24px;
-    }
+        .order-status-indicator {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 36px;
+            height: 36px;
+            flex-shrink: 0;
+            margin-top: 4px;
+        }
 
-    .order-status-indicator {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        width: 44px;
-        height: 44px;
-        flex-shrink: 0;
-        margin-top: 24px; /* Adjusted to align with the name header nicely */
-    }
+        .order-card-content {
+            display: flex;
+            flex-direction: column;
+            flex-grow: 1;
+            gap: 4px; 
+        }
 
-    .order-card-content {
-        display: flex;
-        flex-direction: column;
-        flex-grow: 1;
-        gap: 8px; /* Adds consistent vertical spacing between Date, Name, and Items */
-    }
+        .order-card-date {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            letter-spacing: 0.12em;
+        }
 
-    .order-card-date {
-        font-size: 0.8rem;
-        color: #8a9296;
-        letter-spacing: 0.12em;
-        font-family: inherit;
-        margin-bottom: 2px;
-    }
+        .order-card-officer-name {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #ffffff;
+            margin: 0;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+            line-height: 1.2;
+        }
 
-    .order-card-officer-name {
-        font-size: 1.55rem;
-        font-weight: 600;
-        color: #ffffff;
-        margin: 0;
-        letter-spacing: 0.05em;
-        text-transform: uppercase;
-        line-height: 1.2;
-    }
+        .order-card-items-list {
+            display: flex;
+            flex-direction: column;
+            gap: 6px; 
+            margin-top: 8px;
+            border-top: 1px solid rgba(225, 173, 1, 0.1);
+            padding-top: 8px;
+        }
 
-    .order-card-items-list {
-        display: flex;
-        flex-direction: column;
-        gap: 12px; /* INCREASED: Generous line spacing between items */
-        margin-top: 10px;
-        border-top: 1px solid #1c2421; /* Subtle divider above items list */
-        padding-top: 12px;
-    }
+        .order-card-item {
+            display: flex;
+            align-items: center;
+            font-size: 0.95rem;
+            color: #d1d5db;
+            line-height: 1.4;
+        }
 
-    .order-card-item {
-        display: flex;
-        align-items: center;
-        font-size: 1rem;
-        color: #d1d5db;
-        font-family: monospace;
-        line-height: 1.5; /* More breathing room inside item rows */
-    }
+        .order-card-item .item-name {
+            min-width: 140px;
+            text-transform: uppercase;
+        }
 
-    .order-card-item .item-name {
-        min-width: 140px;
-        text-transform: uppercase;
-    }
+        .order-card-item .item-multiplier {
+            margin: 0 10px;
+            color: #6b7280;
+        }
 
-    .order-card-item .item-multiplier {
-        margin: 0 16px;
-        color: #6b7280;
-    }
-
-    .order-card-item .item-qty {
-        font-weight: 500;
-    }
-        
+        .order-card-item .item-qty {
+            font-weight: 500;
+            color: var(--mustard-gold);
+        }
     </style>
 </head>
 <body>
@@ -857,69 +854,66 @@
     </div>
 
     <!-- ISOLATED LOCKSCREEN CONTROLLER -->
-<script>
-    window.CORRECT_PIN = "1768";
-    window.currentPin = "";
-    window.isLocked = true;
-
-    window.pressNum = function(num) {
-        if (window.currentPin.length < 4) {
-            window.currentPin += String(num);
-            window.updatePinDots();
-            if (window.currentPin.length === 4) {
-                setTimeout(window.checkPin, 200);
-            }
-        }
-    };
-
-    window.clearPin = function() {
+    <script>
+        window.CORRECT_PIN = "1768";
         window.currentPin = "";
-        window.updatePinDots();
-    };
+        window.isLocked = true;
 
-    window.backspacePin = function() {
-        if (window.currentPin.length > 0) {
-            window.currentPin = window.currentPin.slice(0, -1);
-            window.updatePinDots();
-        }
-    };
-
-    window.updatePinDots = function() {
-        // Matches your exact HTML classes: loops through dot1 to dot4
-        for (let i = 1; i <= 4; i++) {
-            const dot = document.getElementById(`dot${i}`);
-            if (dot) {
-                if (i <= window.currentPin.length) {
-                    dot.classList.add('active');
-                } else {
-                    dot.classList.remove('active');
+        window.pressNum = function(num) {
+            if (window.currentPin.length < 4) {
+                window.currentPin += String(num);
+                window.updatePinDots();
+                if (window.currentPin.length === 4) {
+                    setTimeout(window.checkPin, 200);
                 }
             }
-        }
-    };
+        };
 
-    window.checkPin = function() {
-        if (window.currentPin === window.CORRECT_PIN) {
-            const lockScreen = document.getElementById('lock-screen');
-            if (lockScreen) lockScreen.style.display = 'none';
-            window.isLocked = false;
-            window.clearPin();
-            
-            // Safely fires off data fetching if the bottom script is happy
-            if (typeof loadPendingOrdersData === 'function') {
-                loadPendingOrdersData();
+        window.clearPin = function() {
+            window.currentPin = "";
+            window.updatePinDots();
+        };
+
+        window.backspacePin = function() {
+            if (window.currentPin.length > 0) {
+                window.currentPin = window.currentPin.slice(0, -1);
+                window.updatePinDots();
             }
-        } else {
-            // Target the correct container name from line 837
-            const pinContainer = document.querySelector('.pin-dots');
-            if (pinContainer) {
-                pinContainer.classList.add('shake');
-                setTimeout(() => pinContainer.classList.remove('shake'), 500);
+        };
+
+        window.updatePinDots = function() {
+            for (let i = 1; i <= 4; i++) {
+                const dot = document.getElementById(`dot${i}`);
+                if (dot) {
+                    if (i <= window.currentPin.length) {
+                        dot.classList.add('active');
+                    } else {
+                        dot.classList.remove('active');
+                    }
+                }
             }
-            window.clearPin();
-        }
-    };
-</script>
+        };
+
+        window.checkPin = function() {
+            if (window.currentPin === window.CORRECT_PIN) {
+                const lockScreen = document.getElementById('lock-screen');
+                if (lockScreen) lockScreen.style.display = 'none';
+                window.isLocked = false;
+                window.clearPin();
+                
+                if (typeof loadPendingOrdersData === 'function') {
+                    loadPendingOrdersData();
+                }
+            } else {
+                const pinContainer = document.querySelector('.pin-dots');
+                if (pinContainer) {
+                    pinContainer.classList.add('shake');
+                    setTimeout(() => pinContainer.classList.remove('shake'), 500);
+                }
+                window.clearPin();
+            }
+        };
+    </script>
 
     <div id="drawerOverlay" class="drawer-overlay" onclick="toggleSidebar(false)"></div>
     <div id="sidebarDrawer" class="sidebar-drawer">
@@ -933,11 +927,9 @@
                 <div class="drawer-item" onclick="openInternalSummary()">Bills & Summary</div>
                 <div class="drawer-item" onclick="openInternalInventory()">Check Inventory</div>
                 <a href="https://docs.google.com/forms/d/e/1FAIpQLSdr2ahQe2ham_Yl2GsLEsmE2H1KBl6Ou8MdlxJBE7W9ZrTxrA/viewform" class="drawer-item" onclick="toggleSidebar(false)">Add New Item</a>
-                <!-- Form Sync Administration Control Section -->
-<div class="drawer-item" onclick="triggerFormDropdownSync()">
-    SYNC FORMS
-</div>
-<div id="sync-status-msg" style="font-size: 11px; color: var(--text-muted); margin-top: 4px; padding-left: 10px; height: 16px; font-style: italic;"></div>
+                
+                <div class="drawer-item" onclick="triggerFormDropdownSync()">SYNC FORMS</div>
+                <div id="sync-status-msg" style="font-size: 11px; color: var(--text-muted); margin-top: 4px; padding-left: 10px; height: 16px; font-style: italic;"></div>
                 <div class="drawer-item" onclick="toggleSubDrawer('purchase-panel', true)">Update Purchase</div>
                 <a href="https://docs.google.com/spreadsheets/d/17rMvMusueD6IDAYGIjPvL9662G-z4z-CRSc_1jJrRaY/edit?gid=0#gid=0" class="drawer-item" onclick="toggleSidebar(false)">Edit Officers Details</a>
                 <div class="drawer-item" onclick="toggleSubDrawer('prices-panel', true)">Edit Price of Items</div>
@@ -949,9 +941,7 @@
 
         <div id="purchase-panel" class="sub-drawer-panel">
             <button class="sub-panel-back-btn" onclick="toggleSubDrawer('purchase-panel', false)" aria-label="Go Back">
-                <svg viewBox="0 0 24 24">
-                    <path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/>
-                </svg>
+                <svg viewBox="0 0 24 24"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>
             </button>
             <div class="drawer-header" style="margin-bottom: 25px;">
                 <span class="drawer-brand-title" style="font-size: 1rem;">Update Purchase</span>
@@ -964,9 +954,7 @@
 
         <div id="prices-panel" class="sub-drawer-panel">
             <button class="sub-panel-back-btn" onclick="toggleSubDrawer('prices-panel', false)" aria-label="Go Back">
-                <svg viewBox="0 0 24 24">
-                    <path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/>
-                </svg>
+                <svg viewBox="0 0 24 24"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>
             </button>
             <div class="drawer-header" style="margin-bottom: 25px;">
                 <span class="drawer-brand-title" style="font-size: 1rem;">Edit Prices</span>
@@ -979,21 +967,19 @@
 
         <div id="orders-panel" class="sub-drawer-panel">
             <button class="sub-panel-back-btn" onclick="toggleSubDrawer('orders-panel', false)" aria-label="Go Back">
-                <svg viewBox="0 0 24 24">
-                    <path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/>
-                </svg>
+                <svg viewBox="0 0 24 24"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>
             </button>
             <div class="drawer-header" style="margin-bottom: 25px;">
                 <span class="drawer-brand-title" style="font-size: 1rem;">Manage Orders</span>
             </div>
             <nav class="drawer-nav">
+                <!-- RENAME POINT 1: Renamed from Pending Orders to Status inside drawer link -->
                 <div class="drawer-item" onclick="openPendingOrdersView()">Status</div>
                 <a href="https://docs.google.com/spreadsheets/d/17rMvMusueD6IDAYGIjPvL9662G-z4z-CRSc_1jJrRaY/edit#gid=318068113" class="drawer-item" onclick="toggleSidebar(false)">Open Ledger</a>
             </nav>
         </div>
     </div> 
 
-    
     <div class="page-container">
         <div id="app-screen">
             <header>
@@ -1137,12 +1123,14 @@
             <main id="inventoryListContainer" class="inventory-list" style="display: none;"></main>
         </div>
 
-        <!-- PENDING ORDERS SCREEN -->
+        <!-- RENAME POINT 1: Renamed main section element window to Status Screen -->
+        <!-- STATUS VIEWER SCREEN -->
         <div id="pending-orders-screen" style="display: none; opacity: 0; transform: translateY(20px) scale(0.98);">
             <header class="dashboard-header">
                 <div class="header-text-group">
                     <span class="header-date-lbl">System Monitoring</span>
-                    <h1 class="header-title-lbl">Pending Orders</h1>
+                    <!-- RENAME POINT 1: Renamed Heading Title from Pending Orders to Status -->
+                    <h1 class="header-title-lbl">Status</h1>
                 </div>
                 <div class="header-action-container">
                     <button class="back-home-btn" onclick="switchPendingOrdersView(false)">✕</button>
@@ -1150,20 +1138,29 @@
             </header>
 
             <!-- Search and Filter Controls Container -->
-<div class="filter-controls" style="padding: 10px; display: flex; gap: 10px; flex-direction: column;">
-    <input type="text" id="order-search-input" placeholder="Search officer or item..." oninput="filterOrders()" style="width: 100%; padding: 10px; border-radius: 6px; border: 1px solid #3E4E53; bg: #1a262b; color: #fff;">
-    <div style="display: flex; justify-content: space-between; align-items: center;">
-        <span id="sync-timestamp" style="font-size: 12px; color: #8a9a9f;">Last synced: Just now</span>
-        <button onclick="refreshOrdersData()" style="background: none; border: none; color: #FFD54F; cursor: pointer; font-size: 14px;">🔄 Sync Now</button>
-    </div>
-</div>
+            <div class="filter-controls" style="margin-bottom: 20px; display: flex; gap: 12px; flex-direction: column; width:100%;">
+                <!-- SEARCH BAR POINT 3: input field updated placeholder text to match instruction -->
+                <input type="text" id="order-search-input" placeholder="Search officer..." oninput="filterOrders()" class="search-bar">
+                
+                <!-- FILTER BUTTONS POINT 2 & 4: Sub-navigation layout mimicking inventory tab system -->
+                <div class="status-tab-controls">
+                    <button id="status-tab-approved" class="tab-btn" onclick="switchStatusTab('approved')">Approved</button>
+                    <button id="status-tab-pending" class="tab-btn active" onclick="switchStatusTab('pending')">Pending</button>
+                    <button id="status-tab-rejected" class="tab-btn" onclick="switchStatusTab('rejected')">Rejected</button>
+                </div>
+
+                <div style="display: flex; justify-content: space-between; align-items: center; padding: 0 4px;">
+                    <span id="sync-timestamp" style="font-size: 12px; color: var(--text-muted);">Last synced: Just now</span>
+                    <button onclick="refreshOrdersData()" style="background: none; border: none; color: var(--mustard-gold); cursor: pointer; font-size: 13px; letter-spacing:1px; display:flex; align-items:center; gap:4px;">Sync Now</button>
+                </div>
+            </div>
 
             <div id="ordersLoader" class="loading-indicator">
                 <div class="spinner"></div>
                 <span>Scanning active queue...</span>
             </div>
 
-            <main id="pendingOrdersContainer" class="dashboard-list" style="display: none;"></main>
+            <main id="pendingOrdersContainer" class="inventory-list" style="display: none;"></main>
         </div>
 
     </div>
@@ -1174,12 +1171,14 @@
         let idleTimer;
         let isLocked = true;
 
-        // GOOGLE SPREADSHEET ID
         const SPREADSHEET_ID = "17rMvMusueD6IDAYGIjPvL9662G-z4z-CRSc_1jJrRaY";
 
         let liquorStockCache = [];
         let softDrinkStockCache = [];
         let currentInventoryTab = "liquor"; 
+
+        // FILTER BUTTON POINT 2: Initialize default status view value tracking variable
+        let currentStatusFilterTab = "pending"; 
 
         function resetIdleTimer() {
             clearTimeout(idleTimer);
@@ -1249,7 +1248,7 @@
             } else {
                 alert("ACCESS DENIED. INCORRECT PIN.");
                 clearPin();
-            }
+            } verification
         }
 
         function lockApp() {
@@ -1273,7 +1272,6 @@
             lockApp();
         }
 
-        // CONTROL SLIDING SUB-DRAWERS
         function toggleSubDrawer(panelId, open) {
             const panel = document.getElementById(panelId);
             if (open) {
@@ -1292,7 +1290,6 @@
             } else {
                 drawer.classList.remove('active');
                 overlay.classList.remove('active');
-                // Auto-close any open sub-panels when the entire drawer closes
                 toggleSubDrawer('purchase-panel', false);
                 toggleSubDrawer('prices-panel', false);
             }
@@ -1380,6 +1377,15 @@
             renderInventoryItems();
         }
 
+        // FILTER BUTTON POINT 2: Handles category rendering shifts between buttons
+        function switchStatusTab(status) {
+            currentStatusFilterTab = status;
+            document.getElementById('status-tab-approved').classList.toggle('active', status === 'approved');
+            document.getElementById('status-tab-pending').classList.toggle('active', status === 'pending');
+            document.getElementById('status-tab-rejected').classList.toggle('active', status === 'rejected');
+            filterOrders(); 
+        }
+
         function loadInventoryData() {
             const loader = document.getElementById('inventoryLoader');
             const container = document.getElementById('inventoryListContainer');
@@ -1387,9 +1393,7 @@
             loader.style.display = 'flex';
             container.style.display = 'none';
 
-            // Tab 1 (Liquor Inventory) GID: 1541094054
             const liquorUrl = `https://docs.google.com/spreadsheets/d/${SPREADSHEET_ID}/gviz/tq?tqx=out:json&gid=664935442`;
-            // Tab 2 (Soft Drink Inventory) GID: 1046914580
             const softDrinkUrl = `https://docs.google.com/spreadsheets/d/${SPREADSHEET_ID}/gviz/tq?tqx=out:json&gid=1458550284`;
 
             Promise.all([
@@ -1405,14 +1409,13 @@
                 renderInventoryItems();
             })
             .catch(err => {
-                console.error("Error loading inventory layout records:", err);
-                loader.innerHTML = "<span>Failed to retrieve database assets. Verify connection parameters.</span>";
+                console.error("Error loading inventory records:", err);
+                loader.innerHTML = "<span>Failed to retrieve database assets.</span>";
             });
         }
 
        function parseGoogleSheetGvizJson(responseText) {
             try {
-                // Foolproof way to extract the JSON without relying on messy Regex
                 const jsonStart = responseText.indexOf('{');
                 const jsonEnd = responseText.lastIndexOf('}');
                 if (jsonStart === -1 || jsonEnd === -1) return [];
@@ -1429,22 +1432,17 @@
                     const cells = rows[i].c;
                     if (!cells || cells.length === 0) continue;
 
-                    // 1. Get Item Name (Strictly from Column A / Index 0)
                     const nameCell = cells[0];
                     let name = "";
                     if (nameCell && nameCell.v !== null && nameCell.v !== undefined) {
                         name = String(nameCell.v).trim();
                     }
 
-                    // Skip the header rows or blank rows immediately
                     if (!name || name === "VALUE" || name === "ITEM NAME" || name.includes("SUMMARY") || name.includes("MONTH") || name.includes("Total")) {
                         continue;
                     }
 
-                    // 2. Get Monthly Balance (Strictly from Column F / Index 5)
                     let balanceCell = cells[5];
-                    
-                    // Fallback: If you ever change the fetch URL to only ask for 2 columns, this catches it
                     if (!balanceCell && cells.length > 1) {
                         balanceCell = cells[cells.length - 1]; 
                     }
@@ -1462,24 +1460,18 @@
                 return parsedItems;
             } catch (e) {
                 console.error("Data parsing error:", e);
-                // Return an empty array so the screen says "No items found" instead of going blank
                 return []; 
             }
         }
-
-
         
       function renderInventoryItems() {
             try {
                 const container = document.getElementById('inventoryListContainer');
                 const searchInput = document.getElementById('inventorySearch');
                 
-                // Safety check to prevent crashing if the container hasn't loaded
                 if (!container) return; 
-                
                 container.innerHTML = "";
 
-                // Safely grab the cache, defaulting to an empty array if undefined
                 const targetData = (currentInventoryTab === 'liquor') ? (liquorStockCache || []) : (softDrinkStockCache || []);
                 const query = searchInput ? searchInput.value.toLowerCase().trim() : "";
 
@@ -1507,13 +1499,10 @@
             }
         }
 
-
         function filterInventoryItems() {
             renderInventoryItems();
         }
 
-        // Ensure sub-drawers are handled correctly
-        // (Modify your existing toggleSidebar function so it handles 'orders-panel' auto-closures)
         const originalToggleSidebar = toggleSidebar;
         toggleSidebar = function(open) {
             originalToggleSidebar(open);
@@ -1549,10 +1538,10 @@
             }
         }
 
-// ==========================================
-        // PENDING ORDERS CORE FUNCTIONS
         // ==========================================
-        let cachedOrdersData = {};
+        // OVERHAULED: TRACKING FLAT LIST ARRAYS FOR CARDS
+        // ==========================================
+        let cachedFlatOrdersList = []; 
 
         function loadPendingOrdersData() {
             const loader = document.getElementById('ordersLoader');
@@ -1562,7 +1551,8 @@
             if (container) container.style.display = 'none';
             if (container) container.innerHTML = "";
 
-            const ordersUrl = `https://docs.google.com/spreadsheets/d/${SPREADSHEET_ID}/gviz/tq?tqx=out:json&gid=YOUR_ORDERS_GID`;
+            // Target Order Log Sheet GID
+            const ordersUrl = `https://docs.google.com/spreadsheets/d/${SPREADSHEET_ID}/gviz/tq?tqx=out:json&gid=318068113`;
 
             fetch(ordersUrl)
                 .then(res => res.text())
@@ -1576,10 +1566,10 @@
                     
                     if (!rawJson.table || !rawJson.table.rows) return;
                     
-                    processAndRenderOrders(rawJson.table.rows);
+                    processAndStoreFlatOrders(rawJson.table.rows);
 
                     if (loader) loader.style.display = 'none';
-                    if (container) container.style.display = 'block';
+                    if (container) container.style.display = 'flex';
                     const syncStamp = document.getElementById('sync-timestamp');
                     if (syncStamp) syncStamp.innerText = `Last synced: ${new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}`;
                 })
@@ -1589,27 +1579,32 @@
                 });
         }
 
-        function processAndRenderOrders(rows) {
-            const groupedOrders = {};
+        // NO CODE DISTURBED MECHANICS: Process rows cleanly into distinct elements
+        function processAndStoreFlatOrders(rows) {
+            cachedFlatOrdersList = []; 
 
             for (let i = 0; i < rows.length; i++) {
                 const cells = rows[i].c;
-                if (!cells || cells.length < 3) continue;
+                if (!cells || cells.length < 4) continue;
 
                 const rawDate = cells[1] ? String(cells[1].v || '').trim() : '';
                 const officerName = cells[2] ? String(cells[2].v || '').trim() : 'UNKNOWN OFFICER';
                 const itemName = cells[3] ? String(cells[3].v || '').trim() : '';
                 const itemQty = cells[6] ? String(cells[6].v || '').trim() : '1';
+                
+                // Parse Status Value from evaluation column (Index 8 / Column I)
+                let statusVal = cells[8] ? String(cells[8].v || '').trim().toLowerCase() : 'pending';
 
-                let isPending = false;
-                for (let j = 3; j < cells.length; j++) {
-                    if (cells[j] && String(cells[j].v).toLowerCase().includes('pending')) {
-                        isPending = true;
-                        break;
-                    }
+                if (!officerName || officerName === "Offr Name" || officerName.includes("Timestamp")) continue;
+                if (!itemName) continue;
+
+                // Standardize custom string states safely
+                let evaluatedStatus = "pending";
+                if (statusVal.includes("approved")) {
+                    evaluatedStatus = "approved";
+                } else if (statusVal.includes("rejected")) {
+                    evaluatedStatus = "rejected";
                 }
-
-                if (!officerName || officerName === "Offr Name" || !isPending) continue;
 
                 let formattedDate = rawDate;
                 if (rawDate.toUpperCase().includes("DATE")) {
@@ -1618,71 +1613,86 @@
                         const year = match[1];
                         const month = String(Number(match[2]) + 1).padStart(2, '0');
                         const day = match[3].padStart(2, '0');
-                        formattedDate = `${day} ${month} ${year}`;
+                        formattedDate = `${day}/${month}/${year}`;
                     }
                 }
 
-                if (!groupedOrders[officerName]) {
-                    groupedOrders[officerName] = {
-                        date: formattedDate,
-                        items: []
-                    };
-                }
-
-                if (itemName) {
-                    groupedOrders[officerName].items.push({
-                        name: itemName,
-                        qty: itemQty
-                    });
-                }
+                // POINT 5: Creating isolated flat item entities per entry
+                cachedFlatOrdersList.push({
+                    date: formattedDate,
+                    officer: officerName,
+                    name: itemName,
+                    qty: itemQty,
+                    status: evaluatedStatus
+                });
             }
 
-            cachedOrdersData = groupedOrders; 
-            renderFilteredCards(""); 
+            renderFilteredCards(); 
         }
 
         window.filterOrders = function() {
-            const query = document.getElementById('order-search-input').value.toLowerCase();
-            renderFilteredCards(query);
+            renderFilteredCards();
         };
 
-        function renderFilteredCards(query) {
+        function renderFilteredCards() {
             const container = document.getElementById('pendingOrdersContainer');
+            const searchInput = document.getElementById('order-search-input');
             if (!container) return;
             container.innerHTML = "";
+            
+            const query = searchInput ? searchInput.value.toLowerCase().trim() : "";
             let matchCount = 0;
 
-            Object.keys(cachedOrdersData).forEach(officer => {
-                const orderData = cachedOrdersData[officer];
-                const itemsMatch = orderData.items.filter(item => item.name.toLowerCase().includes(query));
-                const nameMatches = officer.toLowerCase().includes(query);
+            cachedFlatOrdersList.forEach(order => {
+                // POINT 2: Filter out elements that don't match the current active tab status layout
+                if (order.status !== currentStatusFilterTab) return;
 
-                if (!nameMatches && itemsMatch.length === 0) return;
+                // SEARCH BAR POINT 3: Strictly match based on officer name query string input
+                if (query && !order.officer.toLowerCase().includes(query)) return;
+                
                 matchCount++;
 
-                const itemsHtml = orderData.items.map(item => `
-                    <div class="order-card-item">
-                        <span class="item-name">${item.name}</span>
-                        <span class="item-multiplier">x</span>
-                        <span class="item-qty">${item.qty}</span>
-                    </div>
-                `).join('');
+                // ICONS POINT 6: SVG renders mapped accurately based on approved, pending, and rejected assets
+                let iconSvg = '';
+                if (order.status === 'approved') {
+                    iconSvg = `
+                        <svg viewBox="0 0 100 100" style="width:100%; height:100%;">
+                            <circle cx="50" cy="50" r="44" fill="none" stroke="#7CFC00" stroke-width="8"/>
+                            <path d="M30 52 L45 67 L70 37" fill="none" stroke="#7CFC00" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>`;
+                } else if (order.status === 'rejected') {
+                    iconSvg = `
+                        <svg viewBox="0 0 100 100" style="width:100%; height:100%;">
+                            <circle cx="50" cy="50" r="44" fill="none" stroke="#FF0000" stroke-width="8"/>
+                            <path d="M26 26 L74 74" fill="none" stroke="#FF0000" stroke-width="8" stroke-linecap="round"/>
+                        </svg>`;
+                } else {
+                    // Default Yellow Alert / Warning State
+                    iconSvg = `
+                        <svg viewBox="0 0 100 100" style="width:100%; height:100%;">
+                            <circle cx="50" cy="50" r="46" fill="#FFD54F"/>
+                            <path d="M50 22 L50 62" stroke="#0A0F0D" stroke-width="8" stroke-linecap="round"/>
+                            <circle cx="50" cy="76" r="5" fill="#0A0F0D"/>
+                        </svg>`;
+                }
 
+                // POINT 5: Build out card structure natively serving precisely one dynamic item block per node view
                 const card = document.createElement('div');
                 card.className = 'pending-order-card';
                 card.innerHTML = `
                     <div class="order-status-indicator">
-                        <svg viewBox="0 0 100 100" style="width:100%; height:100%;">
-                            <circle cx="50" cy="50" r="46" fill="#3E4E53" />
-                            <circle cx="50" cy="50" r="41" fill="#FFD54F" />
-                            <path d="M50 25 L50 63" stroke="#2C3E50" stroke-width="6" stroke-linecap="round" />
-                            <circle cx="50" cy="75" r="4" fill="#2C3E50" />
-                        </svg>
+                        ${iconSvg}
                     </div>
                     <div class="order-card-content">
-                        <div class="order-card-date">${orderData.date}</div>
-                        <h3 class="order-card-officer-name">${officer}</h3>
-                        <div class="order-card-items-list">${itemsHtml}</div>
+                        <div class="order-card-date">${order.date}</div>
+                        <h3 class="order-card-officer-name">${order.officer}</h3>
+                        <div class="order-card-items-list">
+                            <div class="order-card-item">
+                                <span class="item-name">${order.name}</span>
+                                <span class="item-multiplier">x</span>
+                                <span class="item-qty">${order.qty}</span>
+                            </div>
+                        </div>
                     </div>
                 `;
                 container.appendChild(card);
@@ -1697,7 +1707,7 @@
             const syncStamp = document.getElementById('sync-timestamp');
             if (syncStamp) syncStamp.innerText = "Syncing...";
             
-            const ordersUrl = `https://docs.google.com/spreadsheets/d/${SPREADSHEET_ID}/gviz/tq?tqx=out:json&gid=YOUR_ORDERS_GID`;
+            const ordersUrl = `https://docs.google.com/spreadsheets/d/${SPREADSHEET_ID}/gviz/tq?tqx=out:json&gid=318068113`;
             
             fetch(ordersUrl)
                 .then(res => res.text())
@@ -1707,7 +1717,7 @@
                     const jsonString = responseText.substring(jsonStart, jsonEnd + 1);
                     const rawJson = JSON.parse(jsonString);
                     
-                    processAndRenderOrders(rawJson.table.rows);
+                    processAndStoreFlatOrders(rawJson.table.rows);
                     if (syncStamp) syncStamp.innerText = `Last synced: ${new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}`;
                 })
                 .catch(err => {
@@ -1725,47 +1735,42 @@
             }
         });
 
-        // ... your existing code (like touchstart, parseGoogleSheetGvizJson, etc.) ...
-
      function triggerFormDropdownSync() {
-    const statusMsg = document.getElementById('sync-status-msg');
-    if (!statusMsg) return;
+        const statusMsg = document.getElementById('sync-status-msg');
+        if (!statusMsg) return;
 
-    statusMsg.style.color = "var(--text-muted)";
-    statusMsg.innerText = "Connecting to Google servers...";
-    
-    let secondsElapsed = 0;
-    const progressInterval = setInterval(() => {
-        secondsElapsed++;
-        if (secondsElapsed < 60) {
-            statusMsg.innerText = `Syncing master database... ${secondsElapsed}s`;
-        } else {
-            statusMsg.innerText = `Finalizing changes on Google Drive... ${secondsElapsed}s (Hang tight, heavy database build)`;
-        }
-    }, 1000);
-
-    const scriptUrl = "https://script.google.com/macros/s/AKfycbyeNz9Wi4E6Hv1137H3vBbFsVGMX55_WL7v27RMhxWynw3fO6OueCI4REo9uORVvGB9/exec?runMasterSyncProcess=true";
-
-    // Standard no-cors fetch is much cleaner than injecting frames
-    fetch(scriptUrl, { mode: 'no-cors' })
-        .then(() => {
-            clearInterval(progressInterval);
-            statusMsg.innerText = `Sync Complete! Total time: ${secondsElapsed}s`;
-            statusMsg.style.color = "#4caf50";
-            
-            setTimeout(() => { statusMsg.innerText = ""; }, 5000);
-        })
-        .catch((error) => {
-            clearInterval(progressInterval);
-            statusMsg.innerText = "Sync transmission interrupted.";
-            statusMsg.style.color = "#f44336";
-            console.error("Sync Error:", error);
-            
-            setTimeout(() => { statusMsg.innerText = ""; }, 5000);
-        });
-}      
+        statusMsg.style.color = "var(--text-muted)";
+        statusMsg.innerText = "Connecting to Google servers...";
         
+        let secondsElapsed = 0;
+        const progressInterval = setInterval(() => {
+            secondsElapsed++;
+            if (secondsElapsed < 60) {
+                statusMsg.innerText = `Syncing master database... ${secondsElapsed}s`;
+            } else {
+                statusMsg.innerText = `Finalizing changes on Google Drive... ${secondsElapsed}s`;
+            }
+        }, 1000);
+
+        const scriptUrl = "https://script.google.com/macros/s/AKfycbyeNz9Wi4E6Hv1137H3vBbFsVGMX55_WL7v27RMhxWynw3fO6OueCI4REo9uORVvGB9/exec?runMasterSyncProcess=true";
+
+        fetch(scriptUrl, { mode: 'no-cors' })
+            .then(() => {
+                clearInterval(progressInterval);
+                statusMsg.innerText = `Sync Complete! Total time: ${secondsElapsed}s`;
+                statusMsg.style.color = "#4caf50";
+                
+                setTimeout(() => { statusMsg.innerText = ""; }, 5000);
+            })
+            .catch((error) => {
+                clearInterval(progressInterval);
+                statusMsg.innerText = "Sync transmission interrupted.";
+                statusMsg.style.color = "#f44336";
+                console.error("Sync Error:", error);
+                
+                setTimeout(() => { statusMsg.innerText = ""; }, 5000);
+            });
+    }      
 </script>
 </body>
 </html>
-        
