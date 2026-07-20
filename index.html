@@ -1022,6 +1022,9 @@
                 <a href="https://docs.google.com/forms/d/e/1FAIpQLSdr05sZYlhqm4c0fBBZnUdQ7oOCZHj99BErHVKFA_Ovu9GMHQ/viewform?usp=sharing&ouid=117721681857450201406" target="_self" class="btn-card">
                     <h2>Free Liquor</h2>
                 </a>
+<a href="https://docs.google.com/forms/d/e/1FAIpQLSeqYGSXPZz4VteOyEPyAjkXj1g3XPR-3hJvfMJdiB5vt3Na9g/viewform" target="_blank" class="btn-card" style="text-decoration: none;">
+    <h2>PARTY SHARE</h2>
+</a>
             </div>
         </div>
 
@@ -1108,6 +1111,19 @@
                         <svg viewBox="0 0 24 24"><path d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.41z"/></svg>
                     </div>
                 </div>
+               </div>
+        
+        <!-- Party Share Summary Row Entry -->
+        <div class="list-item-card" onclick="openPrintPreview('https://docs.google.com/spreadsheets/d/17rMvMusueD6IDAYGIjPvL9662G-z4z-CRSc_1jJrRaY/edit?gid=1251773068')">
+            <div class="card-left-group">
+                <h2 class="card-title">Party Share Summary</h2>
+            </div>
+            <div class="card-chevron">
+                <svg viewBox="0 0 24 24"><path d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.41z"/></svg>
+            </div>
+        </div>
+
+
             </main>
         </div>
 
@@ -1126,11 +1142,11 @@
                 <input type="text" id="inventorySearch" class="search-bar" placeholder="Search item..." oninput="filterInventoryItems()">
             </div>
 
-            <div class="tab-controls">
-                <button id="tab-liquor" class="tab-btn active" onclick="switchInventoryTab('liquor')">Liquor</button>
-                <button id="tab-softdrinks" class="tab-btn" onclick="switchInventoryTab('softdrinks')">Soft Drinks</button>
-            </div>
-
+           <div class="tab-controls" style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px;">
+    <button id="tab-liquor" class="tab-btn active" onclick="switchInventoryTab('liquor')">Liquor</button>
+    <button id="tab-freeliquor" class="tab-btn" onclick="switchInventoryTab('free-liquor')">Free Liquor</button>
+    <button id="tab-softdrinks" class="tab-btn" onclick="switchInventoryTab('softdrinks')">Soft Drinks</button>
+</div>
             <div id="inventoryLoader" class="loading-indicator">
                 <div class="spinner"></div>
                 <span>Fetching live figures...</span>
@@ -1192,6 +1208,7 @@
         let liquorStockCache = [];
         let softDrinkStockCache = [];
         let currentInventoryTab = "liquor"; 
+        let freeLiquorStockCache = [];
 
         // FILTER BUTTON POINT 2: Initialize default status view value tracking variable
         let currentStatusFilterTab = "pending"; 
@@ -1386,11 +1403,13 @@
         setInterval(updateClock, 1000);
         updateClock();
 
-        function switchInventoryTab(tab) {
-            currentInventoryTab = tab;
-            document.getElementById('tab-liquor').classList.toggle('active', tab === 'liquor');
-            document.getElementById('tab-softdrinks').classList.toggle('active', tab === 'softdrinks');
-            renderInventoryItems();
+       function switchInventoryTab(tab) {
+    currentInventoryTab = tab;
+    document.getElementById('tab-liquor').classList.toggle('active', tab === 'liquor');
+    document.getElementById('tab-freeliquor').classList.toggle('active', tab === 'free-liquor');
+    document.getElementById('tab-softdrinks').classList.toggle('active', tab === 'softdrinks');
+    renderInventoryItems();
+}
         }
 
         // FILTER BUTTON POINT 2: Handles category rendering shifts between buttons
@@ -1409,16 +1428,19 @@
             loader.style.display = 'flex';
             container.style.display = 'none';
 
-            const liquorUrl = `https://docs.google.com/spreadsheets/d/${SPREADSHEET_ID}/gviz/tq?tqx=out:json&gid=664935442`;
-            const softDrinkUrl = `https://docs.google.com/spreadsheets/d/${SPREADSHEET_ID}/gviz/tq?tqx=out:json&gid=1458550284`;
+           const liquorUrl = `https://docs.google.com/spreadsheets/d/${SPREADSHEET_ID}/gviz/tq?tqx=out:json&gid=664935442`;
+    const freeLiquorUrl = `https://docs.google.com/spreadsheets/d/${SPREADSHEET_ID}/gviz/tq?tqx=out:json&gid=1251773068`;
+    const softDrinkUrl = `https://docs.google.com/spreadsheets/d/${SPREADSHEET_ID}/gviz/tq?tqx=out:json&gid=1458550284`;
 
-            Promise.all([
-                fetch(liquorUrl).then(res => res.text()),
-                fetch(softDrinkUrl).then(res => res.text())
-            ])
-            .then(([liquorRaw, softDrinkRaw]) => {
-                liquorStockCache = parseGoogleSheetGvizJson(liquorRaw, 'liquor');
-                softDrinkStockCache = parseGoogleSheetGvizJson(softDrinkRaw, 'softdrinks');
+    Promise.all([
+        fetch(liquorUrl).then(res => res.text()),
+        fetch(freeLiquorUrl).then(res => res.text()),
+        fetch(softDrinkUrl).then(res => res.text())
+    ])
+    .then(([liquorRaw, freeLiquorRaw, softDrinkRaw]) => {
+        liquorStockCache = parseGoogleSheetGvizJson(liquorRaw, 'liquor');
+        freeLiquorStockCache = parseGoogleSheetGvizJson(freeLiquorRaw, 'free-liquor');
+        softDrinkStockCache = parseGoogleSheetGvizJson(softDrinkRaw, 'softdrinks');
                 
                 loader.style.display = 'none';
                 container.style.display = 'flex';
