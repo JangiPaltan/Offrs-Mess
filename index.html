@@ -1440,10 +1440,12 @@
             loader.style.display = 'flex';
             container.style.display = 'none';
 
-           const liquorUrl = `https://docs.google.com/spreadsheets/d/${SPREADSHEET_ID}/gviz/tq?tqx=out:json&gid=664935442`;
-    const freeLiquorUrl = `https://docs.google.com/spreadsheets/d/${SPREADSHEET_ID}/gviz/tq?tqx=out:json&gid=1043397830`;
-    const softDrinkUrl = `https://docs.google.com/spreadsheets/d/17rMvMusueD6IDAYGIjPvL9662G-z4z-CRSc_1jJrRaY/edit?gid=1043397830#gid=1043397830`;
-
+           const liquorUrl =
+`https://docs.google.com/spreadsheets/d/${SPREADSHEET_ID}/gviz/tq?tqx=out:json&gid=664935442`;
+    const freeLiquorUrl =
+`https://docs.google.com/spreadsheets/d/${SPREADSHEET_ID}/gviz/tq?tqx=out:json&gid=1043397830`;
+    const softDrinkUrl =
+`https://docs.google.com/spreadsheets/d/${SPREADSHEET_ID}/gviz/tq?tqx=out:json&gid=1458550284`;
     Promise.all([
         fetch(liquorUrl).then(res => res.text()),
         fetch(freeLiquorUrl).then(res => res.text()),
@@ -1522,7 +1524,15 @@
                 if (!container) return; 
                 container.innerHTML = "";
 
-                const targetData = (currentInventoryTab === 'liquor') ? (liquorStockCache || []) : (softDrinkStockCache || []);
+                let targetData = [];
+
+if (currentInventoryTab === "liquor") {
+    targetData = liquorStockCache || [];
+} else if (currentInventoryTab === "free-liquor") {
+    targetData = freeLiquorStockCache || [];
+} else if (currentInventoryTab === "softdrinks") {
+    targetData = softDrinkStockCache || [];
+}
                 const query = searchInput ? searchInput.value.toLowerCase().trim() : "";
 
                 const filteredData = targetData.filter(item => {
