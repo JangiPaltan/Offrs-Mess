@@ -638,6 +638,13 @@
             width: 100%;
         }
 
+        .inventory-tabs{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:8px;
+    width:100%;
+}
+
         /* NEW STATUS TAB CONTROLS CONTAINER STYLE */
         .status-tab-controls {
             display: grid;
@@ -667,14 +674,28 @@
             border-color: var(--mustard-gold);
         }
 
-       .inventory-list{
+       .inventory-page-wrapper{
+    width:100%;
+    max-width:760px;
+    margin:0 auto;
+    display:flex;
+    flex-direction:column;
+    justify-content:flex-start;
+    align-items:stretch;
+    padding:0 16px;
+    box-sizing:border-box;
+}
+
+      .inventory-list{
     display:flex;
     flex-direction:column;
     width:100%;
-    gap:10px;
+    margin:0;
+    gap:12px;
     max-height:60vh;
     overflow-y:auto;
-    padding-right:5px;
+    padding:0;
+    box-sizing:border-box;
 }
 
         .inventory-list::-webkit-scrollbar {
@@ -1127,6 +1148,7 @@
         </div>
 
         <div id="inventory-screen" style="display: none; opacity: 0; transform: translateY(20px) scale(0.98);">
+            <div class="inventory-page-wrapper">
             <header class="dashboard-header">
                 <div class="header-text-group">
                     <span class="header-date-lbl">Current Balance</span>
@@ -1141,7 +1163,7 @@
                 <input type="text" id="inventorySearch" class="search-bar" placeholder="Search item..." oninput="filterInventoryItems()">
             </div>
 
-           <div class="tab-controls" style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px;">
+          <div class="tab-controls inventory-tabs">
     <button id="tab-liquor" class="tab-btn active" onclick="switchInventoryTab('liquor')">Liquor</button>
     <button id="tab-freeliquor" class="tab-btn" onclick="switchInventoryTab('free-liquor')">Free Liquor</button>
     <button id="tab-softdrinks" class="tab-btn" onclick="switchInventoryTab('softdrinks')">Soft Drinks</button>
@@ -1152,6 +1174,7 @@
             </div>
 
             <main id="inventoryListContainer" class="inventory-list" style="display: none;"></main>
+            </div>
         </div>
 
         <!-- RENAME POINT 1: Renamed main section element window to Status Screen -->
