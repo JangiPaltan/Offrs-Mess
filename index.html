@@ -838,7 +838,24 @@
     transform: translateY(0);
   }
 }
-    </style>
+ 
+#inventoryModal, .modal-overlay {
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+}
+
+.inventory-container {
+    margin: 0 auto !important;
+    width: 90%;
+    max-width: 600px;
+}
+</style>
 </head>
 <body>
 
@@ -1022,7 +1039,7 @@
                 <a href="https://docs.google.com/forms/d/e/1FAIpQLSdr05sZYlhqm4c0fBBZnUdQ7oOCZHj99BErHVKFA_Ovu9GMHQ/viewform?usp=sharing&ouid=117721681857450201406" target="_self" class="btn-card">
                     <h2>Free Liquor</h2>
                 </a>
-                <a href="https://docs.google.com/forms/d/e/1FAIpQLSeqYGSXPZz4VteOyEpYAjkXj1g3XPR-3hJvfMJdiB5vt3Na9g/viewform?usp=sharing&ouid=117721681857450201406" target="_self" class="btn-card">
+                <a href="https://docs.google.com/forms/d/e/1FAIpQLSeqYGSXPZz4VteOyEPyAjkXj1g3XPR-3hJvfMJdiB5vt3Na9g/viewform" target="_self" class="btn-card">
                     <h2>Party Share</h2>
                 </a>
             </div>
@@ -1106,6 +1123,14 @@
                 <div class="list-item-card" onclick="openPrintPreview('https://docs.google.com/spreadsheets/d/17rMvMusueD6IDAYGIjPvL9662G-z4z-CRSc_1jJrRaY/edit?gid=1043397830#gid=1043397830')">
                     <div class="card-left-group">
                         <h2 class="card-title">Free Liquor Inventory</h2>
+                    </div>
+                    <div class="card-chevron">
+                        <svg viewBox="0 0 24 24"><path d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.41z"/></svg>
+                    </div>
+                </div>
+                <div class="list-item-card" onclick="openPrintPreview('https://docs.google.com/spreadsheets/d/17rMvMusueD6IDAYGIjPvL9662G-z4z-CRSc_1jJrRay/edit?gid=1251773068')">
+                    <div class="card-left-group">
+                        <h2 class="card-title">Party Share Summary</h2>
                     </div>
                     <div class="card-chevron">
                         <svg viewBox="0 0 24 24"><path d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.41z"/></svg>
@@ -1417,7 +1442,7 @@
 
            const liquorUrl = `https://docs.google.com/spreadsheets/d/${SPREADSHEET_ID}/gviz/tq?tqx=out:json&gid=664935442`;
     const freeLiquorUrl = `https://docs.google.com/spreadsheets/d/${SPREADSHEET_ID}/gviz/tq?tqx=out:json&gid=1043397830`;
-    const softDrinkUrl = `https://docs.google.com/spreadsheets/d/${SPREADSHEET_ID}/gviz/tq?tqx=out:json&gid=1458550284`;
+    const softDrinkUrl = `https://docs.google.com/spreadsheets/d/17rMvMusueD6IDAYGIjPvL9662G-z4z-CRSc_1jJrRaY/edit?gid=1043397830#gid=1043397830`;
 
     Promise.all([
         fetch(liquorUrl).then(res => res.text()),
